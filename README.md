@@ -1,4 +1,4 @@
-# Wan-Shi-Tong-s-Library
+# Alexandria’s Library
 Project for the CCU course in 2021/2022.
 
 We are group number 3 consisted by:
