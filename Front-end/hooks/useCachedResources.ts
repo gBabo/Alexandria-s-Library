@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { loadAsync as loadFontAsync } from 'expo-font';
 import { preventAutoHideAsync, hideAsync } from 'expo-splash-screen';
 
-import { init } from '../db';
 import alert from '../utils/alert';
 
 export default function useCachedResources() {
@@ -12,7 +11,6 @@ export default function useCachedResources() {
     async function loadResourcesAndDataAsync() {
       try {
         await preventAutoHideAsync();
-        await init();
         await loadFontAsync({
           'OpenSans-Bold': require('../assets/fonts/OpenSans-Bold.ttf'),
           'OpenSans-SemiBold': require('../assets/fonts/OpenSans-SemiBold.ttf'),

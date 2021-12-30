@@ -2,7 +2,7 @@ import { ExpoConfig } from '@expo/config';
 import 'dotenv/config';
 
 export interface Extra {
-  GOOGLE_API_KEY: string
+  FIREBASE_WEB_API_KEY: string
 }
 
 export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
@@ -42,7 +42,7 @@ export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
     ],
     config: {
       googleMaps: {
-        apiKey: process.env.GOOGLE_API_KEY,
+        apiKey: process.env.FIREBASE_WEB_API_KEY,
       },
     },
     adaptiveIcon: {
@@ -54,6 +54,6 @@ export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
     favicon: './assets/images/favicon.png',
   },
   extra: {
-    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+    FIREBASE_WEB_API_KEY: process.env.FIREBASE_WEB_API_KEY,
   },
 };

@@ -1,20 +1,14 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { StyleSheet, ActivityIndicator } from 'react-native';
 
 import Colors from '../../constants/Colors';
-import useColorScheme from '../../hooks/useColorScheme';
+import { View } from './Themed';
 
 export default function Loading() {
-  const colorScheme = useColorScheme();
-
   return (
-    <LinearGradient
-      colors={[Colors[colorScheme].accent, Colors[colorScheme].primary]}
-      style={styles.container}
-    >
-      <ActivityIndicator size="large" color={Colors[colorScheme].primary} />
-    </LinearGradient>
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={Colors.primary} />
+    </View>
   );
 }
 

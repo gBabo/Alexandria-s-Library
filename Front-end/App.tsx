@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler';
 import * as React from 'react';
+import { LogBox } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Provider } from 'react-redux';
@@ -10,6 +11,7 @@ import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import store from './store';
 
+LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();

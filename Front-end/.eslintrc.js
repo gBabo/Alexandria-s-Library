@@ -28,6 +28,7 @@ module.exports = {
     'no-case-declarations': 'off',
     'no-param-reassign': 'off',
     'no-nested-ternary': 'off',
+    'import/no-cycle': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
     'react/jsx-props-no-spreading': 'off',
     'react/no-unescaped-entities': 'off',

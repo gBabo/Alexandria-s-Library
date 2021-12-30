@@ -1,11 +1,9 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 
 import Colors from '../../constants/Colors';
 import { RegularText } from './StyledText';
-import useColorScheme from '../../hooks/useColorScheme';
 
 interface FallbackProps {
   message: string
@@ -14,22 +12,17 @@ interface FallbackProps {
 export default function Fallback({
   message,
 }: FallbackProps) {
-  const colorScheme = useColorScheme();
-
   return (
-    <LinearGradient
-      colors={[Colors[colorScheme].accent, Colors[colorScheme].primary]}
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <MaterialCommunityIcons
         name="database-remove"
         size={100}
-        color={Colors[colorScheme].warning}
+        color={Colors.warning}
       />
-      <RegularText style={[styles.fallback, { color: Colors[colorScheme].background }]}>
+      <RegularText style={[styles.fallback, { color: Colors.error }]}>
         {message}
       </RegularText>
-    </LinearGradient>
+    </View>
   );
 }
 

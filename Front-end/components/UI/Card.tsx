@@ -1,13 +1,12 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-
-import { View, ViewProps } from './Themed';
+import { StyleSheet, View as DefaultView } from 'react-native';
+import { View } from './Themed';
 
 export default function Card({
   style,
   children,
   ...otherProps
-}: ViewProps) {
+}: DefaultView['props']) {
   return (
     <View {...otherProps} style={[styles.container, style]}>{children}</View>
   );

@@ -2,10 +2,6 @@ import React, { ReactElement } from 'react';
 import {
   ListRenderItemInfo, StyleSheet, FlatList, useWindowDimensions,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-
-import Colors from '../../constants/Colors';
-import useColorScheme from '../../hooks/useColorScheme';
 
 export interface RenderTileProps<T> {
   dataInfo: ListRenderItemInfo<T>
@@ -32,7 +28,6 @@ export default function Grid({
   onRefresh = null,
 }: GridProps) {
   const windowDimensions = useWindowDimensions();
-  const colorScheme = useColorScheme();
 
   const inLandscape = windowDimensions.width > windowDimensions.height;
   const numColumnsDynamic = inLandscape ? numRows : numColumns;
@@ -42,25 +37,21 @@ export default function Grid({
   const width = windowDimensions.width / numColumnsDynamic - 2 * marginHorizontal;
 
   return (
-    <LinearGradient
-      colors={[Colors[colorScheme].accent, Colors[colorScheme].primary]}
-      style={styles.container}
-    >
-      <FlatList
-        key={numColumnsDynamic}
-        data={data}
-        renderItem={(dataInfo) => renderTile({
-          dataInfo,
-          marginHorizontal,
-          marginVertical,
-          width,
-        })}
-        numColumns={numColumnsDynamic}
-        style={styles.list}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-      />
-    </LinearGradient>
+    <FlatList
+      key={numColumnsDynamic}
+      data={data}
+      renderItem={(dataInfo) => renderTile({
+        dataInfo,
+        marginHorizontal,
+        marginVertical,
+        width,
+      })}
+      numColumns={numColumnsDynamic}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+      style={styles.list}
+      contentContainerStyle={styles.container}
+    />
   );
 }
 

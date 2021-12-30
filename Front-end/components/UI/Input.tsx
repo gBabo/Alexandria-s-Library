@@ -5,7 +5,6 @@ import validator from 'validator';
 import Colors from '../../constants/Colors';
 import { RegularText, SemiBoldText } from './StyledText';
 import Card from './Card';
-import useColorScheme from '../../hooks/useColorScheme';
 import useInputReducer, { InputActionType } from '../../hooks/useInputReducer';
 
 interface InputProps extends TextInputProps {
@@ -38,7 +37,6 @@ export default function Input({
   max,
   ...otherProps
 }: InputProps) {
-  const colorScheme = useColorScheme();
   const [{
     value,
     warning,
@@ -77,8 +75,8 @@ export default function Input({
   }, [inputDispatch, onChangeValue, isRequired, isURL, isEmail, minLength, maxLength, min, max]);
 
   return (
-    <Card style={[styles.container, { borderColor: Colors[colorScheme].primary }]}>
-      <SemiBoldText style={[styles.label, { borderColor: Colors[colorScheme].secondary }]}>
+    <Card style={[styles.container, { borderColor: Colors.primary }]}>
+      <SemiBoldText style={[styles.label, { borderColor: Colors.secondary }]}>
         {label}
       </SemiBoldText>
       <TextInput
@@ -91,13 +89,13 @@ export default function Input({
         blurOnSubmit={!nextRef}
         onBlur={() => inputDispatch({ type: InputActionType.InputTouched })}
         style={[styles.input, {
-          borderColor: Colors[colorScheme].info,
-          backgroundColor: `${Colors[colorScheme].info}11`,
+          borderColor: Colors.info,
+          backgroundColor: `${Colors.info}11`,
         }]}
         {...otherProps}
       />
       {wasTouched && !!warning && (
-        <RegularText style={[styles.warning, { color: Colors[colorScheme].error }]}>
+        <RegularText style={[styles.warning, { color: Colors.error }]}>
           {warning}
         </RegularText>
       )}

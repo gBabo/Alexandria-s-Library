@@ -31,9 +31,9 @@ export const onUpdate = <S extends { isLoading: boolean }>(
 
 export const onError = (
   state: WritableDraft<{ isLoading: boolean }>,
-  { error }: { error: SerializedError },
+  { error }: { error: SerializedError | unknown },
   title: string,
 ) => {
-  alert(title, error.message || 'Unknown!');
+  alert(title, (error as SerializedError)?.message || 'Unknown!');
   state.isLoading = false;
 };
