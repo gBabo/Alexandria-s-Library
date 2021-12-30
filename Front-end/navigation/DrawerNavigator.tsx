@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
-  ComponentProps, Dispatch, SetStateAction, useState,
+  ComponentProps, Dispatch, SetStateAction, useEffect, useState,
 } from 'react';
 import { View } from 'react-native';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/core';
 import {
   DrawerContentComponentProps,
   createDrawerNavigator,
@@ -16,7 +17,7 @@ import { DrawerParamList } from './types';
 import Colors from '../constants/Colors';
 import useAppSelector from '../hooks/useAppSelector';
 import { SemiBoldText } from '../components/UI/StyledText';
-import VerticalDivider from '../components/UI/VerticalDivider';
+import HorizontalDivider from '../components/UI/HorizontalDivider';
 import {
   SMAcquiredNavigator,
   SMExchangesNavigator,
@@ -43,72 +44,121 @@ const expandables = {
   },
 };
 
+enum ScreenExposure {
+  Always,
+  RequiresGuest,
+  RequiresAuthentication,
+}
+
 const screens = {
+  Profile: {
+    drawerLabel: 'Profile',
+    headerTitle: {
+      initial: 'Profile',
+    },
+    iconName: 'user-alt',
+    component: ProfileScreen,
+    exposure: ScreenExposure.RequiresAuthentication,
+    inactiveBackgroundColor: Colors.secondary,
+  },
   SM_Store: {
     drawerLabel: 'Store',
-    headerTitle: 'Study Materials Store',
+    headerTitle: {
+      initial: 'Study Materials Store',
+    },
     iconName: 'store',
     component: SMStoreNavigator,
+    exposure: ScreenExposure.Always,
+    inactiveBackgroundColor: Colors.secondary,
   },
   SM_Exchanges: {
     drawerLabel: 'Exchanges',
-    headerTitle: 'Study Materials Exchanges',
+    headerTitle: {
+      initial: 'Study Materials Exchanges',
+    },
     iconName: 'exchange-alt',
     component: SMExchangesNavigator,
+    exposure: ScreenExposure.RequiresAuthentication,
+    inactiveBackgroundColor: Colors.secondary,
   },
   SM_Acquired: {
     drawerLabel: 'Acquired',
-    headerTitle: 'Acquired Study Materials',
+    headerTitle: {
+      initial: 'Acquired Study Materials',
+    },
     iconName: 'bookmark',
     component: SMAcquiredNavigator,
+    exposure: ScreenExposure.RequiresAuthentication,
+    inactiveBackgroundColor: Colors.secondary,
   },
   SM_Uploaded: {
     drawerLabel: 'Uploaded',
-    headerTitle: 'Uploaded Study Materials',
+    headerTitle: {
+      initial: 'Uploaded Study Materials',
+    },
     iconName: 'file-upload',
     component: SMUploadedNavigator,
+    exposure: ScreenExposure.RequiresAuthentication,
+    inactiveBackgroundColor: Colors.secondary,
   },
   T_Store: {
     drawerLabel: 'Store',
-    headerTitle: 'Tutoring Sessions Store',
+    headerTitle: {
+      initial: 'Tutoring Sessions Store',
+    },
     iconName: 'store',
     component: TStoreNavigator,
+    exposure: ScreenExposure.Always,
+    inactiveBackgroundColor: Colors.secondary,
   },
   T_Enrolled: {
     drawerLabel: 'Enrolled',
-    headerTitle: 'Tutoring Sessions Enrollments',
+    headerTitle: {
+      initial: 'Tutoring Sessions Enrollments',
+    },
     iconName: 'handshake',
     component: TEnrolledNavigator,
+    exposure: ScreenExposure.RequiresAuthentication,
+    inactiveBackgroundColor: Colors.secondary,
   },
   T_Scheduled: {
     drawerLabel: 'Scheduled',
-    headerTitle: 'Scheduled Tutoring Sessions',
+    headerTitle: {
+      initial: 'Scheduled Tutoring Sessions',
+    },
     iconName: 'calendar-alt',
     component: TScheduledNavigator,
+    exposure: ScreenExposure.RequiresAuthentication,
+    inactiveBackgroundColor: Colors.secondary,
   },
-  U_Profile: {
-    drawerLabel: 'Profile',
-    headerTitle: 'Profile',
-    iconName: 'user-alt',
-    component: ProfileScreen,
-  },
-  U_Logout: {
-    drawerLabel: 'Logout',
-    headerTitle: 'Logout',
-    iconName: 'sign-out-alt',
-    component: LogoutScreen,
-  },
-  U_Login: {
+  A_Login: {
     drawerLabel: 'Login',
-    headerTitle: 'Login',
+    headerTitle: {
+      initial: 'Login',
+      Register: 'Register',
+    },
     iconName: 'sign-in-alt',
     component: LoginNavigator,
+    exposure: ScreenExposure.RequiresGuest,
+    inactiveBackgroundColor: Colors.info,
+  },
+  A_Logout: {
+    drawerLabel: 'Logout',
+    headerTitle: {
+      initial: 'Logout',
+    },
+    iconName: 'sign-out-alt',
+    component: LogoutScreen,
+    exposure: ScreenExposure.RequiresAuthentication,
+    inactiveBackgroundColor: Colors.error,
   },
 };
 
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 export default function DrawerNavigator() {
+  const localId = useAppSelector(({ authentication }) => authentication.localId);
+
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -120,25 +170,40 @@ export default function DrawerNavigator() {
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       {Object.entries(screens)
-        .map(([name, screen], index) => (
+        .filter(([, screen]) => isDisplayable(localId, screen.exposure))
+        .map(([name, screen]) => (
           <Drawer.Screen
-            key={index.toString()}
+            key={name}
             name={name as keyof DrawerParamList}
             component={screen.component}
-            options={{ headerTitle: screen.headerTitle }}
+            options={({ route }) => ({
+              headerTitle: (screen.headerTitle as Record<string, string>)[
+                getFocusedRouteNameFromRoute(route) || 'initial'
+              ],
+            })}
           />
         ))}
     </Drawer.Navigator>
   );
 }
 
+const isDisplayable = (localId: string | null, exposure: ScreenExposure) => (
+  exposure === ScreenExposure.RequiresAuthentication ? !!localId
+    : exposure === ScreenExposure.RequiresGuest ? !localId
+      : exposure === ScreenExposure.Always
+);
+
 function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
-  const localId = useAppSelector(({ authentication }) => authentication.localId);
-  const focusedLabelState = useState('SM_Store');
+  const focusedLabelState = useState('');
   const isExpandedState = {
     SM: useState(false),
     T: useState(false),
   };
+
+  const localId = useAppSelector(({ authentication }) => authentication.localId);
+  useEffect(() => {
+    focusedLabelState[1](navigation.getState().routeNames[navigation.getState().index]);
+  }, [localId]);
 
   return (
     <DrawerContentScrollView contentContainerStyle={{
@@ -161,24 +226,15 @@ function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
             Library of Alexandria
           </SemiBoldText>
         </View>
-        <VerticalDivider />
-        {localId && (
+        <HorizontalDivider />
         <CustomDrawerItem
-          name="U_Profile"
+          name="Profile"
           focusedLabelState={focusedLabelState}
           navigation={navigation}
         />
-        )}
-        <VerticalDivider />
+        <HorizontalDivider />
         <CustomExpandableDrawerItem name="SM" isExpandedState={isExpandedState.SM} />
-        {isExpandedState.SM[0] && !localId && (
-        <CustomDrawerItem
-          name="SM_Store"
-          focusedLabelState={focusedLabelState}
-          navigation={navigation}
-        />
-        )}
-        {isExpandedState.SM[0] && localId && Object.keys(screens)
+        {isExpandedState.SM[0] && Object.keys(screens)
           .filter((name) => name.startsWith('SM_'))
           .map((name) => (
             <CustomDrawerItem
@@ -188,16 +244,9 @@ function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
               navigation={navigation}
             />
           ))}
-        <VerticalDivider />
+        <HorizontalDivider />
         <CustomExpandableDrawerItem name="T" isExpandedState={isExpandedState.T} />
-        {isExpandedState.T[0] && !localId && (
-        <CustomDrawerItem
-          name="T_Store"
-          focusedLabelState={focusedLabelState}
-          navigation={navigation}
-        />
-        )}
-        {isExpandedState.T[0] && localId && Object.keys(screens)
+        {isExpandedState.T[0] && Object.keys(screens)
           .filter((name) => name.startsWith('T_'))
           .map((name) => (
             <CustomDrawerItem
@@ -207,16 +256,20 @@ function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
               navigation={navigation}
             />
           ))}
-        <VerticalDivider />
+        <HorizontalDivider />
       </View>
       <View>
-        <VerticalDivider />
-        <CustomDrawerItem
-          name={localId ? 'U_Logout' : 'U_Login'}
-          focusedLabelState={focusedLabelState}
-          navigation={navigation}
-          inactiveBackgroundColor={localId ? Colors.error : Colors.info}
-        />
+        <HorizontalDivider />
+        {Object.keys(screens)
+          .filter((name) => name.startsWith('A_'))
+          .map((name) => (
+            <CustomDrawerItem
+              key={name}
+              name={name as keyof DrawerParamList}
+              focusedLabelState={focusedLabelState}
+              navigation={navigation}
+            />
+          ))}
       </View>
     </DrawerContentScrollView>
   );
@@ -226,13 +279,16 @@ function CustomDrawerItem({
   name,
   focusedLabelState,
   navigation,
-  inactiveBackgroundColor,
 }: {
   name: keyof DrawerParamList,
   focusedLabelState: [string, Dispatch<SetStateAction<string>>]
   navigation: DrawerNavigationHelpers,
-  inactiveBackgroundColor?: string
 }) {
+  if (!navigation.getState()
+    .routeNames
+    .includes(name)) {
+    return null;
+  }
   const [focusedLabel, setFocusedLabel] = focusedLabelState;
 
   return (
@@ -245,7 +301,7 @@ function CustomDrawerItem({
       }}
       activeBackgroundColor={Colors.accent}
       activeTintColor={Colors.primary}
-      inactiveBackgroundColor={inactiveBackgroundColor || Colors.secondary}
+      inactiveBackgroundColor={screens[name].inactiveBackgroundColor}
       inactiveTintColor={Colors.background}
       labelStyle={{ fontFamily: 'OpenSans-SemiBold' }}
       focused={name === focusedLabel}

@@ -4,7 +4,6 @@ import { StyleSheet, ScrollView, TextInput } from 'react-native';
 import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { mapValues, pick } from 'lodash';
 
-import { LoginStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import { View } from '../../components/UI/Themed';
 import { RegularText } from '../../components/UI/StyledText';
@@ -21,7 +20,7 @@ import alert from '../../utils/alert';
 
 type Label = 'email' | 'password';
 
-export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login'>) {
+export default function LoginScreen() {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(({ authentication }) => authentication.isLoading);
   const refs: Record<Label, RefObject<TextInput>> = {
@@ -57,11 +56,10 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
       },
     });
   }, [formDispatch]);
-  const onLogin = useCallback(async (action: LoginAction) => {
+  const onLogin = useCallback((action: LoginAction) => {
     if (isValid) {
       const payload: LoginPayload = mapValues(pick(values, ['email', 'password']), (o) => o.value);
-      const { meta } = await dispatch(action(payload));
-      if (meta.requestStatus === 'fulfilled') navigation.getParent()!.navigate('SM_Store');
+      dispatch(action(payload));
     } else {
       alert('The form is invalid!', 'Please fix them with the help of the error messages.');
     }

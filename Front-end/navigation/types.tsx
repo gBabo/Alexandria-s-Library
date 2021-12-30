@@ -19,6 +19,7 @@ export type RootStackParamList = {
 };
 
 export type DrawerParamList = {
+  Profile: undefined;
   SM_Store: NavigatorScreenParams<SMStoreStackParamList>;
   SM_Exchanges: NavigatorScreenParams<SMExchangesStackParamList>;
   SM_Acquired: NavigatorScreenParams<SMAcquiredStackParamList>;
@@ -26,9 +27,8 @@ export type DrawerParamList = {
   T_Store: NavigatorScreenParams<TStoreStackParamList>;
   T_Enrolled: NavigatorScreenParams<TEnrolledStackParamList>;
   T_Scheduled: NavigatorScreenParams<TScheduledStackParamList>;
-  U_Profile: undefined;
-  U_Logout: undefined
-  U_Login: NavigatorScreenParams<LoginStackParamList>;
+  A_Login: NavigatorScreenParams<LoginStackParamList>;
+  A_Logout: undefined;
 };
 
 export type SMStoreStackParamList = {
@@ -64,6 +64,8 @@ export type LoginStackParamList = {
   Register: undefined
 };
 
+export type ProfileScreenProps = DrawerScreenProps<DrawerParamList, 'Profile'>;
+
 export type SMStoreStackScreenProps<Screen extends keyof SMStoreStackParamList> =
     CompositeScreenProps<NativeStackScreenProps<SMStoreStackParamList, Screen>,
     DrawerScreenProps<DrawerParamList, 'SM_Store'>>;
@@ -92,10 +94,8 @@ export type TScheduledStackScreenProps<Screen extends keyof TScheduledStackParam
     CompositeScreenProps<NativeStackScreenProps<TScheduledStackParamList, Screen>,
     DrawerScreenProps<DrawerParamList, 'T_Scheduled'>>;
 
-export type ProfileScreenProps = DrawerScreenProps<DrawerParamList, 'U_Profile'>;
-
-export type LogoutScreenProps = DrawerScreenProps<DrawerParamList, 'U_Logout'>;
-
 export type LoginStackScreenProps<Screen extends keyof LoginStackParamList> =
     CompositeScreenProps<NativeStackScreenProps<LoginStackParamList, Screen>,
-    DrawerScreenProps<DrawerParamList, 'U_Login'>>;
+    DrawerScreenProps<DrawerParamList, 'A_Login'>>;
+
+export type LogoutScreenProps = DrawerScreenProps<DrawerParamList, 'A_Logout'>;

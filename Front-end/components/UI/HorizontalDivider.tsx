@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import Colors from '../../constants/Colors';
 
-export default function VerticalDivider() {
+export default function HorizontalDivider() {
   return (
     <View style={styles.container} />
   );
