@@ -3,6 +3,7 @@ import 'dotenv/config';
 
 export interface Extra {
   FIREBASE_WEB_API_KEY: string
+  SERVER_BASE_URL: string
 }
 
 export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
@@ -40,11 +41,6 @@ export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
       'ACCESS_FINE_LOCATION',
       'FOREGROUND_SERVICE',
     ],
-    config: {
-      googleMaps: {
-        apiKey: process.env.FIREBASE_WEB_API_KEY,
-      },
-    },
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
@@ -55,5 +51,6 @@ export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
   },
   extra: {
     FIREBASE_WEB_API_KEY: process.env.FIREBASE_WEB_API_KEY,
+    SERVER_BASE_URL: process.env.SERVER_BASE_URL,
   },
 };

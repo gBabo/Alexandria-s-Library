@@ -76,7 +76,7 @@ export default function Input({
 
   return (
     <Card style={[styles.container, { borderColor: Colors.primary }]}>
-      <SemiBoldText style={[styles.label, { borderColor: Colors.secondary }]}>
+      <SemiBoldText style={styles.label}>
         {label}
       </SemiBoldText>
       <TextInput
@@ -89,8 +89,7 @@ export default function Input({
         blurOnSubmit={!nextRef}
         onBlur={() => inputDispatch({ type: InputActionType.InputTouched })}
         style={[styles.input, {
-          borderColor: Colors.info,
-          backgroundColor: `${Colors.info}11`,
+          borderBottomColor: Colors.secondary,
         }]}
         {...otherProps}
       />
@@ -111,16 +110,13 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 18,
-    textAlign: 'center',
     paddingBottom: 10,
-    borderBottomWidth: 1,
   },
   input: {
     fontSize: 16,
-    textAlign: 'center',
     fontFamily: 'OpenSans-Regular',
     minWidth: '100%',
-    borderWidth: 1,
+    borderBottomWidth: 1,
     marginTop: 10,
     padding: 5,
   },
