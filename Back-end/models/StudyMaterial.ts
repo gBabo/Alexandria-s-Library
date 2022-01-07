@@ -5,7 +5,6 @@ export default interface StudyMaterial {
   name: string
   description: string
   price: number
-  categories: string[]
   type: string
   reviews: StudyMaterialReview[]
   date: Date
