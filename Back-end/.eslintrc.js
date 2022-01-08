@@ -16,6 +16,9 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    semi: 'off',
+    '@typescript-eslint/semi': ['error'],
+    'no-plusplus': 'off',
     'no-console': 'off',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',

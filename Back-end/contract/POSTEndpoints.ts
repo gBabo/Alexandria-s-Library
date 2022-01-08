@@ -80,6 +80,12 @@ export interface StudyMaterialExchangePOSTRequest {
   idToken: string
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string
+  requesteeStudyMaterialAuthor: string
+}
+
+export interface StudyMaterialExchangePOSTResponse {
+  studyMaterialExchangeId: string
+  date: Date
 }
 
 // TutoringSessionEnrollment POST

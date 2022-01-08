@@ -17,21 +17,23 @@ pool.on('error', (err) => {
 export default pool;
 
 export async function init() {
-  const connection = await pool.connect();
+  const con = await pool.connect();
   try {
-    await connection.query(create.createUserTableSQL);
-    await connection.query(create.createStudyMaterialTableSQL);
-    await connection.query(create.createStudyMaterialCategoryTableSQL);
-    await connection.query(create.createStudyMaterialAcquiredTableSQL);
-    await connection.query(create.createStudyMaterialReviewTableSQL);
-    await connection.query(create.createStudyMaterialAnswerReviewSQL);
-    await connection.query(create.createStudyMaterialExchangesRequestTableSQL);
-    await connection.query(create.createSessionTableSQL);
-    await connection.query(create.createSessionCategoryTableSQL);
-    await connection.query(create.createSessionEnrollmentTableSQL);
+    await con.query(create.createUserTable);
+    await con.query(create.createStudyMTable);
+    await con.query(create.createStudyMLikesTable);
+    await con.query(create.createStudyMCategoryTable);
+    await con.query(create.createStudyMAcquiredTable);
+    await con.query(create.createStudyMReviewTable);
+    await con.query(create.createStudyMReviewLikesTable);
+    await con.query(create.createStudyMaterialReviewCommentTable);
+    await con.query(create.createStudyMExchangesRequestTable);
+    await con.query(create.createSessionTable);
+    await con.query(create.createSessionCategoryTable);
+    await con.query(create.createSessionEnrollmentTable);
   } catch (error: any) {
     console.error(error.stack);
   } finally {
-    await connection.release();
+    await con.release();
   }
 }

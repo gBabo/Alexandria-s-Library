@@ -6,7 +6,10 @@ import { RegisterPOSTRequest, RegisterPushNotificationPOSTRequest } from '../con
 
 const router = Router();
 
-router.get('/', async (req: Request<{}, {}, {}, UserGETRequest>, res: Response<UserGETResponse>) => {
+router.get('/', async (
+  req: Request<{}, {}, {}, UserGETRequest>,
+  res: Response<UserGETResponse>,
+) => {
   const email = await authenticate(req.query.idToken);
   if (email === undefined) {
     res.status(403).send();
@@ -21,10 +24,12 @@ router.get('/', async (req: Request<{}, {}, {}, UserGETRequest>, res: Response<U
   res.json({ user });
 });
 
-router.post('/register', async (req: Request<{}, {}, RegisterPOSTRequest, {}>, res: Response) => {
+router.post('/register', async (
+  req: Request<{}, {}, RegisterPOSTRequest, {}>,
+  res: Response,
+) => {
   const { idToken, name, institution } = req.body;
   const email = await authenticate(idToken);
-
   if (email === undefined) {
     res.status(403).send();
     return;
@@ -34,7 +39,10 @@ router.post('/register', async (req: Request<{}, {}, RegisterPOSTRequest, {}>, r
   res.status(200).send();
 });
 
-router.post('/registerPushNotificationToken', async (req: Request<{}, {}, RegisterPushNotificationPOSTRequest, {}>, res: Response) => {
+router.post('/registerPushNotificationToken', async (
+  req: Request<{}, {}, RegisterPushNotificationPOSTRequest, {}>,
+  res: Response,
+) => {
   const { idToken, pushNotificationToken } = req.body;
   const email = await authenticate(idToken);
 

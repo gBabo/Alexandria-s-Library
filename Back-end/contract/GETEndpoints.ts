@@ -3,9 +3,15 @@ import TutoringSession, { Enrollment } from '../models/TutoringSession';
 import User from '../models/User';
 
 // StudyMaterials GET
+export interface StudyMaterialsGETRequest {
+    idToken: string | undefined
+}
+
 export interface StudyMaterialsGETResponse {
     studyMaterials: Record<string, StudyMaterial>
     studyMaterialsCategories: Record<string, string[]>
+    uploaded: string[],
+    acquired: string[]
 }
 
 // TutoringSessions GET
@@ -21,15 +27,6 @@ export interface StudyMaterialsPendingExchangesGETRequest {
 
 export interface StudyMaterialsPendingExchangesGETResponse {
     studyMaterialsExchanges: StudyMaterialExchange[]
-}
-
-// AcquiredStudyMaterials GET
-export interface AcquiredStudyMaterialsGETRequest {
-    idToken: string
-}
-
-export interface AcquiredStudyMaterialsGETResponse {
-    studyMaterialIds: string
 }
 
 // Enrollments GET

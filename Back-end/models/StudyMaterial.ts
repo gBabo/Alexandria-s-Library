@@ -1,3 +1,5 @@
+import { StudyMaterialReview } from './StudyMaterialReview';
+
 export default interface StudyMaterial {
   id: string
   authorEmail: string
@@ -6,22 +8,9 @@ export default interface StudyMaterial {
   description: string
   price: number
   type: string
+  likes: number
+  hasLiked: boolean
   reviews: StudyMaterialReview[]
-  date: Date
-}
-
-export interface StudyMaterialReview {
-  id: string
-  author: string
-  likes: string
-  comments: StudyMaterialReviewComment[]
-  date: Date
-}
-
-export interface StudyMaterialReviewComment {
-  id: string
-  author: string
-  comment: string
   date: Date
 }
 
