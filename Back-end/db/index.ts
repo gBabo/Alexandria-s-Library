@@ -28,9 +28,9 @@ export async function init() {
     await con.query(create.createStudyMReviewLikesTable);
     await con.query(create.createStudyMaterialReviewCommentTable);
     await con.query(create.createStudyMExchangesRequestTable);
-    await con.query(create.createSessionTable);
-    await con.query(create.createSessionCategoryTable);
-    await con.query(create.createSessionEnrollmentTable);
+    await con.query(create.createTutoringSessionTable);
+    await con.query(create.createTutoringSessionCategoryTable);
+    await con.query(create.createTutoringSessionEnrollmentTable);
   } catch (error: any) {
     console.error(error.stack);
   } finally {

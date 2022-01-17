@@ -36,7 +36,7 @@ export async function registerUser(email:string, name:string, institution: strin
 export async function registerPushNotification(email:string, pushNotificationToken: string) {
   const con = await pool.connect();
   try {
-    await con.query(insert.insertPushNotificationSQL, [pushNotificationToken, email]);
+    await con.query(insert.insertPushNotification, [pushNotificationToken, email]);
     return true;
   } catch (error: any) {
     console.error(error.stack);

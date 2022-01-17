@@ -78,6 +78,8 @@ export async function getStudyMaterials(email: string | undefined) {
           id: row.study_id,
           authorEmail: row.author,
           author: row.author_name,
+          authorRating: row.rating,
+          authorInstitution: row.institution,
           name: row.name,
           description: row.description,
           price: row.price,
@@ -231,7 +233,7 @@ export async function rejectStudyMaterialExchangeRequest(exchangeId: string, ema
   try {
     await con.query('BEGIN');
     const result = (await con.query(select.selectStudyMExchangeR, [exchangeId])).rows.pop();
-    if (result.requestee !== email) {
+    if (result === undefined || result.requestee !== email) {
       await con.query('ROLLBACK');
       console.error('ERROR:rejectStudyMaterialExchangeRequest:InvalidRights');
       return -1;
@@ -254,13 +256,18 @@ export async function acceptStudyMaterialExchangeRequest(exchangeId: string, ema
   try {
     await con.query('BEGIN');
     const result = (await con.query(select.selectStudyMExchangeR, [exchangeId])).rows.pop();
-    if (result.requestee !== email) {
+    if (result === undefined || result.requestee !== email) {
       await con.query('ROLLBACK');
       console.error('ERROR:acceptStudyMaterialExchangeRequest:InvalidRights');
       return -1;
     }
-    await con.query(insert.insertAcquireStudyM, [result.study_id_requestee]);
-    await con.query(remove.removeAcquiredStudyM, [result.study_id_requester]);
+    await con.query(remove.removeAcquiredStudyM, [result.study_id_requester, result.requester]);
+    await con.query(remove.removeAcquiredStudyM, [result.study_id_requestee, result.requestee]);
+
+    await con.query(insert.insertAcquireStudyM, [result.study_id_requestee, result.requester]);
+    await con.query(insert.insertAcquireStudyM, [result.study_id_requester, result.requestee]);
+
+    await con.query(remove.removeStudyMExchangeRs, [exchangeId]);
     await con.query('COMMIT');
     return 1;
   } catch (error: any) {

@@ -15,9 +15,14 @@ export interface StudyMaterialsGETResponse {
 }
 
 // TutoringSessions GET
+export interface TutoringSessionsGetRequest {
+    idToken: string | undefined
+}
+
 export interface TutoringSessionsGETResponse {
     tutoringSessions: Record<string, TutoringSession>
     tutoringSessionsCategories: Record<string, string[]>
+    created: string[],
 }
 
 // StudyMaterialsPendingExchanges GET
@@ -29,12 +34,12 @@ export interface StudyMaterialsPendingExchangesGETResponse {
     studyMaterialsExchanges: StudyMaterialExchange[]
 }
 
-// Enrollments GET
-export interface EnrollmentsGETRequest {
+// My Enrollments GET
+export interface MyEnrollmentsGETRequest {
     idToken: string
 }
 
-export interface EnrollmentsGETResponse {
+export interface MyEnrollmentsGETResponse {
     enrollments: Enrollment[]
 }
 

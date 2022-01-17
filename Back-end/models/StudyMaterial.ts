@@ -4,6 +4,8 @@ export default interface StudyMaterial {
   id: string
   authorEmail: string
   author: string
+  authorRating: string
+  authorInstitution: string
   name: string
   description: string
   price: number

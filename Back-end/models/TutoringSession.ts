@@ -1,14 +1,22 @@
+export interface UserEnroll {
+  email: string,
+  name: string,
+}
+
 export default interface TutoringSession {
   id: string
   tutorEmail: string
   tutor: string
+  tutorRating: string,
+  tutorInstitution: string,
   name: string
   description: string
   price: number
-  categories: string[]
   location: number[]
   date: Date
   duration: number
+  enrolled: UserEnroll[],
+  pendingEnrolls: UserEnroll[],
 }
 
 export interface Enrollment {

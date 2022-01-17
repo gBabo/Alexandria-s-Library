@@ -28,7 +28,7 @@ const createStudyMCategoryTable = `
     CREATE TABLE IF NOT EXISTS "study_material_category" (
         "category" VARCHAR(100) NOT NULL,
         "study_id" INTEGER NOT NULL,
-        PRIMARY KEY ("category"),
+        PRIMARY KEY ("category", "study_id"),
         FOREIGN KEY("study_id") REFERENCES study_material("study_id")
         );`;
 
@@ -43,7 +43,7 @@ const createStudyMLikesTable = `
 
 const createStudyMAcquiredTable = `
     CREATE TABLE IF NOT EXISTS "study_material_acquired" (
-        "study_id" SERIAL,
+        "study_id" INTEGER NOT NULL,
         "user" VARCHAR(100) NOT NULL,
         PRIMARY KEY ("study_id", "user"),
         FOREIGN KEY("study_id") REFERENCES study_material("study_id"),
@@ -97,37 +97,39 @@ const createStudyMExchangesRequestTable = `
         FOREIGN KEY("study_id_requester") REFERENCES study_material("study_id"),
         FOREIGN KEY("study_id_requestee") REFERENCES study_material("study_id") 
         );`;
-const createSessionTable = `
-    CREATE TABLE IF NOT EXISTS "session" (
+
+const createTutoringSessionTable = `
+    CREATE TABLE IF NOT EXISTS "tutoring_session" (
         "session_id" SERIAL,
         "name" VARCHAR(100) NOT NULL,
         "tutor" VARCHAR(100) NOT NULL,
         "description" VARCHAR NOT NULL,
-        "location" VARCHAR(100) NOT NULL,
-        "category" VARCHAR(100) NOT NULL,
+        "latitude" INTEGER NOT NULL,
+        "longitude" INTEGER NOT NULL,
         "price" INT NOT NULL,
-        "date" TIMESTAMP,   
+        "date" TIMESTAMP,
+        "duration" INTEGER  NOT NULL,
         PRIMARY KEY ("session_id"),
         FOREIGN KEY("tutor") REFERENCES users("email")
         );`;
 
-const createSessionCategoryTable = `
-CREATE TABLE IF NOT EXISTS "session_category" (
+const createTutoringSessionCategoryTable = `
+CREATE TABLE IF NOT EXISTS "tutoring_session_category" (
     "category" VARCHAR(100) NOT NULL,
     "session_id" INTEGER NOT NULL,
-    PRIMARY KEY ("category"),
-    FOREIGN KEY("session_id") REFERENCES session("session_id")
+    PRIMARY KEY ("category", "session_id"),
+    FOREIGN KEY("session_id") REFERENCES tutoring_session("session_id")
 );`;
 
-const createSessionEnrollmentTable = `
-    CREATE TABLE IF NOT EXISTS "session_enrollment" (
+const createTutoringSessionEnrollmentTable = `
+    CREATE TABLE IF NOT EXISTS "tutoring_session_enrollment" (
         "enrollment_id" SERIAL,
         "session_id" INTEGER NOT NULL,
         "requester" VARCHAR(100) NOT NULL,
         "status" VARCHAR(100) NOT NULL,
         "date" TIMESTAMP,   
         PRIMARY KEY ("enrollment_id"),
-        FOREIGN KEY("session_id") REFERENCES session("session_id"),
+        FOREIGN KEY("session_id") REFERENCES tutoring_session("session_id"),
         FOREIGN KEY("requester") REFERENCES users("email")
         );`;
 
@@ -141,9 +143,9 @@ const create = {
   createStudyMReviewLikesTable,
   createStudyMaterialReviewCommentTable,
   createStudyMExchangesRequestTable,
-  createSessionTable,
-  createSessionCategoryTable,
-  createSessionEnrollmentTable,
+  createTutoringSessionTable,
+  createTutoringSessionCategoryTable,
+  createTutoringSessionEnrollmentTable,
 };
 
 export default create;

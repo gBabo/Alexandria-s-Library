@@ -1,4 +1,4 @@
-const insertUser = 'INSERT INTO users (email, name, institution, credits, rating) VALUES ($1, $2, $3, 0, 0);';
+const insertUser = 'INSERT INTO users (email, name, institution, credits, rating) VALUES ($1, $2, $3, 20, 0);';
 
 const insertPushNotification = 'UPDATE users SET push_notification_token=$1 WHERE email=$2';
 
@@ -27,12 +27,22 @@ const insertLikeStudyMReview = [
   ' INSERT INTO study_material_review_likes ("user", review_id) VALUES ($1, $2)',
   ' UPDATE study_material_review SET likes=likes+1 WHERE review_id=$1;'];
 
-const insertStudyMaterialExchangeRequest = `INSERT INTO study_material_exchange_requests
-    (requester, requestee, study_id_requester, study_id_requestee, date) VALUES ($1, $2, $3, $4, $5) RETURNING *;;`;
+const insertStudyMExchangeR = `INSERT INTO study_material_exchange_requests
+    (requester, requestee, study_id_requester, study_id_requestee, date) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
+
+const insertTutoringSession = `INSERT INTO tutoring_session 
+    (name, tutor, description, latitude, longitude, price, date, duration) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;`;
+
+const insertTutoringSessionCategory = 'INSERT INTO tutoring_session_category (category, session_id) VALUES ($1, $2);';
+
+const insertEnrollment = `INSERT INTO tutoring_session_enrollment 
+    (session_id, requester, status, date) VALUES ($1, $2, 'Pending', $4)`;
+
+const insertStatusEnrollment = 'UPDATE tutoring_session_enrollment SET status=$1 WHERE enrollment_id=$2';
 
 const insert = {
   insertUser,
-  insertPushNotificationSQL: insertPushNotification,
+  insertPushNotification,
   insertStudyM,
   insertPathToStudyM,
   insertStudyMCategory,
@@ -42,7 +52,11 @@ const insert = {
   insertAcquireStudyM,
   insertLikeStudyM,
   insertLikeStudyMReview,
-  insertStudyMExchangeR: insertStudyMaterialExchangeRequest,
+  insertStudyMExchangeR,
+  insertTutoringSession,
+  insertTutoringSessionCategory,
+  insertEnrollment,
+  insertStatusEnrollment,
 };
 
 export default insert;

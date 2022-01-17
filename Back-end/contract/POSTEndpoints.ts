@@ -42,7 +42,6 @@ export interface TutoringSessionPOSTRequest {
 
 export interface TutoringSessionPOSTResponse {
   tutoringSessionId: string
-  date: Date
 }
 
 // StudyMaterialReview POST
@@ -92,4 +91,9 @@ export interface StudyMaterialExchangePOSTResponse {
 export interface TutoringSessionEnrollmentPOSTRequest {
   idToken: string
   tutoringSessionId: string
+}
+
+export interface TutoringSessionEnrollmentPOSTResponse {
+  enrollmentId: string
+  date: Date
 }

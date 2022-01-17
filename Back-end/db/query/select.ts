@@ -1,8 +1,8 @@
 const selectUser = 'SELECT * FROM users WHERE email=$1;';
 
-const selectStudyMs = `SELECT *FROM study_material
+const selectStudyMs = `SELECT * FROM study_material
     NATURAL JOIN study_material_category
-    NATURAL JOIN (SELECT name AS author_name, email AS author FROM users) u`;
+    NATURAL JOIN (SELECT name AS author_name, email AS author, institution, rating FROM users) u`;
 
 const selectStudyMRightsSQL = `SELECT study_id FROM study_material WHERE study_id=$1 AND author=$2
                                UNION SELECT study_id FROM study_material_acquired WHERE study_id=$1 AND "user"=$2`;
@@ -35,11 +35,29 @@ const selectUserCredit = 'SELECT credits FROM users WHERE email=$1;';
 
 const SelectStudyMPrice = 'SELECT price FROM study_material WHERE study_id=$1;';
 
-const selectStudyMExchangeR = 'SELECT * FROM study_material_exchange_request WHERE exchange_id=$1 ';
+const selectStudyMExchangeR = 'SELECT * FROM study_material_exchange_requests WHERE exchange_id=$1 ';
 
 const selectStudyMExchangeRs = `SELECT * FROM
-    (SELECT * FROM study_material_exchange_request WHERE requestee=$1) e
+    (SELECT * FROM study_material_exchange_requests WHERE requestee=$1) e
     JOIN (SELECT * FROM users) u ON requester=email`;
+
+const selectTutoringSessions = `SELECT * FROM tutoring_session
+    NATURAL JOIN tutoring_session_category
+    NATURAL JOIN (SELECT name AS tutor_name, email AS tutor, rating, institution FROM users) u`;
+
+const selectTutoringSession = 'SELECT * FROM tutoring_session WHERE session_id=$1';
+
+const selectEnrollments = `SELECT * FROM 
+              (SELECT * FROM tutoring_session_enrollment WHERE session_id=$1) as e
+                NATURAL JOIN (SELECT name AS requester_name, email AS requester FROM users) u`;
+
+const selectEnrollment = 'SELECT * FROM tutoring_session_enrollment WHERE enrollment_id=$1';
+
+const selectTutoringSessionEnrollments = `SELECT * FROM (
+    SELECT * FROM tutoring_session_enrollment WHERE session_id=$1) as t
+    NATURAL JOIN (SELECT name AS requester_name, email AS requester FROM users) u;`;
+
+const selectMyEnrollments = 'SELECT * FROM tutoring_session_enrollment WHERE requester=$1;';
 
 const select = {
   selectUser,
@@ -56,6 +74,12 @@ const select = {
   selectStudyMsAcquired,
   selectStudyMExchangeR,
   selectStudyMExchangeRs,
+  selectTutoringSessions,
+  selectTutoringSession,
+  selectTutoringSessionEnrollments,
+  selectMyEnrollments,
+  selectEnrollments,
+  selectEnrollment,
 };
 
 export default select;
