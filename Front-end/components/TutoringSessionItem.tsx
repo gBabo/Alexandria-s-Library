@@ -1,87 +1,69 @@
-import React, { ComponentType } from 'react';
+import React from 'react';
 import {
-  GestureResponderEvent,
-  StyleSheet,
-  View,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  TouchableNativeFeedbackProps,
-  TouchableOpacityProps,
-  StyleProp,
-  ViewStyle,
-  Platform,
+  GestureResponderEvent, StyleSheet, View, ViewStyle,
 } from 'react-native';
-
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
-import { RegularText, SemiBoldText } from './UI/StyledText';
-import Card from './UI/Card';
+
 import TutoringSession from '../models/TutoringSession';
+import { RegularText, SemiBoldText } from './UI/StyledText';
+import CustomButton from './UI/CustomButton';
 
 interface TutoringSessionItemProps {
   tutoringSession: TutoringSession
   onPress: (event: GestureResponderEvent) => void
-  containerStyle: StyleProp<ViewStyle>
+  containerStyle: ViewStyle
+  style: ViewStyle
 }
 
 export default function TutoringSessionItem({
   tutoringSession,
   onPress,
   containerStyle,
+  style,
 }: TutoringSessionItemProps) {
-  const TouchableComponent: ComponentType<TouchableOpacityProps | TouchableNativeFeedbackProps> = Platform.OS === 'android'
-    ? TouchableNativeFeedback
-    : TouchableOpacity;
-
   return (
-    <Card style={containerStyle}>
-      <TouchableComponent onPress={onPress}>
-        <View style={styles.innerContainer}>
-          <View style={styles.lineReverse}>
-            <View style={styles.iconContainer}>
-              <SemiBoldText style={styles.text}>{tutoringSession.price}</SemiBoldText>
-              <FontAwesome5
-                name="ticket-alt"
-                size={24}
-                color="#3949AB"
-                style={styles.icon}
-              />
-            </View>
-            <View style={styles.textBetweenIcons}>
-              <SemiBoldText numberOfLines={2} style={styles.text}>
-                {tutoringSession.name}
-              </SemiBoldText>
-            </View>
+    <View style={containerStyle}>
+      <CustomButton onPress={onPress} style={style}>
+        <View style={styles.lineReverse}>
+          <View style={styles.iconContainer}>
+            <SemiBoldText style={styles.text}>{tutoringSession.price}</SemiBoldText>
+            <FontAwesome5
+              name="ticket-alt"
+              size={24}
+              color="#3949AB"
+              style={styles.icon}
+            />
           </View>
-          <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Institution</SemiBoldText>
-            {`: ${tutoringSession.tutorInstitution}`}
-          </RegularText>
-          <View style={styles.line}>
-            <View style={styles.iconContainer}>
-              <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
-              <SemiBoldText style={styles.text}>
-                {tutoringSession.tutorRating}
-              </SemiBoldText>
-            </View>
-            <View style={styles.textBetweenIcons}>
-              <RegularText numberOfLines={1} style={styles.text}>
-                <SemiBoldText>Author</SemiBoldText>
-                {`: ${tutoringSession.tutor}`}
-              </RegularText>
-            </View>
+          <View style={styles.textBetweenIcons}>
+            <SemiBoldText numberOfLines={2} style={styles.text}>
+              {tutoringSession.name}
+            </SemiBoldText>
           </View>
         </View>
-      </TouchableComponent>
-    </Card>
+        <RegularText numberOfLines={1} style={styles.text}>
+          <SemiBoldText>Institution</SemiBoldText>
+          {`: ${tutoringSession.tutorInstitution}`}
+        </RegularText>
+        <View style={styles.line}>
+          <View style={styles.iconContainer}>
+            <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
+            <SemiBoldText style={styles.text}>
+              {tutoringSession.tutorRating}
+            </SemiBoldText>
+          </View>
+          <View style={styles.textBetweenIcons}>
+            <RegularText numberOfLines={1} style={styles.text}>
+              <SemiBoldText>Author</SemiBoldText>
+              {`: ${tutoringSession.tutor}`}
+            </RegularText>
+          </View>
+        </View>
+      </CustomButton>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  innerContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-  },
   lineReverse: {
     width: '100%',
     flexDirection: 'row-reverse',

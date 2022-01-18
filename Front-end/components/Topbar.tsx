@@ -1,21 +1,11 @@
-import React, {
-  ComponentType, Dispatch, SetStateAction, useState,
-} from 'react';
-import {
-  Platform,
-  StyleSheet,
-  View,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  TouchableNativeFeedbackProps,
-  TouchableOpacityProps,
-} from 'react-native';
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
-import Card from './UI/Card';
 import Searchbar from './Searchbar';
 import SortingOption from './SortingOption';
+import CustomButton from './UI/CustomButton';
 
 export interface SortingMethod<T> {
   value: keyof T
@@ -35,10 +25,6 @@ export default function Topbar<T>({
   sortingMethodState,
   sortingOptions,
 }: SearchBarProps<T>) {
-  const TouchableComponent: ComponentType<TouchableOpacityProps | TouchableNativeFeedbackProps> = Platform.OS === 'android'
-    ? TouchableNativeFeedback
-    : TouchableOpacity;
-
   const sortingOptionsVisible = useState(false);
   const orderState = sortingOptions
     ? useState<('Ascending' | 'Descending' | 'Unselected')[]>(Array(sortingOptions.length)
@@ -49,27 +35,21 @@ export default function Topbar<T>({
     <View style={styles.container}>
       <View style={styles.bar}>
         <Searchbar placeholder={searchPlaceholder} valueState={searchState} />
-        {sortingMethodState
-                && (
-                <Card style={styles.button}>
-                  <TouchableComponent
-                    onPress={() => sortingOptionsVisible[1]((value) => !value)}
-                  >
-                    <View style={[styles.icon, {
-                      backgroundColor: !sortingOptionsVisible[0] ? Colors.primary : Colors.white,
-                      borderColor: !sortingOptionsVisible[0] ? Colors.white : Colors.primary,
-                    }]}
-                    >
-                      <FontAwesome
-                        name="sliders"
-                        size={30}
-                        color={!sortingOptionsVisible[0] ? Colors.white : Colors.primary}
-                      />
-                    </View>
-                  </TouchableComponent>
-                </Card>
-                )}
-
+        {sortingMethodState && (
+        <CustomButton
+          onPress={() => sortingOptionsVisible[1]((value) => !value)}
+          style={{
+            backgroundColor: !sortingOptionsVisible[0] ? Colors.primary : Colors.white,
+            borderColor: !sortingOptionsVisible[0] ? Colors.white : Colors.primary,
+          }}
+        >
+          <FontAwesome
+            name="sliders"
+            size={30}
+            color={!sortingOptionsVisible[0] ? Colors.white : Colors.primary}
+          />
+        </CustomButton>
+        )}
       </View>
       {sortingMethodState && sortingOptions && orderState && sortingOptionsVisible[0] && (
         <View style={styles.sortingOptions}>
@@ -111,6 +91,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingTop: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   sortingOptions: {
     top: 66,
@@ -118,17 +101,5 @@ const styles = StyleSheet.create({
     width: 333,
     position: 'absolute',
     zIndex: 1,
-  },
-  button: {
-    marginTop: 5,
-    marginRight: 5,
-    width: 50,
-    height: 50,
-  },
-  icon: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
   },
 });

@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import User from '../../models/User';
 import { ThunkApiConfig } from '../index';
 import { onError, onPending, onUpdate } from '../../utils/ThunkActions';
-import { user } from '../../constants/DummyUser';
+import { dummyUser } from '../../constants/DummyUser';
 
 interface State {
   isLoading: boolean
@@ -12,7 +12,7 @@ interface State {
 
 const initialState: State = {
   isLoading: false,
-  user,
+  user: dummyUser,
 };
 
 export const getUser = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(

@@ -43,9 +43,11 @@ export default function CategoryGrid({
         marginVertical,
         width,
         height,
-        borderWidth: 1,
-        borderColor: Colors.primary,
+      }}
+      style={{
+        flexGrow: 1,
         backgroundColor: '#E0F7FA',
+        borderColor: Colors.primary,
       }}
     />
   );

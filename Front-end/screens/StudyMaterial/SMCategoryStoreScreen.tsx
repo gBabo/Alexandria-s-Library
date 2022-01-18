@@ -42,9 +42,10 @@ export default function SMCategoryStoreScreen({
       containerStyle={{
         marginHorizontal,
         marginVertical,
-        borderWidth: 1,
-        borderColor: Colors.primary,
+      }}
+      style={{
         backgroundColor: '#E0F7FA',
+        borderColor: Colors.primary,
       }}
     />
   );

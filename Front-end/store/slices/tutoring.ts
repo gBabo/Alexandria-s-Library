@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import TutoringSession, { Enrollment } from '../../models/TutoringSession';
 import {
-  tutoringSessions,
-  tutoringSessionsCategories,
-  enrollments,
+  dummyTutoringSessions,
+  dummyTutoringSessionsCategories,
+  dummyEnrollments,
 } from '../../constants/DummyTutoringSessions';
 import { ThunkApiConfig } from '../index';
 import { onError, onPending, onUpdate } from '../../utils/ThunkActions';
@@ -17,9 +17,9 @@ interface State {
 }
 
 const initialState: State = {
-  tutoringSessions,
-  tutoringSessionsCategories,
-  enrollments,
+  tutoringSessions: dummyTutoringSessions,
+  tutoringSessionsCategories: dummyTutoringSessionsCategories,
+  enrollments: dummyEnrollments,
   isLoading: false,
 };
 

@@ -1,38 +1,55 @@
-import React, { ReactNode } from 'react';
-import { GestureResponderEvent, StyleSheet, TouchableHighlight } from 'react-native';
+import React, { ComponentType, ReactNode } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  TouchableNativeFeedback,
+  TouchableOpacity,
+  TouchableNativeFeedbackProps,
+  TouchableOpacityProps,
+  GestureResponderEvent,
+  ViewStyle,
+} from 'react-native';
 
-import Colors from '../../constants/Colors';
+import { View } from './Themed';
 import Card from './Card';
 
 interface CustomButtonProps {
   onPress: (event: GestureResponderEvent) => void
   children: ReactNode
-  backgroundColor?: string
+  style: ViewStyle
 }
 
 export default function CustomButton({
   onPress,
   children,
-  backgroundColor,
+  style,
 }: CustomButtonProps) {
+  const TouchableComponent: ComponentType<TouchableOpacityProps | TouchableNativeFeedbackProps> = Platform.OS === 'android'
+    ? TouchableNativeFeedback
+    : TouchableOpacity;
+
   return (
-    <TouchableHighlight activeOpacity={0.6} onPress={onPress}>
-      <Card style={[styles.container, {
-        backgroundColor: backgroundColor || Colors.tint,
-        borderColor: Colors.primary,
-      }]}
-      >
-        {children}
-      </Card>
-    </TouchableHighlight>
+    <Card style={styles.container}>
+      <TouchableComponent onPress={onPress}>
+        <View style={[styles.button, style]}>
+          {children}
+        </View>
+      </TouchableComponent>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  button: {
     alignItems: 'center',
     justifyContent: 'space-evenly',
-    borderWidth: 1,
     padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
   },
 });

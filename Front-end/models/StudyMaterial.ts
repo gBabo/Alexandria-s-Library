@@ -5,6 +5,7 @@ export default interface StudyMaterial {
   authorInstitution: string
   authorRating: number
   likes: number
+  hasLiked: boolean
   name: string
   description: string
   price: number

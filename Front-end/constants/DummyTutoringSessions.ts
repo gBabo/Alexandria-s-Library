@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import TutoringSession, { Enrollment } from '../models/TutoringSession';
 
-export const tutoringSessions: Record<string, TutoringSession> = {
+export const dummyTutoringSessions: Record<string, TutoringSession> = {
   id1: {
     id: 'id1',
     tutorEmail: 'ricardo.grade@tecnico.ulisboa.pt',
@@ -50,7 +50,7 @@ export const tutoringSessions: Record<string, TutoringSession> = {
   },
 };
 
-export const tutoringSessionsCategories: Record<string, string[]> = {
+export const dummyTutoringSessionsCategories: Record<string, string[]> = {
   Mathematics: ['id1', 'id2', 'id3'],
   Physics: ['id1', 'id2', 'id3'],
   Chemistry: ['id1', 'id2', 'id3'],
@@ -58,4 +58,4 @@ export const tutoringSessionsCategories: Record<string, string[]> = {
   'Cyber-Security': ['id1', 'id2', 'id3'],
 };
 
-export const enrollments: Enrollment[] = [];
+export const dummyEnrollments: Enrollment[] = [];

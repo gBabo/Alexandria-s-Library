@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import StudyMaterial, { StudyMaterialExchange } from '../models/StudyMaterial';
 
-export const studyMaterials: Record<string, StudyMaterial> = {
+export const dummyStudyMaterials: Record<string, StudyMaterial> = {
   id1: {
     id: 'id1',
     authorEmail: 'ricardo.grade@tecnico.ulisboa.pt',
@@ -10,6 +10,7 @@ export const studyMaterials: Record<string, StudyMaterial> = {
     authorInstitution: 'FCT',
     authorRating: 3,
     likes: 5,
+    hasLiked: true,
     name: 'Algebra Exam Exercises',
     description: 'These are the solutions of the Algebra Exam Exercises that I corrected with the help of the Professor.',
     price: 1,
@@ -26,6 +27,7 @@ export const studyMaterials: Record<string, StudyMaterial> = {
     authorInstitution: 'IST',
     authorRating: 4,
     likes: 10,
+    hasLiked: false,
     name: 'Discrete Mathematics Exam Exercises',
     description: 'These are the solutions of the Discrete Mathematics Exam Exercises that I corrected with the help of the Professor.',
     price: 2,
@@ -42,6 +44,7 @@ export const studyMaterials: Record<string, StudyMaterial> = {
     authorInstitution: 'IST',
     authorRating: 4,
     likes: 15,
+    hasLiked: false,
     name: 'Calculus Exam Exercises',
     description: 'These are the solutions of the Calculus Exam Exercises that I corrected with the help of the Professor.',
     price: 3,
@@ -53,7 +56,7 @@ export const studyMaterials: Record<string, StudyMaterial> = {
   },
 };
 
-export const studyMaterialsCategories: Record<string, string[]> = {
+export const dummyStudyMaterialsCategories: Record<string, string[]> = {
   Mathematics: ['id1', 'id2', 'id3'],
   Physics: ['id1', 'id2', 'id3'],
   Chemistry: ['id1', 'id2', 'id3'],
@@ -61,4 +64,8 @@ export const studyMaterialsCategories: Record<string, string[]> = {
   'Cyber-Security': ['id1', 'id2', 'id3'],
 };
 
-export const studyMaterialsExchanges: StudyMaterialExchange[] = [];
+export const dummyStudyMaterialsExchanges: StudyMaterialExchange[] = [];
+
+export const dummyUploadedStudyMaterials: string[] = [];
+
+export const dummyAcquiredStudyMaterials: string[] = [];
