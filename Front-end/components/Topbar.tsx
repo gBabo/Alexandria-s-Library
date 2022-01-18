@@ -17,52 +17,38 @@ import Card from './UI/Card';
 import Searchbar from './Searchbar';
 import SortingOption from './SortingOption';
 
-export interface SortingMethod {
-  value: string
+export interface SortingMethod<T> {
+  value: keyof T
   order: 'Ascending' | 'Descending'
 }
 
-interface SearchBarProps {
+interface SearchBarProps<T> {
+  searchPlaceholder: string
   searchState: [string, Dispatch<SetStateAction<string>>]
-  sortingMethodState?: [SortingMethod, Dispatch<SetStateAction<SortingMethod>>]
+  sortingMethodState?: [SortingMethod<T>, Dispatch<SetStateAction<SortingMethod<T>>>]
+  sortingOptions?: { label: string, value: keyof T }[]
 }
 
-export default function Topbar({
+export default function Topbar<T>({
+  searchPlaceholder,
   searchState,
   sortingMethodState,
-}: SearchBarProps) {
+  sortingOptions,
+}: SearchBarProps<T>) {
   const TouchableComponent: ComponentType<TouchableOpacityProps | TouchableNativeFeedbackProps> = Platform.OS === 'android'
     ? TouchableNativeFeedback
     : TouchableOpacity;
 
   const sortingOptionsVisible = useState(false);
-  const sortingOptions = [
-    {
-      label: 'Likes',
-      value: 'likes',
-      orderState: useState('Unselected'),
-    },
-    {
-      label: 'Author Rating',
-      value: 'authorRating',
-      orderState: useState('Unselected'),
-    },
-    {
-      label: 'Publication Date',
-      value: 'date',
-      orderState: useState('Unselected'),
-    },
-    {
-      label: 'Price',
-      value: 'price',
-      orderState: useState('Unselected'),
-    },
-  ];
+  const orderState = sortingOptions
+    ? useState<('Ascending' | 'Descending' | 'Unselected')[]>(Array(sortingOptions.length)
+      .fill('Unselected'))
+    : undefined;
 
   return (
     <View style={styles.container}>
       <View style={styles.bar}>
-        <Searchbar valueState={searchState} />
+        <Searchbar placeholder={searchPlaceholder} valueState={searchState} />
         {sortingMethodState
                 && (
                 <Card style={styles.button}>
@@ -85,22 +71,22 @@ export default function Topbar({
                 )}
 
       </View>
-      {sortingMethodState && sortingOptionsVisible[0] && (
+      {sortingMethodState && sortingOptions && orderState && sortingOptionsVisible[0] && (
         <View style={styles.sortingOptions}>
           {sortingOptions.map(({
             label,
             value,
-            orderState,
           }, index) => (
             <SortingOption
               key={index.toString()}
               label={label}
-              valueState={orderState}
+              value={orderState[0][index]}
               onValueChange={(itemValue) => {
+                const newOrderState = Array(sortingOptions.length)
+                  .fill('Unselected');
+                newOrderState[index] = itemValue;
+                orderState[1](newOrderState);
                 if (itemValue !== 'Unselected') {
-                  sortingOptions.forEach((sortingOption, i) => {
-                    if (index !== i) sortingOption.orderState[1]('Unselected');
-                  });
                   sortingOptionsVisible[1](false);
                   sortingMethodState[1]({
                     value,

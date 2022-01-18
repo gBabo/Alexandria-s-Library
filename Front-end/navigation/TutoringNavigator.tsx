@@ -9,6 +9,8 @@ import {
 import TStoreScreen from '../screens/Tutoring/TStoreScreen';
 import TEnrolledScreen from '../screens/Tutoring/TEnrolledScreen';
 import TScheduledScreen from '../screens/Tutoring/TScheduledScreen';
+import TCategoryStoreScreen from '../screens/Tutoring/TCategoryStoreScreen';
+import TutoringSessionScreen from '../screens/Tutoring/TutoringSessionScreen';
 
 const TStoreStack = createNativeStackNavigator<TStoreStackParamList>();
 const TEnrolledStack = createNativeStackNavigator<TEnrolledStackParamList>();
@@ -18,6 +20,8 @@ export function TStoreNavigator() {
   return (
     <TStoreStack.Navigator screenOptions={{ headerShown: false }}>
       <TStoreStack.Screen name="Store" component={TStoreScreen} />
+      <TStoreStack.Screen name="CategoryStore" component={TCategoryStoreScreen} />
+      <TStoreStack.Screen name="TutoringSession" component={TutoringSessionScreen} />
     </TStoreStack.Navigator>
   );
 }

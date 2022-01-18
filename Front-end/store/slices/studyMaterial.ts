@@ -26,8 +26,7 @@ const initialState: State = {
 export const getStudyMaterials = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
   'studyMaterial/getStudyMaterials',
   // TODO
-  async () => ({})
-  ,
+  async () => ({}),
 );
 
 const studyMaterialSlice = createSlice({

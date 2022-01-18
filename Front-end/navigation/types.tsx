@@ -51,6 +51,8 @@ export type SMUploadedStackParamList = {
 
 export type TStoreStackParamList = {
   Store: undefined;
+  CategoryStore: { category: string };
+  TutoringSession: { id: string };
 };
 
 export type TEnrolledStackParamList = {

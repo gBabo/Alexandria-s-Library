@@ -2,42 +2,42 @@ import * as React from 'react';
 import { useLayoutEffect } from 'react';
 import { useIsFocused } from '@react-navigation/core';
 
-import { SMStoreStackScreenProps } from '../../navigation/types';
+import { TStoreStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
-import StudyMaterial from '../../models/StudyMaterial';
 import Loading from '../../components/UI/Loading';
 import ItemList, { RenderItemProps } from '../../components/ItemList';
-import StudyMaterialItem from '../../components/StudyMaterialItem';
+import TutoringSessionItem from '../../components/TutoringSessionItem';
 import useAppSelector from '../../hooks/useAppSelector';
 import useAppDispatch from '../../hooks/useAppDispatch';
-import { getStudyMaterials } from '../../store/slices/studyMaterial';
+import TutoringSession from '../../models/TutoringSession';
+import { getTutoringSessions } from '../../store/slices/tutoring';
 
-export default function SMCategoryStoreScreen({
+export default function TCategoryStoreScreen({
   navigation,
   route,
-}: SMStoreStackScreenProps<'CategoryStore'>) {
+}: TStoreStackScreenProps<'CategoryStore'>) {
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
-  const studyMaterialsCategories = useAppSelector((s) => s.studyMaterial.studyMaterialsCategories);
-  const studyMaterials = useAppSelector((s) => s.studyMaterial.studyMaterials);
+  const isLoading = useAppSelector((s) => s.tutoring.isLoading);
+  const tutoringSessionsCategories = useAppSelector((s) => s.tutoring.tutoringSessionsCategories);
+  const tutoringSessions = useAppSelector((s) => s.tutoring.tutoringSessions);
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
     if (isFocused) navigation.getParent()!.setOptions({ headerTitle: `${route.params.category}: Store` });
   }, [navigation, isFocused]);
 
-  const items = studyMaterialsCategories[route.params.category]
-    .map((studyMaterialId) => studyMaterials[studyMaterialId]);
+  const items = tutoringSessionsCategories[route.params.category]
+    .map((tutoringSessionId) => tutoringSessions[tutoringSessionId]);
 
   const renderItem = ({
     dataInfo,
     marginHorizontal,
     marginVertical,
-  }: RenderItemProps<StudyMaterial>) => (
-    <StudyMaterialItem
-      studyMaterial={dataInfo.item}
+  }: RenderItemProps<TutoringSession>) => (
+    <TutoringSessionItem
+      tutoringSession={dataInfo.item}
       onPress={() => {
-        navigation.navigate('StudyMaterial', { id: dataInfo.item.id });
+        navigation.navigate('TutoringSession', { id: dataInfo.item.id });
       }}
       containerStyle={{
         marginHorizontal,
@@ -54,19 +54,15 @@ export default function SMCategoryStoreScreen({
   ) : (
     <ItemList
       items={items}
-      keys={['name', 'author', 'authorEmail', 'authorInstitution', 'type']}
-      searchPlaceholder="Search Study Materials"
+      keys={['name', 'tutor', 'tutorEmail', 'tutorInstitution']}
+      searchPlaceholder="Search Tutoring Sessions"
       sortingOptions={[
         {
-          label: 'Likes',
-          value: 'likes',
+          label: 'Tutor Rating',
+          value: 'tutorRating',
         },
         {
-          label: 'Author Rating',
-          value: 'authorRating',
-        },
-        {
-          label: 'Publication Date',
+          label: 'Session Date',
           value: 'date',
         },
         {
@@ -80,7 +76,7 @@ export default function SMCategoryStoreScreen({
       }}
       renderItem={renderItem}
       refreshing={isLoading}
-      onRefresh={() => dispatch(getStudyMaterials())}
+      onRefresh={() => dispatch(getTutoringSessions())}
     />
   );
 }

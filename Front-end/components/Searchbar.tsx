@@ -5,10 +5,14 @@ import { Feather } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
 
 interface SearchBarProps {
+  placeholder: string,
   valueState: [string, Dispatch<SetStateAction<string>>]
 }
 
-export default function Searchbar({ valueState }: SearchBarProps) {
+export default function Searchbar({
+  placeholder,
+  valueState,
+}: SearchBarProps) {
   return (
     <View style={styles.container}>
       <Feather
@@ -17,7 +21,7 @@ export default function Searchbar({ valueState }: SearchBarProps) {
         size={20}
       />
       <TextInput
-        placeholder="Search"
+        placeholder={placeholder}
         value={valueState[0]}
         onChangeText={valueState[1]}
         style={styles.input}

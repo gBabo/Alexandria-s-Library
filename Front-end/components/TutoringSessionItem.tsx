@@ -12,22 +12,22 @@ import {
   Platform,
 } from 'react-native';
 
-import { AntDesign, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import { RegularText, SemiBoldText } from './UI/StyledText';
 import Card from './UI/Card';
-import StudyMaterial from '../models/StudyMaterial';
+import TutoringSession from '../models/TutoringSession';
 
-interface CategoryTileProps {
-  studyMaterial: StudyMaterial
+interface TutoringSessionItemProps {
+  tutoringSession: TutoringSession
   onPress: (event: GestureResponderEvent) => void
   containerStyle: StyleProp<ViewStyle>
 }
 
-export default function StudyMaterialTile({
-  studyMaterial,
+export default function TutoringSessionItem({
+  tutoringSession,
   onPress,
   containerStyle,
-}: CategoryTileProps) {
+}: TutoringSessionItemProps) {
   const TouchableComponent: ComponentType<TouchableOpacityProps | TouchableNativeFeedbackProps> = Platform.OS === 'android'
     ? TouchableNativeFeedback
     : TouchableOpacity;
@@ -36,23 +36,9 @@ export default function StudyMaterialTile({
     <Card style={containerStyle}>
       <TouchableComponent onPress={onPress}>
         <View style={styles.innerContainer}>
-          <View style={styles.line}>
+          <View style={styles.lineReverse}>
             <View style={styles.iconContainer}>
-              <MaterialIcons
-                name="thumb-up"
-                size={24}
-                color="#1E88E5"
-                style={styles.icon}
-              />
-              <SemiBoldText style={styles.text}>{studyMaterial.likes}</SemiBoldText>
-            </View>
-            <View style={styles.textBetweenIcons}>
-              <SemiBoldText numberOfLines={2} style={styles.text}>
-                {studyMaterial.name}
-              </SemiBoldText>
-            </View>
-            <View style={styles.iconContainer}>
-              <SemiBoldText style={styles.text}>{studyMaterial.price}</SemiBoldText>
+              <SemiBoldText style={styles.text}>{tutoringSession.price}</SemiBoldText>
               <FontAwesome5
                 name="ticket-alt"
                 size={24}
@@ -60,22 +46,27 @@ export default function StudyMaterialTile({
                 style={styles.icon}
               />
             </View>
+            <View style={styles.textBetweenIcons}>
+              <SemiBoldText numberOfLines={2} style={styles.text}>
+                {tutoringSession.name}
+              </SemiBoldText>
+            </View>
           </View>
-          <RegularText style={styles.text}>
+          <RegularText numberOfLines={1} style={styles.text}>
             <SemiBoldText>Institution</SemiBoldText>
-            {`: ${studyMaterial.authorInstitution}`}
+            {`: ${tutoringSession.tutorInstitution}`}
           </RegularText>
           <View style={styles.line}>
             <View style={styles.iconContainer}>
               <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
               <SemiBoldText style={styles.text}>
-                {studyMaterial.authorRating}
+                {tutoringSession.tutorRating}
               </SemiBoldText>
             </View>
             <View style={styles.textBetweenIcons}>
-              <RegularText style={styles.text}>
+              <RegularText numberOfLines={1} style={styles.text}>
                 <SemiBoldText>Author</SemiBoldText>
-                {`: ${studyMaterial.author}`}
+                {`: ${tutoringSession.tutor}`}
               </RegularText>
             </View>
           </View>
@@ -90,6 +81,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
+  },
+  lineReverse: {
+    width: '100%',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    marginVertical: 10,
   },
   line: {
     width: '100%',

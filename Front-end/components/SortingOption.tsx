@@ -1,6 +1,4 @@
-import React, {
-  ComponentType, Dispatch, SetStateAction, useRef,
-} from 'react';
+import React, { ComponentType, useRef } from 'react';
 import {
   Platform,
   StyleSheet,
@@ -16,13 +14,13 @@ import Colors from '../constants/Colors';
 
 interface SortingOptionProps {
   label: string
-  valueState: [string, Dispatch<SetStateAction<string>>]
+  value: 'Ascending' | 'Descending' | 'Unselected'
   onValueChange: ((itemValue: any, itemPosition: number) => void)
 }
 
 export default function SortingOption({
   label,
-  valueState,
+  value,
   onValueChange,
 }: SortingOptionProps) {
   const pickerRef = useRef<Picker<string>>(null);
@@ -35,11 +33,8 @@ export default function SortingOption({
       <View style={styles.container}>
         <Picker
           ref={pickerRef}
-          selectedValue={valueState[0]}
-          onValueChange={(itemValue, itemPosition) => {
-            valueState[1](itemValue);
-            onValueChange(itemValue, itemPosition);
-          }}
+          selectedValue={value}
+          onValueChange={onValueChange}
           mode="dropdown"
           dropdownIconColor={Colors.primary}
         >
