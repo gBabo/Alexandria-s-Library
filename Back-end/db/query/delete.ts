@@ -1,6 +1,6 @@
 const removeLikeStudyM = [
   'DELETE FROM study_material_likes WHERE study_id=$1;',
-  'UPDATE study_material SET likes=likes+1 WHERE study_id=$1;'];
+  'UPDATE study_material SET likes=likes-1 WHERE study_id=$1;'];
 
 const removeLikeStudyMReview = [
   'DELETE FROM study_material_review_likes WHERE review_id=$1;',

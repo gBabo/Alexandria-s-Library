@@ -17,6 +17,8 @@ const insertStudyMReviewComment = `INSERT INTO study_material_review_comment
 
 const insertUserCredit = 'UPDATE users SET credits=credits+$1 WHERE email=$2;';
 
+const insertUserRating = 'UPDATE users SET rating=rating+$1 WHERE email=$2;';
+
 const insertAcquireStudyM = ' INSERT INTO study_material_acquired (study_id, "user") VALUES ($1, $2);';
 
 const insertLikeStudyM = [
@@ -36,7 +38,7 @@ const insertTutoringSession = `INSERT INTO tutoring_session
 const insertTutoringSessionCategory = 'INSERT INTO tutoring_session_category (category, session_id) VALUES ($1, $2);';
 
 const insertEnrollment = `INSERT INTO tutoring_session_enrollment 
-    (session_id, requester, status, date) VALUES ($1, $2, 'Pending', $4)`;
+    (session_id, requester, status, date) VALUES ($1, $2, 'Pending', $3) RETURNING *;`;
 
 const insertStatusEnrollment = 'UPDATE tutoring_session_enrollment SET status=$1 WHERE enrollment_id=$2';
 
@@ -49,6 +51,7 @@ const insert = {
   insertStudyMReviewComment,
   insertStudyMReview,
   insertUserCredit,
+  insertUserRating,
   insertAcquireStudyM,
   insertLikeStudyM,
   insertLikeStudyMReview,

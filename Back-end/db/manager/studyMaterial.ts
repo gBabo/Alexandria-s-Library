@@ -118,14 +118,16 @@ export async function purchaseStudyMaterial(email: string, studyMaterialId: stri
     await con.query('BEGIN');
 
     const { credits } = (await con.query(select.selectUserCredit, [email])).rows.pop();
-    const { price } = (await con.query(select.SelectStudyMPrice, [studyMaterialId])).rows.pop();
+    const query = select.SelectStudyMPrice;
+    const { price, author } = (await con.query(query, [studyMaterialId])).rows.pop();
     if (credits < price) {
       await con.query('ROLLBACK');
       console.error('ERROR:purchaseStudyMaterial: No Sufficient Credits');
       return -1;
     }
 
-    await con.query(insert.insertUserCredit, [-(credits - price), email]);
+    await con.query(insert.insertUserCredit, [-price, email]);
+    await con.query(insert.insertUserCredit, [price, author]);
     await con.query(insert.insertAcquireStudyM, [studyMaterialId, email]);
     await con.query('COMMIT');
     return 1;
@@ -139,18 +141,23 @@ export async function purchaseStudyMaterial(email: string, studyMaterialId: stri
   }
 }
 
-export async function like(email: string, id: string, queries: any[]) {
+export async function like(email: string, id: string, queries: Record<string, string>) {
   const con = await pool.connect();
   try {
     await con.query('BEGIN');
-    const cnt = (await con.query(queries[0], [email, id])).rowCount;
+    const cnt = (await con.query(queries.selectLikedItem, [email, id])).rowCount;
+    let rating;
     if (cnt) {
-      await con.query(queries[1][0], [id]);
-      await con.query(queries[1][1], [id]);
+      rating = -1;
+      await con.query(queries.deleteLike, [id]);
+      await con.query(queries.removeLikeItem, [id]);
     } else {
-      await con.query(queries[2][0], [email, id]);
-      await con.query(queries[2][1], [id]);
+      rating = 1;
+      await con.query(queries.insertLike, [email, id]);
+      await con.query(queries.addLikeItem, [id]);
     }
+    const { author } = (await con.query(queries.selectAuthor, [id])).rows.pop();
+    await con.query(insert.insertUserRating, [rating, author]);
     await con.query('COMMIT');
   } catch (error: any) {
     await con.query('ROLLBACK');
@@ -161,8 +168,15 @@ export async function like(email: string, id: string, queries: any[]) {
   }
 }
 export async function likeStudyMaterial(email: string, studyMaterialId: string) {
-  await like(email, studyMaterialId, [select.selectLikedStudyM,
-    remove.removeLikeStudyM, insert.insertLikeStudyM]);
+  const queries: Record<string, string> = {
+    selectLikedItem: select.selectLikedStudyM,
+    deleteLike: remove.removeLikeStudyM[0],
+    removeLikeItem: remove.removeLikeStudyM[1],
+    insertLike: insert.insertLikeStudyM[0],
+    addLikeItem: insert.insertLikeStudyM[0],
+    selectAuthor: select.selectStudyMAuthor,
+  };
+  await like(email, studyMaterialId, queries);
 }
 
 export async function createStudyMaterialExchangeRequest(

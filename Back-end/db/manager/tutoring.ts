@@ -2,7 +2,7 @@ import { PoolClient } from 'pg';
 import pool from '../index';
 import insert from '../query/insert';
 import select from '../query/select';
-import TutoringSession, { Enrollment, UserEnroll } from '../../models/TutoringSession';
+import { Enrollment, UserEnroll } from '../../models/TutoringSession';
 
 export async function createTutoringSession(
   name:string,
@@ -58,7 +58,7 @@ export async function enroll(
       console.error('ERROR:enroll: No Sufficient Credits');
       return -1;
     }
-    await con.query(insert.insertUserCredit, [-(credits - price), email]);
+    await con.query(insert.insertUserCredit, [-price, email]);
     const result = await con.query(insert.insertEnrollment, [sessionId, email, date.toISOString()]);
     const enrollmentId = result.rows.pop().enrollment_id;
     await con.query('COMMIT');
@@ -78,7 +78,6 @@ export async function settleEnrollment(enrollmentId: string, email: string, acce
   try {
     await con.query('BEGIN');
     const result = (await con.query(select.selectEnrollment, [enrollmentId])).rows.pop();
-
     if (result === undefined || result.tutor !== email) {
       await con.query('ROLLBACK');
       console.error('ERROR:settleEnrollment:InvalidRights');
@@ -126,8 +125,9 @@ export async function getMyEnrollments(email: string) {
   }
 }
 
-export async function getSessionEnrollments(con: PoolClient, sessionId: string) {
+async function getSessionEnrollments(con: PoolClient, sessionId: string) {
   const { rows } = await con.query(select.selectEnrollments, [sessionId]);
+
   const enrolled: UserEnroll[] = [];
   const pendingEnrolls: UserEnroll[] = [];
   for (let i = 0; i < rows.length; i++) {
@@ -136,8 +136,8 @@ export async function getSessionEnrollments(con: PoolClient, sessionId: string) 
       email: row.requester,
       name: row.requester_name,
     };
-    if (row.Status === 'Pending') pendingEnrolls.push(user);
-    else if (row.Status === 'Accepted') enrolled.push(user);
+    if (row.status === 'Pending') pendingEnrolls.push(user);
+    else if (row.status === 'Accepted') { enrolled.push(user); }
   }
   return { enrolled, pendingEnrolls };
 }
