@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { RefObject, useCallback, useRef } from 'react';
+import {
+  RefObject, useCallback, useLayoutEffect, useRef,
+} from 'react';
 import { StyleSheet, ScrollView, TextInput } from 'react-native';
+import { useIsFocused } from '@react-navigation/core';
 import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 import { mapValues, pick } from 'lodash';
 
+import { LoginStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import { View } from '../../components/UI/Themed';
 import { RegularText } from '../../components/UI/StyledText';
@@ -20,7 +24,7 @@ import alert from '../../utils/alert';
 
 type Label = 'email' | 'password';
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login'>) {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector(({ authentication }) => authentication.isLoading);
   const refs: Record<Label, RefObject<TextInput>> = {
@@ -43,6 +47,11 @@ export default function LoginScreen() {
     },
     isValid: false,
   });
+
+  const isFocused = useIsFocused();
+  useLayoutEffect(() => {
+    if (isFocused) navigation.setOptions({ headerTitle: 'Login' });
+  }, [navigation, isFocused]);
 
   const onInputUpdate = useCallback((label: Label, value: string, validity: boolean) => {
     formDispatch({
@@ -93,7 +102,7 @@ export default function LoginScreen() {
             <MaterialCommunityIcons
               name="account-plus"
               size={30}
-              color={Colors.accent}
+              color={Colors.white}
             />
             <RegularText style={{ color: Colors.background }}>
               Sign up
@@ -103,7 +112,7 @@ export default function LoginScreen() {
             <FontAwesome5
               name="sign-in-alt"
               size={30}
-              color={Colors.accent}
+              color={Colors.white}
             />
             <RegularText style={{ color: Colors.background }}>
               Sign in

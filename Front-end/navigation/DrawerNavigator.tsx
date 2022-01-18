@@ -3,7 +3,6 @@ import {
   ComponentProps, Dispatch, SetStateAction, useEffect, useState,
 } from 'react';
 import { View } from 'react-native';
-import { getFocusedRouteNameFromRoute } from '@react-navigation/core';
 import {
   DrawerContentComponentProps,
   createDrawerNavigator,
@@ -53,9 +52,6 @@ enum ScreenExposure {
 const screens = {
   Profile: {
     drawerLabel: 'Profile',
-    headerTitle: {
-      initial: 'Profile',
-    },
     iconName: 'user-alt',
     component: ProfileScreen,
     exposure: ScreenExposure.RequiresAuthentication,
@@ -63,9 +59,6 @@ const screens = {
   },
   SM_Store: {
     drawerLabel: 'Store',
-    headerTitle: {
-      initial: 'Study Materials Store',
-    },
     iconName: 'store',
     component: SMStoreNavigator,
     exposure: ScreenExposure.Always,
@@ -73,9 +66,6 @@ const screens = {
   },
   SM_Exchanges: {
     drawerLabel: 'Exchanges',
-    headerTitle: {
-      initial: 'Study Materials Exchanges',
-    },
     iconName: 'exchange-alt',
     component: SMExchangesNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
@@ -83,9 +73,6 @@ const screens = {
   },
   SM_Acquired: {
     drawerLabel: 'Acquired',
-    headerTitle: {
-      initial: 'Acquired Study Materials',
-    },
     iconName: 'bookmark',
     component: SMAcquiredNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
@@ -93,9 +80,6 @@ const screens = {
   },
   SM_Uploaded: {
     drawerLabel: 'Uploaded',
-    headerTitle: {
-      initial: 'Uploaded Study Materials',
-    },
     iconName: 'file-upload',
     component: SMUploadedNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
@@ -103,9 +87,6 @@ const screens = {
   },
   T_Store: {
     drawerLabel: 'Store',
-    headerTitle: {
-      initial: 'Tutoring Sessions Store',
-    },
     iconName: 'store',
     component: TStoreNavigator,
     exposure: ScreenExposure.Always,
@@ -113,9 +94,6 @@ const screens = {
   },
   T_Enrolled: {
     drawerLabel: 'Enrolled',
-    headerTitle: {
-      initial: 'Tutoring Sessions Enrollments',
-    },
     iconName: 'handshake',
     component: TEnrolledNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
@@ -123,9 +101,6 @@ const screens = {
   },
   T_Scheduled: {
     drawerLabel: 'Scheduled',
-    headerTitle: {
-      initial: 'Scheduled Tutoring Sessions',
-    },
     iconName: 'calendar-alt',
     component: TScheduledNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
@@ -133,10 +108,6 @@ const screens = {
   },
   A_Login: {
     drawerLabel: 'Login',
-    headerTitle: {
-      initial: 'Login',
-      Register: 'Register',
-    },
     iconName: 'sign-in-alt',
     component: LoginNavigator,
     exposure: ScreenExposure.RequiresGuest,
@@ -144,9 +115,6 @@ const screens = {
   },
   A_Logout: {
     drawerLabel: 'Logout',
-    headerTitle: {
-      initial: 'Logout',
-    },
     iconName: 'sign-out-alt',
     component: LogoutScreen,
     exposure: ScreenExposure.RequiresAuthentication,
@@ -165,7 +133,7 @@ export default function DrawerNavigator() {
         drawerStyle: { backgroundColor: Colors.primary },
         headerStyle: { backgroundColor: Colors.primary },
         headerTitleStyle: { fontFamily: 'OpenSans-SemiBold' },
-        headerTintColor: Colors.accent,
+        headerTintColor: Colors.white,
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
@@ -176,11 +144,6 @@ export default function DrawerNavigator() {
             key={name}
             name={name as keyof DrawerParamList}
             component={screen.component}
-            options={({ route }) => ({
-              headerTitle: (screen.headerTitle as Record<string, string>)[
-                getFocusedRouteNameFromRoute(route) || 'initial'
-              ],
-            })}
           />
         ))}
     </Drawer.Navigator>
@@ -220,13 +183,12 @@ function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
         >
           <SemiBoldText style={{
             fontSize: 24,
-            color: Colors.accent,
+            color: Colors.white,
           }}
           >
-            Library of Alexandria
+            Alexandria's Library
           </SemiBoldText>
         </View>
-        <HorizontalDivider />
         <CustomDrawerItem
           name="Profile"
           focusedLabelState={focusedLabelState}
@@ -300,7 +262,7 @@ function CustomDrawerItem({
         setFocusedLabel(name);
       }}
       activeBackgroundColor={Colors.accent}
-      activeTintColor={Colors.primary}
+      activeTintColor={Colors.white}
       inactiveBackgroundColor={screens[name].inactiveBackgroundColor}
       inactiveTintColor={Colors.background}
       labelStyle={{ fontFamily: 'OpenSans-SemiBold' }}

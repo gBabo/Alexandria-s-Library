@@ -2,13 +2,15 @@ export default interface StudyMaterial {
   id: string
   authorEmail: string
   author: string
+  authorInstitution: string
+  authorRating: number
+  likes: number
   name: string
   description: string
   price: number
-  categories: string[]
   type: string
   reviews: StudyMaterialReview[]
-  date: Date
+  date: string
 }
 
 export interface StudyMaterialReview {
@@ -16,14 +18,14 @@ export interface StudyMaterialReview {
   author: string
   likes: string
   comments: StudyMaterialReviewComment[]
-  date: Date
+  date: string
 }
 
 export interface StudyMaterialReviewComment {
   id: string
   author: string
   comment: string
-  date: Date
+  date: string
 }
 
 export interface StudyMaterialExchange {
@@ -33,5 +35,5 @@ export interface StudyMaterialExchange {
   requesterInstitution: string
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string
-  date: Date
+  date: string
 }

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useCallback, useLayoutEffect } from 'react';
 import { Alert, StyleSheet } from 'react-native';
 import { Item } from 'react-navigation-header-buttons';
+import { useIsFocused } from '@react-navigation/core';
 
 import Colors from '../../constants/Colors';
 import { TStoreStackScreenProps } from '../../navigation/types';
@@ -22,18 +23,25 @@ export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Sto
       cancelable: true,
     },
   ), []);
-  useLayoutEffect(() => navigation.getParent()!.setOptions({
-    headerRight: () => (
-      <MaterialIconsHeaderButtons>
-        <Item
-          title="help-outline"
-          iconName="help-outline"
-          color={Colors.accent}
-          onPress={onPressHelp}
-        />
-      </MaterialIconsHeaderButtons>
-    ),
-  }), [navigation, onPressHelp]);
+
+  const isFocused = useIsFocused();
+  useLayoutEffect(() => {
+    if (isFocused) {
+      navigation.getParent()!.setOptions({
+        headerTitle: 'Tutoring Sessions Store',
+        headerRight: () => (
+          <MaterialIconsHeaderButtons>
+            <Item
+              title="help-outline"
+              iconName="help-outline"
+              color={Colors.white}
+              onPress={onPressHelp}
+            />
+          </MaterialIconsHeaderButtons>
+        ),
+      });
+    }
+  }, [navigation, onPressHelp, isFocused]);
 
   return (
     <View style={styles.container}>

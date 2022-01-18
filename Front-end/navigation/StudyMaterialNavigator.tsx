@@ -11,6 +11,8 @@ import SMStoreScreen from '../screens/StudyMaterial/SMStoreScreen';
 import SMExchangesScreen from '../screens/StudyMaterial/SMExchangesScreen';
 import SMAcquiredScreen from '../screens/StudyMaterial/SMAcquiredScreen';
 import SMUploadedScreen from '../screens/StudyMaterial/SMUploadedScreen';
+import SMCategoryStoreScreen from '../screens/StudyMaterial/SMCategoryStoreScreen';
+import StudyMaterialScreen from '../screens/StudyMaterial/StudyMaterialScreen';
 
 const SMStoreStack = createNativeStackNavigator<SMStoreStackParamList>();
 const SMExchangesStack = createNativeStackNavigator<SMExchangesStackParamList>();
@@ -21,6 +23,8 @@ export function SMStoreNavigator() {
   return (
     <SMStoreStack.Navigator screenOptions={{ headerShown: false }}>
       <SMStoreStack.Screen name="Store" component={SMStoreScreen} />
+      <SMStoreStack.Screen name="CategoryStore" component={SMCategoryStoreScreen} />
+      <SMStoreStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
     </SMStoreStack.Navigator>
   );
 }

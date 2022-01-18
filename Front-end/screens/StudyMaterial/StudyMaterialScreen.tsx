@@ -3,20 +3,27 @@ import { useLayoutEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
 
-import { SMAcquiredStackScreenProps } from '../../navigation/types';
+import { SMStoreStackScreenProps } from '../../navigation/types';
 import { RegularText } from '../../components/UI/StyledText';
 import { View } from '../../components/UI/Themed';
+import useAppSelector from '../../hooks/useAppSelector';
 
-export default function SMAcquiredScreen({ navigation }: SMAcquiredStackScreenProps<'Acquired'>) {
+export default function StudyMaterialScreen({
+  navigation,
+  route,
+}: SMStoreStackScreenProps<'StudyMaterial'>) {
+  const studyMaterials = useAppSelector((s) => s.studyMaterial.studyMaterials);
+  const studyMaterial = studyMaterials[route.params.id];
+
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Acquired Materials' });
+    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: studyMaterial.name });
   }, [navigation, isFocused]);
 
   return (
     <View style={styles.container}>
       <RegularText>
-        SMAcquiredScreen
+        StudyMaterialScreen
       </RegularText>
     </View>
   );

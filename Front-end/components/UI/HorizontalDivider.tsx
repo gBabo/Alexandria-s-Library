@@ -11,7 +11,8 @@ export default function HorizontalDivider() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.secondary,
+    width: '100%',
+    backgroundColor: Colors.accent,
     height: 1,
     marginVertical: 5,
   },

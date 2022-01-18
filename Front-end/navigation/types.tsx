@@ -33,6 +33,8 @@ export type DrawerParamList = {
 
 export type SMStoreStackParamList = {
   Store: undefined;
+  CategoryStore: { category: string };
+  StudyMaterial: { id: string };
 };
 
 export type SMExchangesStackParamList = {

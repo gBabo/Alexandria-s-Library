@@ -8,6 +8,7 @@ export interface RenderTileProps<T> {
   marginHorizontal: number
   marginVertical: number
   width: number
+  height: number
 }
 
 interface GridProps<T = any> {
@@ -31,20 +32,24 @@ export default function Grid({
 
   const inLandscape = windowDimensions.width > windowDimensions.height;
   const numColumnsDynamic = inLandscape ? numRows : numColumns;
+  const numRowsDynamic = inLandscape ? numColumns : numRows;
 
-  const marginHorizontal = windowDimensions.height / 100;
-  const marginVertical = windowDimensions.height / 100;
+  const marginHorizontal = windowDimensions.height / 150;
+  const marginVertical = windowDimensions.height / 150;
   const width = windowDimensions.width / numColumnsDynamic - 2 * marginHorizontal;
+  const height = windowDimensions.height / numRowsDynamic - 2 * marginVertical;
 
   return (
     <FlatList
       key={numColumnsDynamic}
       data={data}
+      keyExtractor={(_, index) => index.toString()}
       renderItem={(dataInfo) => renderTile({
         dataInfo,
         marginHorizontal,
         marginVertical,
         width,
+        height,
       })}
       numColumns={numColumnsDynamic}
       refreshing={refreshing}
@@ -57,9 +62,7 @@ export default function Grid({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexGrow: 1,
   },
   list: {
     width: '100%',

@@ -1,7 +1,7 @@
 export default {
-  primary: '#3f51b5',
+  primary: '#0D47A1',
   secondary: '#607d8b',
-  accent: '#ffc107',
+  accent: '#009688',
   error: '#f44336',
   warning: '#ff5722',
   info: '#2196f3',
@@ -11,4 +11,6 @@ export default {
   tint: '#2f95dc',
   tabIconDefault: '#cccccc',
   tabIconSelected: '#2f95dc',
+  black: '#000000',
+  white: '#ffffff',
 };
