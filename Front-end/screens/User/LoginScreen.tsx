@@ -97,27 +97,31 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
           minLength={5}
           secureTextEntry
         />
-        <View style={styles.actions}>
-          <CustomButton onPress={() => onLogin(signup)}>
-            <MaterialCommunityIcons
-              name="account-plus"
-              size={30}
-              color={Colors.white}
-            />
-            <RegularText style={{ color: Colors.background }}>
-              Sign up
-            </RegularText>
-          </CustomButton>
-          <CustomButton onPress={() => onLogin(signin)}>
-            <FontAwesome5
-              name="sign-in-alt"
-              size={30}
-              color={Colors.white}
-            />
-            <RegularText style={{ color: Colors.background }}>
-              Sign in
-            </RegularText>
-          </CustomButton>
+        <View style={styles.actionsBar}>
+          <View style={styles.actionContainer}>
+            <CustomButton onPress={() => onLogin(signup)} style={styles.action}>
+              <MaterialCommunityIcons
+                name="account-plus"
+                size={30}
+                color={Colors.white}
+              />
+              <RegularText style={{ color: Colors.white }}>
+                Sign up
+              </RegularText>
+            </CustomButton>
+          </View>
+          <View style={styles.actionContainer}>
+            <CustomButton onPress={() => onLogin(signin)} style={styles.action}>
+              <FontAwesome5
+                name="sign-in-alt"
+                size={30}
+                color={Colors.white}
+              />
+              <RegularText style={{ color: Colors.white }}>
+                Sign in
+              </RegularText>
+            </CustomButton>
+          </View>
         </View>
       </View>
     </ScrollView>
@@ -133,11 +137,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
   },
-  actions: {
+  actionsBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',
     width: '100%',
-    backgroundColor: '#0000',
+  },
+  actionContainer: {
+    width: '45%',
+  },
+  action: {
+    flexDirection: 'row',
+    backgroundColor: '#1E88E5',
+    borderColor: Colors.white,
   },
 });

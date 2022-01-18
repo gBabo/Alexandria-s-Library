@@ -68,4 +68,4 @@ export const dummyStudyMaterialsExchanges: StudyMaterialExchange[] = [];
 
 export const dummyUploadedStudyMaterials: string[] = [];
 
-export const dummyAcquiredStudyMaterials: string[] = [];
+export const dummyAcquiredStudyMaterials: string[] = ['id1'];

@@ -59,7 +59,7 @@ export const buyStudyMaterial = createAsyncThunk<Partial<State>, {
     const { price } = getState().studyMaterial.studyMaterials[payload.studyMaterialId];
     const { credits } = getState().user.user!;
     if (credits < price) throw new Error('You don\'t have enough tokens!');
-    const { acquiredStudyMaterials } = getState().studyMaterial;
+    const acquiredStudyMaterials = [...getState().studyMaterial.acquiredStudyMaterials];
     acquiredStudyMaterials.push(payload.studyMaterialId);
     return { acquiredStudyMaterials };
   },

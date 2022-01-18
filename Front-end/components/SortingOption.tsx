@@ -41,18 +41,19 @@ export default function SortingOption({
           <Picker.Item
             label={label}
             value="Unselected"
+            color={Colors.black}
             fontFamily="OpenSans-Regular"
           />
           <Picker.Item
-            label={`${label}: Ascending`}
+            label={`${label}: Ascending ↑`}
             value="Ascending"
-            color="#1B5E20"
+            color={Colors.primary}
             fontFamily="OpenSans-Regular"
           />
           <Picker.Item
-            label={`${label}: Descending`}
+            label={`${label}: Descending ↓`}
             value="Descending"
-            color="#B71C1C"
+            color={Colors.primary}
             fontFamily="OpenSans-Regular"
           />
         </Picker>
