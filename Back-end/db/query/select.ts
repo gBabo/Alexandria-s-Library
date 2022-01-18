@@ -4,6 +4,10 @@ const selectStudyMs = `SELECT * FROM study_material
     NATURAL JOIN study_material_category
     NATURAL JOIN (SELECT name AS author_name, email AS author, institution, rating FROM users) u`;
 
+const selectStudyMAuthor = 'SELECT author FROM study_material WHERE study_id=$1';
+
+const selectStudyMReviewAuthor = 'SELECT author FROM study_material_review WHERE review_id=$1';
+
 const selectStudyMRightsSQL = `SELECT study_id FROM study_material WHERE study_id=$1 AND author=$2
                                UNION SELECT study_id FROM study_material_acquired WHERE study_id=$1 AND "user"=$2`;
 
@@ -33,7 +37,7 @@ const selectStudyMIdOfReview = 'SELECT study_id FROM study_material_review WHERE
 
 const selectUserCredit = 'SELECT credits FROM users WHERE email=$1;';
 
-const SelectStudyMPrice = 'SELECT price FROM study_material WHERE study_id=$1;';
+const SelectStudyMPrice = 'SELECT price, author FROM study_material WHERE study_id=$1;';
 
 const selectStudyMExchangeR = 'SELECT * FROM study_material_exchange_requests WHERE exchange_id=$1 ';
 
@@ -47,11 +51,11 @@ const selectTutoringSessions = `SELECT * FROM tutoring_session
 
 const selectTutoringSession = 'SELECT * FROM tutoring_session WHERE session_id=$1';
 
-const selectEnrollments = `SELECT * FROM 
-              (SELECT * FROM tutoring_session_enrollment WHERE session_id=$1) as e
-                NATURAL JOIN (SELECT name AS requester_name, email AS requester FROM users) u`;
+const selectEnrollments = `SELECT * FROM (SELECT * FROM tutoring_session_enrollment WHERE session_id=$1) as e
+    NATURAL JOIN (SELECT name AS requester_name, email AS requester FROM users) u`;
 
-const selectEnrollment = 'SELECT * FROM tutoring_session_enrollment WHERE enrollment_id=$1';
+const selectEnrollment = `SELECT * FROM (SELECT * FROM tutoring_session_enrollment WHERE enrollment_id=$1) as t
+    JOIN tutoring_session ON t.session_id=tutoring_session.session_id;`;
 
 const selectTutoringSessionEnrollments = `SELECT * FROM (
     SELECT * FROM tutoring_session_enrollment WHERE session_id=$1) as t
@@ -62,6 +66,8 @@ const selectMyEnrollments = 'SELECT * FROM tutoring_session_enrollment WHERE req
 const select = {
   selectUser,
   selectStudyMs,
+  selectStudyMAuthor,
+  selectStudyMReviewAuthor,
   selectStudyMRightsSQL,
   selectStudyMReview,
   selectStudyMIdOfReview,

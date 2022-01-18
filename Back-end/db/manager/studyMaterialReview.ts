@@ -93,6 +93,13 @@ export async function createReviewComment(email: string, reviewId: string, comme
 }
 
 export async function likeStudyMaterialReview(email: string, reviewId: string) {
-  await like(email, reviewId, [select.selectLikedStudyMReview,
-    remove.removeLikeStudyMReview, insert.insertLikeStudyMReview]);
+  const queries: Record<string, string> = {
+    selectLikedItem: select.selectLikedStudyMReview,
+    deleteLike: remove.removeLikeStudyMReview[0],
+    removeLikeItem: remove.removeLikeStudyMReview[1],
+    insertLike: insert.insertLikeStudyMReview[0],
+    addLikeItem: insert.insertLikeStudyMReview[0],
+    selectAuthor: select.selectStudyMReviewAuthor,
+  };
+  await like(email, reviewId, queries);
 }
