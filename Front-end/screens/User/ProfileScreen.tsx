@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useEffect, useLayoutEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
+import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
-import { RegularText } from '../../components/UI/StyledText';
+import { RegularText, SemiBoldText } from '../../components/UI/StyledText';
 import { View } from '../../components/UI/Themed';
 import Loading from '../../components/UI/Loading';
 import { getUser } from '../../store/slices/user';
@@ -29,13 +30,30 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
     <Loading />
   ) : (
     <View style={styles.container}>
-      <RegularText>
-        {user.email}
-        {user.name}
-        {user.credits}
-        {user.rating}
-        {user.institution}
-      </RegularText>
+      <View style={styles.block}>
+        <SemiBoldText style={styles.text}>{user.name}</SemiBoldText>
+        <RegularText numberOfLines={1} style={styles.subtext}>{user.email}</RegularText>
+      </View>
+      <View style={styles.block}>
+        <RegularText numberOfLines={1} style={styles.text}>
+          <SemiBoldText>Institution</SemiBoldText>
+          {`: ${user.institution}`}
+        </RegularText>
+      </View>
+      <View style={[styles.block, styles.line]}>
+        <RegularText numberOfLines={1} style={styles.text}>
+          <SemiBoldText>Credits</SemiBoldText>
+          {`: ${user.credits}`}
+        </RegularText>
+        <FontAwesome5 name="ticket-alt" size={24} color="#3949AB" style={styles.icon} />
+      </View>
+      <View style={[styles.block, styles.line]}>
+        <RegularText numberOfLines={1} style={styles.text}>
+          <SemiBoldText>Rating</SemiBoldText>
+          {`: ${user.rating}`}
+        </RegularText>
+        <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
+      </View>
     </View>
   );
 }
@@ -45,5 +63,22 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  block: {
+    marginVertical: 20,
+  },
+  line: {
+    flexDirection: 'row',
+  },
+  text: {
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  subtext: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  icon: {
+    marginHorizontal: 5,
   },
 });
