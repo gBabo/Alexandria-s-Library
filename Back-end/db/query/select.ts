@@ -1,5 +1,11 @@
 const selectUser = 'SELECT * FROM users WHERE email=$1;';
 
+const selectPushNotificationToken = 'SELECT push_notification_token FROM users WHERE email=$1;';
+
+const selectStudyMName = 'SELECT name FROM study_material WHERE study_id=$1;';
+
+const selectStudyMPath = 'SELECT path FROM study_material WHERE study_id=$1;';
+
 const selectStudyMs = `SELECT * FROM study_material
     NATURAL JOIN study_material_category
     NATURAL JOIN (SELECT name AS author_name, email AS author, institution, rating FROM users) u`;
@@ -49,6 +55,8 @@ const selectTutoringSessions = `SELECT * FROM tutoring_session
     NATURAL JOIN tutoring_session_category
     NATURAL JOIN (SELECT name AS tutor_name, email AS tutor, rating, institution FROM users) u`;
 
+const selectTutoringSessionName = 'SELECT name FROM study_material WHERE study_id=$1;';
+
 const selectTutoringSession = 'SELECT * FROM tutoring_session WHERE session_id=$1';
 
 const selectEnrollments = `SELECT * FROM (SELECT * FROM tutoring_session_enrollment WHERE session_id=$1) as e
@@ -65,6 +73,9 @@ const selectMyEnrollments = 'SELECT * FROM tutoring_session_enrollment WHERE req
 
 const select = {
   selectUser,
+  selectPushNotificationToken,
+  selectStudyMName,
+  selectStudyMPath,
   selectStudyMs,
   selectStudyMAuthor,
   selectStudyMReviewAuthor,

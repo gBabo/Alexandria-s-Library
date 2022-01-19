@@ -51,3 +51,13 @@ export interface UserGETRequest {
 export interface UserGETResponse {
     user: User
 }
+
+// StudyMaterial Link GET
+export interface StudyMaterialLinkGETRequest {
+    idToken: string,
+    studyMaterialId: string
+}
+
+export interface StudyMaterialLinkGETResponse {
+    link: string
+}

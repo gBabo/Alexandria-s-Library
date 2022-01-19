@@ -4,6 +4,7 @@ import * as postEndpoints from '../contract/POSTEndpoints';
 import * as db from '../db/manager/studyMaterial';
 import * as getEndpoints from '../contract/GETEndpoints';
 import * as putEndpoints from '../contract/PUTEndpoints';
+import { getLink, uploadFile } from '../services/file';
 
 const router = Router();
 export default router;
@@ -13,7 +14,7 @@ router.post('/', async (
   res: Response<postEndpoints.StudyMaterialPOSTResponse>,
 ) => {
   const {
-    idToken, name, description, price, type, categories,
+    idToken, name, description, price, type, categories, file,
   } = req.body;
   // TODO FILE Path + Link
 
@@ -31,10 +32,12 @@ router.post('/', async (
     price,
     categories,
   );
+
   if (result === undefined) {
     res.status(500).send();
     return;
   }
+  uploadFile(result.path, file).then();
   res.json(result);
 });
 
@@ -98,6 +101,26 @@ router.get('/pending-exchanges', async (
   }
 
   res.json(result);
+});
+
+router.get('/get-link', async (
+  req: Request<{}, {}, {}, getEndpoints.StudyMaterialLinkGETRequest>,
+  res: Response<getEndpoints.StudyMaterialLinkGETResponse>,
+) => {
+  const { idToken, studyMaterialId } = req.query;
+  const email = await authenticate(idToken);
+  if (email === undefined) {
+    res.status(403).send();
+    return;
+  }
+  const path = await db.getStudyMaterialPath(email, studyMaterialId);
+  const link = await getLink(path);
+  if (path === undefined || link === undefined) {
+    res.status(500).send();
+    return;
+  }
+
+  res.json({ link });
 });
 
 router.post('/exchange-request', async (
