@@ -9,6 +9,7 @@ import Colors from '../../constants/Colors';
 import { SMStoreStackScreenProps } from '../../navigation/types';
 import MaterialIconsHeaderButtons from '../../components/UI/MaterialIconsHeaderButtons';
 import Loading from '../../components/UI/Loading';
+import Fallback from '../../components/UI/Fallback';
 import CategoryGrid from '../../components/CategoryGrid';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
@@ -54,8 +55,10 @@ export default function SMStoreScreen({ navigation }: SMStoreStackScreenProps<'S
     }
   }, [navigation, onPressHelp, isFocused]);
 
-  return isLoading && isEmpty(studyMaterialsCategories) ? (
+  return isLoading ? (
     <Loading />
+  ) : isEmpty(studyMaterialsCategories) ? (
+    <Fallback message="There are no published study materials yet." />
   ) : (
     <CategoryGrid
       categories={Object.keys(studyMaterialsCategories)}

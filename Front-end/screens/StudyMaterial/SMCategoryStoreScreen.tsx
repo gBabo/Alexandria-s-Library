@@ -6,6 +6,7 @@ import { SMStoreStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import StudyMaterial from '../../models/StudyMaterial';
 import Loading from '../../components/UI/Loading';
+import Fallback from '../../components/UI/Fallback';
 import ItemList, { RenderItemProps } from '../../components/ItemList';
 import StudyMaterialItem from '../../components/StudyMaterialItem';
 import useAppSelector from '../../hooks/useAppSelector';
@@ -50,8 +51,10 @@ export default function SMCategoryStoreScreen({
     />
   );
 
-  return isLoading && items.length === 0 ? (
+  return isLoading ? (
     <Loading />
+  ) : items.length === 0 ? (
+    <Fallback message="This category has no published study materials yet." />
   ) : (
     <ItemList
       items={items}

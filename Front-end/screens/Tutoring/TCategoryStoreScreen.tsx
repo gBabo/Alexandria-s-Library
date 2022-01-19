@@ -5,6 +5,7 @@ import { useIsFocused } from '@react-navigation/core';
 import { TStoreStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import Loading from '../../components/UI/Loading';
+import Fallback from '../../components/UI/Fallback';
 import ItemList, { RenderItemProps } from '../../components/ItemList';
 import TutoringSessionItem from '../../components/TutoringSessionItem';
 import useAppSelector from '../../hooks/useAppSelector';
@@ -50,8 +51,10 @@ export default function TCategoryStoreScreen({
     />
   );
 
-  return isLoading && items.length === 0 ? (
+  return isLoading ? (
     <Loading />
+  ) : items.length === 0 ? (
+    <Fallback message="There are no announced tutoring sessions in this category yet." />
   ) : (
     <ItemList
       items={items}

@@ -9,6 +9,7 @@ import Colors from '../../constants/Colors';
 import { TStoreStackScreenProps } from '../../navigation/types';
 import MaterialIconsHeaderButtons from '../../components/UI/MaterialIconsHeaderButtons';
 import Loading from '../../components/UI/Loading';
+import Fallback from '../../components/UI/Fallback';
 import CategoryGrid from '../../components/CategoryGrid';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
@@ -55,8 +56,10 @@ export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Sto
     }
   }, [navigation, onPressHelp, isFocused]);
 
-  return isLoading && isEmpty(tutoringSessionsCategories) ? (
+  return isLoading ? (
     <Loading />
+  ) : isEmpty(tutoringSessionsCategories) ? (
+    <Fallback message="There are no announced tutoring sessions yet." />
   ) : (
     <CategoryGrid
       categories={Object.keys(tutoringSessionsCategories)}

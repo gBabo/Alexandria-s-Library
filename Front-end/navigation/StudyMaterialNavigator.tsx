@@ -41,6 +41,7 @@ export function SMAcquiredNavigator() {
   return (
     <SMAcquiredStack.Navigator screenOptions={{ headerShown: false }}>
       <SMAcquiredStack.Screen name="Acquired" component={SMAcquiredScreen} />
+      <SMAcquiredStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
     </SMAcquiredStack.Navigator>
   );
 }
@@ -49,6 +50,7 @@ export function SMUploadedNavigator() {
   return (
     <SMUploadedStack.Navigator screenOptions={{ headerShown: false }}>
       <SMUploadedStack.Screen name="Uploaded" component={SMUploadedScreen} />
+      <SMAcquiredStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
     </SMUploadedStack.Navigator>
   );
 }

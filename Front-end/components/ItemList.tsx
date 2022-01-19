@@ -17,7 +17,7 @@ interface ItemListProps<T> {
   items: T[]
   keys: (keyof T)[]
   searchPlaceholder: string
-  sortingOptions: { label: string, value: keyof T }[]
+  sortingOptions?: { label: string, value: keyof T }[]
   defaultSortingMethod: SortingMethod<T>
   renderItem: (info: RenderItemProps<T>) => ReactElement
   refreshing: boolean

@@ -49,10 +49,12 @@ export default function StudyMaterialItem({
             />
           </View>
         </View>
-        <RegularText numberOfLines={1} style={styles.text}>
-          <SemiBoldText>Institution</SemiBoldText>
-          {`: ${studyMaterial.authorInstitution}`}
-        </RegularText>
+        <View style={[styles.line, styles.textAlone]}>
+          <RegularText numberOfLines={1} style={styles.text}>
+            <SemiBoldText>Institution</SemiBoldText>
+            {`: ${studyMaterial.authorInstitution}`}
+          </RegularText>
+        </View>
         <View style={styles.line}>
           <View style={styles.iconContainer}>
             <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
@@ -77,11 +79,14 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 5,
   },
   text: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  textAlone: {
+    justifyContent: 'center',
   },
   textBetweenIcons: {
     width: '60%',
@@ -91,7 +96,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
   },
   icon: {
     marginHorizontal: 5,

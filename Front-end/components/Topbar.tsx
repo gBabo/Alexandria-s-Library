@@ -35,23 +35,25 @@ export default function Topbar<T>({
     <View style={styles.container}>
       <View style={styles.bar}>
         <Searchbar placeholder={searchPlaceholder} valueState={searchState} />
-        {sortingMethodState && (
-        <CustomButton
-          onPress={() => sortingOptionsVisible[1]((value) => !value)}
-          style={{
-            backgroundColor: !sortingOptionsVisible[0] ? Colors.primary : Colors.white,
-            borderColor: !sortingOptionsVisible[0] ? Colors.white : Colors.primary,
-          }}
-        >
-          <FontAwesome
-            name="sliders"
-            size={30}
-            color={!sortingOptionsVisible[0] ? Colors.white : Colors.primary}
-          />
-        </CustomButton>
+        {sortingOptions && (
+        <View style={styles.sortingButton}>
+          <CustomButton
+            onPress={() => sortingOptionsVisible[1]((value) => !value)}
+            style={{
+              backgroundColor: !sortingOptionsVisible[0] ? Colors.primary : Colors.white,
+              borderColor: !sortingOptionsVisible[0] ? Colors.transparent : Colors.primary,
+            }}
+          >
+            <FontAwesome
+              name="sliders"
+              size={30}
+              color={!sortingOptionsVisible[0] ? Colors.white : Colors.primary}
+            />
+          </CustomButton>
+        </View>
         )}
       </View>
-      {sortingMethodState && sortingOptions && orderState && sortingOptionsVisible[0] && (
+      {sortingOptions && sortingMethodState && orderState && sortingOptionsVisible[0] && (
         <View style={styles.sortingOptions}>
           {sortingOptions.map(({
             label,
@@ -91,9 +93,15 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingTop: 5,
     paddingLeft: 5,
     paddingRight: 5,
+  },
+  sortingButton: {
+    marginLeft: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   sortingOptions: {
     top: 66,

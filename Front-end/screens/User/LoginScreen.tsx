@@ -149,6 +149,6 @@ const styles = StyleSheet.create({
   action: {
     flexDirection: 'row',
     backgroundColor: '#1E88E5',
-    borderColor: Colors.white,
+    borderColor: Colors.transparent,
   },
 });

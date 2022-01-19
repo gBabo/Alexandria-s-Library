@@ -43,10 +43,12 @@ export type SMExchangesStackParamList = {
 
 export type SMAcquiredStackParamList = {
   Acquired: undefined;
+  StudyMaterial: { id: string };
 };
 
 export type SMUploadedStackParamList = {
   Uploaded: undefined;
+  StudyMaterial: { id: string };
 };
 
 export type TStoreStackParamList = {

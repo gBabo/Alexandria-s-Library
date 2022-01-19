@@ -7,7 +7,11 @@ import {
   AntDesign, FontAwesome, FontAwesome5, MaterialIcons,
 } from '@expo/vector-icons';
 
-import { SMStoreStackScreenProps } from '../../navigation/types';
+import {
+  SMAcquiredStackScreenProps,
+  SMStoreStackScreenProps,
+  SMUploadedStackScreenProps,
+} from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import StudyMaterial from '../../models/StudyMaterial';
 import { RegularText, SemiBoldText } from '../../components/UI/StyledText';
@@ -25,7 +29,7 @@ import {
 export default function StudyMaterialScreen({
   navigation,
   route,
-}: SMStoreStackScreenProps<'StudyMaterial'>) {
+}: SMStoreStackScreenProps<'StudyMaterial'> | SMAcquiredStackScreenProps<'StudyMaterial'> | SMUploadedStackScreenProps<'StudyMaterial'>) {
   const dispatch = useAppDispatch();
   const pickerRef = useRef<Picker<string>>(null);
   const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
@@ -89,7 +93,7 @@ export default function StudyMaterialScreen({
             style={{
               flexDirection: 'row',
               backgroundColor: studyMaterial.hasLiked ? '#1E88E5' : Colors.white,
-              borderColor: studyMaterial.hasLiked ? Colors.white : '#1E88E5',
+              borderColor: studyMaterial.hasLiked ? Colors.transparent : '#1E88E5',
             }}
           >
             <MaterialIcons
@@ -274,6 +278,6 @@ const styles = StyleSheet.create({
   action: {
     flexDirection: 'row',
     backgroundColor: '#1E88E5',
-    borderColor: Colors.white,
+    borderColor: Colors.transparent,
   },
 });

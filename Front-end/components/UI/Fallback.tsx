@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import Colors from '../../constants/Colors';
-import { RegularText } from './StyledText';
+import { SemiBoldText } from './StyledText';
+import { View } from './Themed';
 
 interface FallbackProps {
   message: string
@@ -15,13 +16,13 @@ export default function Fallback({
   return (
     <View style={styles.container}>
       <MaterialCommunityIcons
-        name="database-remove"
+        name="database-search"
         size={100}
-        color={Colors.warning}
+        color={Colors.accent}
       />
-      <RegularText style={[styles.fallback, { color: Colors.error }]}>
+      <SemiBoldText style={[styles.fallback, { color: Colors.primary }]}>
         {message}
-      </RegularText>
+      </SemiBoldText>
     </View>
   );
 }
@@ -34,7 +35,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   fallback: {
+    textAlign: 'center',
     fontSize: 20,
     marginTop: 10,
+    marginHorizontal: 20,
   },
 });

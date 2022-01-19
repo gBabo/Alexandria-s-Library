@@ -13,4 +13,5 @@ export default {
   tabIconSelected: '#2f95dc',
   black: '#000000',
   white: '#ffffff',
+  transparent: '#00000000',
 };

@@ -10,6 +10,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
+import Colors from '../../constants/Colors';
 import { View } from './Themed';
 import Card from './Card';
 
@@ -44,6 +45,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     overflow: 'hidden',
+    backgroundColor: Colors.transparent,
   },
   button: {
     alignItems: 'center',

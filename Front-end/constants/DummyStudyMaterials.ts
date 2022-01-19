@@ -66,6 +66,6 @@ export const dummyStudyMaterialsCategories: Record<string, string[]> = {
 
 export const dummyStudyMaterialsExchanges: StudyMaterialExchange[] = [];
 
-export const dummyUploadedStudyMaterials: string[] = [];
+export const dummyUploadedStudyMaterials: string[] = ['id1'];
 
 export const dummyAcquiredStudyMaterials: string[] = ['id1'];
