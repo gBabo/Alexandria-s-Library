@@ -5,6 +5,7 @@ import select from '../query/select';
 import remove from '../query/delete';
 import { StudyMaterialExchange } from '../../models/StudyMaterial';
 import { getStudyMaterialReviews } from './studyMaterialReview';
+import * as notification from '../../services/notification';
 
 export async function createStudyMaterial(
   name:string,
@@ -22,7 +23,8 @@ export async function createStudyMaterial(
     const values = [name, description, author, type, price, date.toISOString()];
     const studyMaterialId = (await con.query(insert.insertStudyM, values)).rows.pop().study_id;
 
-    await con.query(insert.insertPathToStudyM, [`path${studyMaterialId}`, studyMaterialId]);
+    const path = studyMaterialId + Math.random().toString(36).slice(2);
+    await con.query(insert.insertPathToStudyM, [path, studyMaterialId]);
 
     const promiseCatg = [];
     for (let i = 0; i < categories.length; i++) {
@@ -31,7 +33,7 @@ export async function createStudyMaterial(
     await Promise.all(promiseCatg);
 
     await con.query('COMMIT');
-    return { studyMaterialId, date };
+    return { path, studyMaterialId, date };
   } catch (error: any) {
     await con.query('ROLLBACK');
     console.error('ERROR:createStudyMaterial');
@@ -204,6 +206,7 @@ export async function createStudyMaterialExchangeRequest(
     const studyMaterialExchangeId = r.rows.pop().exchange_id;
 
     await con.query('COMMIT');
+    notification.newStudyMaterialExchange(requestee, studyMaterialIdTer, studyMaterialIdTee).then();
     return { studyMaterialExchangeId, date };
   } catch (error: any) {
     await con.query('ROLLBACK');
@@ -254,6 +257,12 @@ export async function rejectStudyMaterialExchangeRequest(exchangeId: string, ema
     }
     await con.query(remove.removeStudyMExchangeRs, [exchangeId]);
     await con.query('COMMIT');
+    notification.settleStudyMaterialExchange(
+      result.requester,
+      result.study_id_requester,
+      result.study_id_requestee,
+      'Rejected',
+    ).then();
     return 1;
   } catch (error: any) {
     await con.query('ROLLBACK');
@@ -283,12 +292,51 @@ export async function acceptStudyMaterialExchangeRequest(exchangeId: string, ema
 
     await con.query(remove.removeStudyMExchangeRs, [exchangeId]);
     await con.query('COMMIT');
+    notification.settleStudyMaterialExchange(
+      result.requester,
+      result.study_id_requester,
+      result.study_id_requestee,
+      'Accepted',
+    ).then();
     return 1;
   } catch (error: any) {
     await con.query('ROLLBACK');
     console.error('ERROR:acceptStudyMaterialExchangeRequest');
     console.error(error.stack);
     return -2;
+  } finally {
+    await con.release();
+  }
+}
+
+export async function getStudyMaterialName(studyMaterialId: string) {
+  const con = await pool.connect();
+  try {
+    return (await con.query(select.selectStudyMName, [studyMaterialId])).rows.pop().name;
+  } catch (error: any) {
+    console.error('ERROR:getStudyMaterialName');
+    console.error(error.stack);
+    return undefined;
+  } finally {
+    await con.release();
+  }
+}
+
+export async function getStudyMaterialPath(email: string, studyMaterialId: string) {
+  const con = await pool.connect();
+  try {
+    await con.query('BEGIN');
+    const cnt = (await con.query(select.selectStudyMRightsSQL, [studyMaterialId, email])).rowCount;
+    if (cnt === 0) {
+      await con.query('ROLLBACK');
+      console.error('ERROR:getStudyMaterialPath:InvalidRights');
+      return -1;
+    }
+    return (await con.query(select.selectStudyMPath, [studyMaterialId])).rows.pop().path;
+  } catch (error: any) {
+    console.error('ERROR:getStudyMaterialName');
+    console.error(error.stack);
+    return undefined;
   } finally {
     await con.release();
   }

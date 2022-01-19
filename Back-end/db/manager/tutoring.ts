@@ -3,6 +3,7 @@ import pool from '../index';
 import insert from '../query/insert';
 import select from '../query/select';
 import { Enrollment, UserEnroll } from '../../models/TutoringSession';
+import * as notification from '../../services/notification';
 
 export async function createTutoringSession(
   name:string,
@@ -52,16 +53,18 @@ export async function enroll(
     await con.query('BEGIN');
 
     const { credits } = (await con.query(select.selectUserCredit, [email])).rows.pop();
-    const { price } = (await con.query(select.selectTutoringSession, [sessionId])).rows.pop();
+    let result = (await con.query(select.selectTutoringSession, [sessionId]));
+    const { price, name, tutor } = result.rows.pop();
     if (credits < price) {
       await con.query('ROLLBACK');
       console.error('ERROR:enroll: No Sufficient Credits');
       return -1;
     }
     await con.query(insert.insertUserCredit, [-price, email]);
-    const result = await con.query(insert.insertEnrollment, [sessionId, email, date.toISOString()]);
+    result = await con.query(insert.insertEnrollment, [sessionId, email, date.toISOString()]);
     const enrollmentId = result.rows.pop().enrollment_id;
     await con.query('COMMIT');
+    notification.newEnrollment(tutor, name).then();
     return { enrollmentId, date };
   } catch (error: any) {
     await con.query('ROLLBACK');
@@ -87,6 +90,7 @@ export async function settleEnrollment(enrollmentId: string, email: string, acce
     const status = accept ? 'Accepted' : 'Rejected';
     await con.query(insert.insertStatusEnrollment, [status, enrollmentId]);
     await con.query('COMMIT');
+    notification.settleEnrollment(email, result.name, status);
     return 1;
   } catch (error: any) {
     await con.query('ROLLBACK');
@@ -184,6 +188,19 @@ export async function getTutoringSessions(email: string | undefined) {
     return { tutoringSessions, tutoringSessionsCategories, created };
   } catch (error: any) {
     console.error('ERROR:getTutoringSessions');
+    console.error(error.stack);
+    return undefined;
+  } finally {
+    await con.release();
+  }
+}
+
+export async function getTutoringSessionName(sessionId: string) {
+  const con = await pool.connect();
+  try {
+    return (await con.query(select.selectStudyMName, [sessionId])).rows.pop().name;
+  } catch (error: any) {
+    console.error('ERROR:getStudyMaterialName');
     console.error(error.stack);
     return undefined;
   } finally {

@@ -1,8 +1,6 @@
 import * as admin from 'firebase-admin';
 
-admin.initializeApp({
-  credential: admin.credential.cert('./config/serviceAccountKey.json'),
-});
+admin.initializeApp({ credential: admin.credential.cert('./config/serviceAccountKey.json') });
 
 export default async function authenticate(idToken: string) {
   try {

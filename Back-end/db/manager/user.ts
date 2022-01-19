@@ -33,6 +33,19 @@ export async function registerUser(email:string, name:string, institution: strin
   }
 }
 
+export async function getPushNotificationToken(email:string) {
+  const con = await pool.connect();
+  try {
+    const query = select.selectPushNotificationToken;
+    return (await con.query(query, [email])).rows.pop().push_notification_token;
+  } catch (error: any) {
+    console.error(error.stack);
+    return undefined;
+  } finally {
+    await con.release();
+  }
+}
+
 export async function registerPushNotification(email:string, pushNotificationToken: string) {
   const con = await pool.connect();
   try {

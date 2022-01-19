@@ -6,9 +6,10 @@ import { init } from './db';
 import studyMaterialReview from './routes/studyMaterialReview';
 
 const app = express();
-const port = 3000;
 
+const port = 3000;
 app.use(express.json());
+
 app.use('/study-material', studyMaterials);
 app.use('/study-material/review', studyMaterialReview);
 app.use('/tutoring', tutoring);
