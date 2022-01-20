@@ -7,11 +7,7 @@ import {
   AntDesign, FontAwesome, FontAwesome5, MaterialIcons,
 } from '@expo/vector-icons';
 
-import {
-  SMAcquiredStackScreenProps,
-  SMStoreStackScreenProps,
-  SMUploadedStackScreenProps,
-} from '../../navigation/types';
+import { SMStoreStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import StudyMaterial from '../../models/StudyMaterial';
 import { RegularText, SemiBoldText } from '../../components/UI/StyledText';
@@ -23,13 +19,14 @@ import useAppSelector from '../../hooks/useAppSelector';
 import {
   buyStudyMaterial,
   exchangeStudyMaterial,
+  getStudyMaterialLink,
   toggleLikeStudyMaterial,
 } from '../../store/slices/studyMaterial';
 
 export default function StudyMaterialScreen({
   navigation,
   route,
-}: SMStoreStackScreenProps<'StudyMaterial'> | SMAcquiredStackScreenProps<'StudyMaterial'> | SMUploadedStackScreenProps<'StudyMaterial'>) {
+}: SMStoreStackScreenProps<'StudyMaterial'>) {
   const dispatch = useAppDispatch();
   const pickerRef = useRef<Picker<string>>(null);
   const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
@@ -91,19 +88,19 @@ export default function StudyMaterialScreen({
               dispatch(toggleLikeStudyMaterial({ studyMaterialId: studyMaterial.id }));
             }}
             style={{
-              flexDirection: 'row',
-              backgroundColor: studyMaterial.hasLiked ? '#1E88E5' : Colors.white,
-              borderColor: studyMaterial.hasLiked ? Colors.transparent : '#1E88E5',
+              backgroundColor: studyMaterial.hasLiked ? Colors.yellow : Colors.blue,
+              borderColor: Colors.transparent,
             }}
+            row
           >
             <MaterialIcons
               name="thumb-up"
               size={30}
-              color={studyMaterial.hasLiked ? Colors.white : '#1E88E5'}
+              color={studyMaterial.hasLiked ? Colors.primary : Colors.white}
               style={styles.icon}
             />
             <SemiBoldText style={[styles.text, {
-              color: studyMaterial.hasLiked ? Colors.white : '#1E88E5',
+              color: studyMaterial.hasLiked ? Colors.primary : Colors.white,
             }]}
             >
               {studyMaterial.likes}
@@ -117,7 +114,7 @@ export default function StudyMaterialScreen({
         </View>
         <View style={styles.line}>
           <View style={styles.iconStar}>
-            <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
+            <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
             <SemiBoldText style={styles.text}>
               {studyMaterial.authorRating}
             </SemiBoldText>
@@ -135,12 +132,29 @@ export default function StudyMaterialScreen({
             {`: ${studyMaterial.description}`}
           </RegularText>
         </View>
+        <View style={styles.line}>
+          <CustomButton
+            onPress={() => navigation.navigate('Discussion', { studyMaterialId: route.params.id })}
+            style={styles.action}
+            row
+          >
+            <FontAwesome
+              name="comments"
+              size={24}
+              color={Colors.white}
+              style={styles.icon}
+            />
+            <SemiBoldText style={[styles.text, { color: Colors.white }]}>
+              Discussion
+            </SemiBoldText>
+          </CustomButton>
+        </View>
         {acquiredStudyMaterials.some(({ id }) => id === studyMaterial.id) ? (
-          <View style={[styles.line, styles.actionContainer]}>
+          <View style={styles.line}>
             <CustomButton
-              onPress={() => {
-              }}
+              onPress={() => dispatch(getStudyMaterialLink({ studyMaterialId: studyMaterial.id }))}
               style={styles.action}
+              row
             >
               <FontAwesome5
                 name="link"
@@ -155,38 +169,36 @@ export default function StudyMaterialScreen({
           </View>
         ) : (
           <View style={styles.line}>
-            <View style={styles.actionContainer}>
-              <CustomButton
-                onPress={confirmStudyMaterialPurchase}
-                style={styles.action}
-              >
-                <FontAwesome5
-                  name="link"
-                  size={24}
-                  color={Colors.white}
-                  style={styles.icon}
-                />
-                <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-                  Purchase
-                </SemiBoldText>
-              </CustomButton>
-            </View>
-            <View style={styles.actionContainer}>
-              <CustomButton
-                onPress={() => (pickerRef.current as any)?.focus()}
-                style={styles.action}
-              >
-                <FontAwesome
-                  name="exchange"
-                  size={24}
-                  color={Colors.white}
-                  style={styles.icon}
-                />
-                <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-                  Exchange
-                </SemiBoldText>
-              </CustomButton>
-            </View>
+            <CustomButton
+              onPress={confirmStudyMaterialPurchase}
+              style={styles.action}
+              row
+            >
+              <FontAwesome5
+                name="link"
+                size={24}
+                color={Colors.white}
+                style={styles.icon}
+              />
+              <SemiBoldText style={[styles.text, { color: Colors.white }]}>
+                Purchase
+              </SemiBoldText>
+            </CustomButton>
+            <CustomButton
+              onPress={() => (pickerRef.current as any)?.focus()}
+              style={styles.action}
+              row
+            >
+              <FontAwesome
+                name="exchange"
+                size={24}
+                color={Colors.white}
+                style={styles.icon}
+              />
+              <SemiBoldText style={[styles.text, { color: Colors.white }]}>
+                Exchange
+              </SemiBoldText>
+            </CustomButton>
             <Picker
               ref={pickerRef}
               selectedValue="Unselected"
@@ -233,8 +245,8 @@ const styles = StyleSheet.create({
   },
   line: {
     marginVertical: 20,
+    marginHorizontal: 15,
     flexDirection: 'row',
-    width: '95%',
     justifyContent: 'space-evenly',
     alignItems: 'center',
   },
@@ -267,17 +279,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   icon: {
-    marginRight: 5,
+    marginRight: 10,
   },
   hspace: {
     width: 10,
   },
-  actionContainer: {
-    width: '45%',
-  },
   action: {
-    flexDirection: 'row',
-    backgroundColor: '#1E88E5',
+    width: '47.5%',
+    marginHorizontal: 10,
+    backgroundColor: Colors.blue,
     borderColor: Colors.transparent,
   },
 });

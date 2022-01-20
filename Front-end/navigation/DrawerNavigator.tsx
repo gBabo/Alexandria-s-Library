@@ -3,6 +3,7 @@ import {
   ComponentProps, Dispatch, SetStateAction, useEffect, useState,
 } from 'react';
 import { View } from 'react-native';
+import { NavigationState } from '@react-navigation/core';
 import {
   DrawerContentComponentProps,
   createDrawerNavigator,
@@ -144,6 +145,20 @@ export default function DrawerNavigator() {
             key={name}
             name={name as keyof DrawerParamList}
             component={screen.component}
+            listeners={({ navigation }) => ({
+              blur: ({ target }) => {
+                const route = navigation.getState()
+                  .routes
+                  .find(({ key }: NavigationState<DrawerParamList>) => key === target);
+                if (route && route.state) {
+                  const {
+                    type,
+                    routes,
+                  } = route.state;
+                  if (type === 'stack' && routes.length > 1) navigation.popToTop();
+                }
+              },
+            })}
           />
         ))}
     </Drawer.Navigator>

@@ -15,10 +15,37 @@ export const dummyStudyMaterials: Record<string, StudyMaterial> = {
     description: 'These are the solutions of the Algebra Exam Exercises that I corrected with the help of the Professor.',
     price: 1,
     type: 'Exercises',
-    reviews: [],
+    reviews: [{
+      id: 'id1',
+      author: 'Rafael Figueiredo',
+      review: 'This note is very well written!',
+      likes: 5,
+      hasLiked: false,
+      date: moment()
+        .subtract('2', 'month')
+        .valueOf(),
+      comments: [],
+    }, {
+      id: 'id2',
+      author: 'Sara Machado',
+      review: 'I didn\'t quite understand the algorithm explained in the last section of this note, could someone enlighten me?',
+      likes: 5,
+      hasLiked: false,
+      date: moment()
+        .subtract('1', 'day')
+        .valueOf(),
+      comments: [{
+        id: 'id1',
+        author: 'Ricardo Grade',
+        comment: 'It is similar to operations performed in Simplex!',
+        date: moment()
+          .subtract('2', 'day')
+          .valueOf(),
+      }],
+    }],
     date: moment()
-      .diff('3', 'day')
-      .toLocaleString(),
+      .subtract('3', 'day')
+      .valueOf(),
   },
   id2: {
     id: 'id2',
@@ -34,8 +61,8 @@ export const dummyStudyMaterials: Record<string, StudyMaterial> = {
     type: 'Exercises',
     reviews: [],
     date: moment()
-      .diff('2', 'day')
-      .toLocaleString(),
+      .subtract('2', 'day')
+      .valueOf(),
   },
   id3: {
     id: 'id3',
@@ -51,8 +78,8 @@ export const dummyStudyMaterials: Record<string, StudyMaterial> = {
     type: 'Exercises',
     reviews: [],
     date: moment()
-      .diff('1', 'day')
-      .toLocaleString(),
+      .subtract('1', 'day')
+      .valueOf(),
   },
 };
 

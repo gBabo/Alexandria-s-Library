@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  GestureResponderEvent, StyleSheet, View, ViewStyle,
+  GestureResponderEvent, StyleSheet, View, ViewProps,
 } from 'react-native';
 
 import StudyMaterial from '../models/StudyMaterial';
@@ -10,8 +10,8 @@ import CustomButton from './UI/CustomButton';
 interface AcquiredStudyMaterialItemProps {
   studyMaterial: StudyMaterial
   onPress: (event: GestureResponderEvent) => void
-  containerStyle: ViewStyle
-  style: ViewStyle
+  containerStyle: ViewProps['style']
+  style: ViewProps['style']
 }
 
 export default function AcquiredStudyMaterialItem({

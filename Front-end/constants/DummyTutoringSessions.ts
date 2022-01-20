@@ -15,8 +15,10 @@ export const dummyTutoringSessions: Record<string, TutoringSession> = {
     location: [30, 30],
     duration: 15,
     date: moment()
-      .diff('3', 'day')
-      .toLocaleString(),
+      .subtract('3', 'day')
+      .valueOf(),
+    pendingEnrolls: [],
+    enrolled: [],
   },
   id2: {
     id: 'id2',
@@ -30,8 +32,10 @@ export const dummyTutoringSessions: Record<string, TutoringSession> = {
     location: [30, 30],
     duration: 30,
     date: moment()
-      .diff('2', 'day')
-      .toLocaleString(),
+      .subtract('2', 'day')
+      .valueOf(),
+    pendingEnrolls: [],
+    enrolled: [],
   },
   id3: {
     id: 'id3',
@@ -45,8 +49,10 @@ export const dummyTutoringSessions: Record<string, TutoringSession> = {
     location: [30, 30],
     duration: 60,
     date: moment()
-      .diff('1', 'day')
-      .toLocaleString(),
+      .subtract('1', 'day')
+      .valueOf(),
+    pendingEnrolls: [],
+    enrolled: [],
   },
 };
 

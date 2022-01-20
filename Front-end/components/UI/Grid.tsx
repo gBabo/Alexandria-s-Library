@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   list: {
+    flex: 1,
     width: '100%',
   },
 });

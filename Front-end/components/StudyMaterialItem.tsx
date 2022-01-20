@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  GestureResponderEvent, StyleSheet, View, ViewStyle,
+  GestureResponderEvent, StyleSheet, View, ViewProps,
 } from 'react-native';
 import { AntDesign, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 
+import Colors from '../constants/Colors';
 import StudyMaterial from '../models/StudyMaterial';
 import { RegularText, SemiBoldText } from './UI/StyledText';
 import CustomButton from './UI/CustomButton';
@@ -11,8 +12,8 @@ import CustomButton from './UI/CustomButton';
 interface StudyMaterialItemProps {
   studyMaterial: StudyMaterial
   onPress: (event: GestureResponderEvent) => void
-  containerStyle: ViewStyle
-  style: ViewStyle
+  containerStyle: ViewProps['style']
+  style: ViewProps['style']
 }
 
 export default function StudyMaterialItem({
@@ -29,7 +30,7 @@ export default function StudyMaterialItem({
             <MaterialIcons
               name="thumb-up"
               size={24}
-              color="#1E88E5"
+              color={Colors.blue}
               style={styles.icon}
             />
             <SemiBoldText style={styles.text}>{studyMaterial.likes}</SemiBoldText>
@@ -44,7 +45,7 @@ export default function StudyMaterialItem({
             <FontAwesome5
               name="ticket-alt"
               size={24}
-              color="#3949AB"
+              color={Colors.purple}
               style={styles.icon}
             />
           </View>
@@ -57,7 +58,7 @@ export default function StudyMaterialItem({
         </View>
         <View style={styles.line}>
           <View style={styles.iconContainer}>
-            <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
+            <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
             <SemiBoldText style={styles.text}>
               {studyMaterial.authorRating}
             </SemiBoldText>

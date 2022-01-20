@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  GestureResponderEvent, StyleSheet, View, ViewStyle,
+  GestureResponderEvent, StyleSheet, View, ViewProps,
 } from 'react-native';
 
 import { SemiBoldText } from './UI/StyledText';
@@ -9,8 +9,8 @@ import CustomButton from './UI/CustomButton';
 interface CategoryTileProps {
   category: string
   onPress: (event: GestureResponderEvent) => void
-  containerStyle: ViewStyle
-  style: ViewStyle
+  containerStyle: ViewProps['style']
+  style: ViewProps['style']
 }
 
 export default function CategoryTile({

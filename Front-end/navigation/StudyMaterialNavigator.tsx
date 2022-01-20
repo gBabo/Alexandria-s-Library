@@ -13,6 +13,8 @@ import SMAcquiredScreen from '../screens/StudyMaterial/SMAcquiredScreen';
 import SMUploadedScreen from '../screens/StudyMaterial/SMUploadedScreen';
 import SMCategoryStoreScreen from '../screens/StudyMaterial/SMCategoryStoreScreen';
 import StudyMaterialScreen from '../screens/StudyMaterial/StudyMaterialScreen';
+import SMDiscussionScreen from '../screens/StudyMaterial/SMDiscussionScreen';
+import SMDiscussionCommentsScreen from '../screens/StudyMaterial/SMDiscussionCommentsScreen';
 
 const SMStoreStack = createNativeStackNavigator<SMStoreStackParamList>();
 const SMExchangesStack = createNativeStackNavigator<SMExchangesStackParamList>();
@@ -25,6 +27,8 @@ export function SMStoreNavigator() {
       <SMStoreStack.Screen name="Store" component={SMStoreScreen} />
       <SMStoreStack.Screen name="CategoryStore" component={SMCategoryStoreScreen} />
       <SMStoreStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
+      <SMStoreStack.Screen name="Discussion" component={SMDiscussionScreen} />
+      <SMStoreStack.Screen name="DiscussionComments" component={SMDiscussionCommentsScreen} />
     </SMStoreStack.Navigator>
   );
 }
@@ -42,6 +46,11 @@ export function SMAcquiredNavigator() {
     <SMAcquiredStack.Navigator screenOptions={{ headerShown: false }}>
       <SMAcquiredStack.Screen name="Acquired" component={SMAcquiredScreen} />
       <SMAcquiredStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
+      <SMAcquiredStack.Screen name="Discussion" component={SMDiscussionScreen} />
+      <SMAcquiredStack.Screen
+        name="DiscussionComments"
+        component={SMDiscussionCommentsScreen}
+      />
     </SMAcquiredStack.Navigator>
   );
 }
@@ -50,7 +59,12 @@ export function SMUploadedNavigator() {
   return (
     <SMUploadedStack.Navigator screenOptions={{ headerShown: false }}>
       <SMUploadedStack.Screen name="Uploaded" component={SMUploadedScreen} />
-      <SMAcquiredStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
+      <SMUploadedStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
+      <SMUploadedStack.Screen name="Discussion" component={SMDiscussionScreen} />
+      <SMUploadedStack.Screen
+        name="DiscussionComments"
+        component={SMDiscussionCommentsScreen}
+      />
     </SMUploadedStack.Navigator>
   );
 }

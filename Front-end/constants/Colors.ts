@@ -13,5 +13,8 @@ export default {
   tabIconSelected: '#2f95dc',
   black: '#000000',
   white: '#ffffff',
+  purple: '#3949AB',
+  blue: '#1E88E5',
+  yellow: '#FBC02D',
   transparent: '#00000000',
 };

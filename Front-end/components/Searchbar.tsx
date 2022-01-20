@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
 
@@ -15,16 +15,17 @@ export default function Searchbar({
 }: SearchBarProps) {
   return (
     <View style={styles.container}>
-      <Feather
+      <Ionicons
         name="search"
+        size={24}
         color={Colors.primary}
-        size={20}
       />
       <TextInput
         placeholder={placeholder}
         value={valueState[0]}
         onChangeText={valueState[1]}
         style={styles.input}
+        multiline
       />
     </View>
   );
@@ -32,17 +33,18 @@ export default function Searchbar({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 5,
-    padding: 10,
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: 1,
     borderColor: Colors.primary,
     backgroundColor: Colors.white,
+    paddingLeft: 10,
   },
   input: {
     flex: 1,
-    marginLeft: 10,
+    padding: 10,
     fontSize: 18,
   },
 });

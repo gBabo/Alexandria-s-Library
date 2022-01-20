@@ -1,9 +1,10 @@
 import React from 'react';
 import {
-  GestureResponderEvent, StyleSheet, View, ViewStyle,
+  GestureResponderEvent, StyleSheet, View, ViewProps,
 } from 'react-native';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
+import Colors from '../constants/Colors';
 import TutoringSession from '../models/TutoringSession';
 import { RegularText, SemiBoldText } from './UI/StyledText';
 import CustomButton from './UI/CustomButton';
@@ -11,8 +12,8 @@ import CustomButton from './UI/CustomButton';
 interface TutoringSessionItemProps {
   tutoringSession: TutoringSession
   onPress: (event: GestureResponderEvent) => void
-  containerStyle: ViewStyle
-  style: ViewStyle
+  containerStyle: ViewProps['style']
+  style: ViewProps['style']
 }
 
 export default function TutoringSessionItem({
@@ -30,7 +31,7 @@ export default function TutoringSessionItem({
             <FontAwesome5
               name="ticket-alt"
               size={24}
-              color="#3949AB"
+              color={Colors.purple}
               style={styles.icon}
             />
           </View>
@@ -46,7 +47,7 @@ export default function TutoringSessionItem({
         </RegularText>
         <View style={styles.line}>
           <View style={styles.iconContainer}>
-            <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
+            <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
             <SemiBoldText style={styles.text}>
               {tutoringSession.tutorRating}
             </SemiBoldText>

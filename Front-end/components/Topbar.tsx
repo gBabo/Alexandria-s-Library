@@ -1,11 +1,11 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
 
 import Colors from '../constants/Colors';
 import Searchbar from './Searchbar';
 import SortingOption from './SortingOption';
 import CustomButton from './UI/CustomButton';
+import { SemiBoldText } from './UI/StyledText';
 
 export interface SortingMethod<T> {
   value: keyof T
@@ -32,7 +32,7 @@ export default function Topbar<T>({
     : undefined;
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView behavior="height">
       <View style={styles.bar}>
         <Searchbar placeholder={searchPlaceholder} valueState={searchState} />
         {sortingOptions && (
@@ -40,15 +40,17 @@ export default function Topbar<T>({
           <CustomButton
             onPress={() => sortingOptionsVisible[1]((value) => !value)}
             style={{
-              backgroundColor: !sortingOptionsVisible[0] ? Colors.primary : Colors.white,
-              borderColor: !sortingOptionsVisible[0] ? Colors.transparent : Colors.primary,
+              flex: 1,
+              backgroundColor: sortingOptionsVisible[0] ? Colors.white : Colors.primary,
+              borderColor: sortingOptionsVisible[0] ? Colors.primary : Colors.transparent,
             }}
           >
-            <FontAwesome
-              name="sliders"
-              size={30}
-              color={!sortingOptionsVisible[0] ? Colors.white : Colors.primary}
-            />
+            <SemiBoldText style={[styles.text, {
+              color: sortingOptionsVisible[0] ? Colors.primary : Colors.white,
+            }]}
+            >
+              Order By
+            </SemiBoldText>
           </CustomButton>
         </View>
         )}
@@ -80,23 +82,23 @@ export default function Topbar<T>({
           ))}
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: 60,
-  },
   bar: {
-    flex: 1,
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 5,
     paddingLeft: 5,
     paddingRight: 5,
+  },
+  text: {
+    fontSize: 16,
+    textAlign: 'center',
   },
   sortingButton: {
     marginLeft: 5,

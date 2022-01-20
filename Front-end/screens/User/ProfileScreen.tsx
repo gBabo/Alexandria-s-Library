@@ -4,13 +4,14 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
+import { ProfileScreenProps } from '../../navigation/types';
+import Colors from '../../constants/Colors';
 import { RegularText, SemiBoldText } from '../../components/UI/StyledText';
 import { View } from '../../components/UI/Themed';
 import Loading from '../../components/UI/Loading';
-import { getUser } from '../../store/slices/user';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
-import { ProfileScreenProps } from '../../navigation/types';
+import { getUser } from '../../store/slices/user';
 
 export default function ProfileScreen({ navigation }: ProfileScreenProps) {
   const dispatch = useAppDispatch();
@@ -46,14 +47,19 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
             <SemiBoldText>Credits</SemiBoldText>
             {`: ${user.credits}`}
           </RegularText>
-          <FontAwesome5 name="ticket-alt" size={24} color="#3949AB" style={styles.icon} />
+          <FontAwesome5
+            name="ticket-alt"
+            size={24}
+            color={Colors.purple}
+            style={styles.icon}
+          />
         </View>
         <View style={[styles.block, styles.line]}>
           <RegularText numberOfLines={1} style={styles.text}>
             <SemiBoldText>Rating</SemiBoldText>
             {`: ${user.rating}`}
           </RegularText>
-          <AntDesign name="star" size={24} color="#FBC02D" style={styles.icon} />
+          <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
         </View>
       </View>
     </ScrollView>

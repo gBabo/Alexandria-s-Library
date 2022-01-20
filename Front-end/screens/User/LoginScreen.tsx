@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   action: {
     flexDirection: 'row',
-    backgroundColor: '#1E88E5',
+    backgroundColor: Colors.blue,
     borderColor: Colors.transparent,
   },
 });

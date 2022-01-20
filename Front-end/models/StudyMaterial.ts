@@ -1,32 +1,19 @@
+import StudyMaterialReview from './StudyMaterialReview';
+
 export default interface StudyMaterial {
   id: string
   authorEmail: string
   author: string
-  authorInstitution: string
   authorRating: number
-  likes: number
-  hasLiked: boolean
+  authorInstitution: string
   name: string
   description: string
   price: number
   type: string
+  likes: number
+  hasLiked: boolean
   reviews: StudyMaterialReview[]
-  date: string
-}
-
-export interface StudyMaterialReview {
-  id: string
-  author: string
-  likes: string
-  comments: StudyMaterialReviewComment[]
-  date: string
-}
-
-export interface StudyMaterialReviewComment {
-  id: string
-  author: string
-  comment: string
-  date: string
+  date: number
 }
 
 export interface StudyMaterialExchange {
@@ -36,5 +23,5 @@ export interface StudyMaterialExchange {
   requesterInstitution: string
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string
-  date: string
+  date: number
 }

@@ -35,6 +35,8 @@ export type SMStoreStackParamList = {
   Store: undefined;
   CategoryStore: { category: string };
   StudyMaterial: { id: string };
+  Discussion: { studyMaterialId: string };
+  DiscussionComments: { studyMaterialId: string, reviewId: string };
 };
 
 export type SMExchangesStackParamList = {
@@ -44,11 +46,15 @@ export type SMExchangesStackParamList = {
 export type SMAcquiredStackParamList = {
   Acquired: undefined;
   StudyMaterial: { id: string };
+  Discussion: { studyMaterialId: string };
+  DiscussionComments: { studyMaterialId: string, reviewId: string };
 };
 
 export type SMUploadedStackParamList = {
   Uploaded: undefined;
   StudyMaterial: { id: string };
+  Discussion: { studyMaterialId: string };
+  DiscussionComments: { studyMaterialId: string, reviewId: string };
 };
 
 export type TStoreStackParamList = {
