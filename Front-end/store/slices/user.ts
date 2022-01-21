@@ -15,8 +15,8 @@ const initialState: State = {
   user: dummyUser,
 };
 
-export const getUser = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
-  'user/getUser',
+export const fetchUser = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
+  'user/fetchUser',
   // TODO
   async () => ({}),
   /*
@@ -32,9 +32,9 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUser.pending, onPending);
-    builder.addCase(getUser.fulfilled, onUpdate);
-    builder.addCase(getUser.rejected, (state, action) => onError(state, action, 'Error getting user!'));
+    builder.addCase(fetchUser.pending, onPending);
+    builder.addCase(fetchUser.fulfilled, onUpdate);
+    builder.addCase(fetchUser.rejected, (state, action) => onError(state, action, 'Error getting user!'));
   },
 });
 

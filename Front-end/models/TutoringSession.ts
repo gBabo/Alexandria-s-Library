@@ -23,6 +23,12 @@ export interface Enrollment {
   id: string
   requester: string
   tutoringSessionId: string
-  status: string
+  status: EnrollmentStatus
   date: number
+}
+
+export enum EnrollmentStatus {
+  PENDING,
+  CONFIRMED,
+  REJECTED,
 }

@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import TutoringSession, { Enrollment } from '../models/TutoringSession';
+import TutoringSession, { Enrollment, EnrollmentStatus } from '../models/TutoringSession';
 
 export const dummyTutoringSessions: Record<string, TutoringSession> = {
   id1: {
@@ -12,7 +12,7 @@ export const dummyTutoringSessions: Record<string, TutoringSession> = {
     name: 'Algebra Exam',
     description: 'In this session I will prepare you for the Algebra Exam.',
     price: 1,
-    location: [30, 30],
+    location: 'IST da Alameda, Civil Pavilion, Room 5',
     duration: 15,
     date: moment()
       .subtract('3', 'day')
@@ -29,7 +29,7 @@ export const dummyTutoringSessions: Record<string, TutoringSession> = {
     name: 'Discrete Mathematics Exam',
     description: 'In this session I will prepare you for the Discrete Mathematics Exam.',
     price: 2,
-    location: [30, 30],
+    location: 'IST da Alameda, Civil Pavilion, Room 5',
     duration: 30,
     date: moment()
       .subtract('2', 'day')
@@ -46,7 +46,7 @@ export const dummyTutoringSessions: Record<string, TutoringSession> = {
     name: 'Calculus Exam',
     description: 'In this session I will prepare you for the Calculus Exam.',
     price: 3,
-    location: [30, 30],
+    location: 'IST da Alameda, Civil Pavilion, Room 5',
     duration: 60,
     date: moment()
       .subtract('1', 'day')
@@ -64,4 +64,28 @@ export const dummyTutoringSessionsCategories: Record<string, string[]> = {
   'Cyber-Security': ['id1', 'id2', 'id3'],
 };
 
-export const dummyEnrollments: Enrollment[] = [];
+export const dummyEnrollments: Enrollment[] = [{
+  id: 'id1',
+  tutoringSessionId: 'id1',
+  requester: 'Sara Machado',
+  status: EnrollmentStatus.PENDING,
+  date: moment()
+    .add('1', 'day')
+    .valueOf(),
+}, {
+  id: 'id2',
+  tutoringSessionId: 'id2',
+  requester: 'Ricardo Grade',
+  status: EnrollmentStatus.CONFIRMED,
+  date: moment()
+    .add('2', 'day')
+    .valueOf(),
+}, {
+  id: 'id3',
+  tutoringSessionId: 'id2',
+  requester: 'Sara Machado',
+  status: EnrollmentStatus.REJECTED,
+  date: moment()
+    .add('3', 'day')
+    .valueOf(),
+}];

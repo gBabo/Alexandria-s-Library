@@ -126,7 +126,7 @@ const screens = {
 const Drawer = createDrawerNavigator<DrawerParamList>();
 
 export default function DrawerNavigator() {
-  const localId = useAppSelector(({ authentication }) => authentication.localId);
+  const localId = useAppSelector((s) => s.authentication.localId);
 
   return (
     <Drawer.Navigator
@@ -178,7 +178,7 @@ function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
     T: useState(false),
   };
 
-  const localId = useAppSelector(({ authentication }) => authentication.localId);
+  const localId = useAppSelector((s) => s.authentication.localId);
   useEffect(() => {
     focusedLabelState[1](navigation.getState().routeNames[navigation.getState().index]);
   }, [localId]);

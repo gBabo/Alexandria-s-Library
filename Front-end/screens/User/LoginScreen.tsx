@@ -26,7 +26,7 @@ type Label = 'email' | 'password';
 
 export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login'>) {
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector(({ authentication }) => authentication.isLoading);
+  const isLoading = useAppSelector((s) => s.authentication.isLoading);
   const refs: Record<Label, RefObject<TextInput>> = {
     email: useRef<TextInput>(null),
     password: useRef<TextInput>(null),
@@ -112,11 +112,7 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
           </View>
           <View style={styles.actionContainer}>
             <CustomButton onPress={() => onLogin(signin)} style={styles.action} row>
-              <FontAwesome5
-                name="sign-in-alt"
-                size={30}
-                color={Colors.white}
-              />
+              <FontAwesome5 name="sign-in-alt" size={30} color={Colors.white} />
               <SemiBoldText style={styles.actionText}>Sign in</SemiBoldText>
             </CustomButton>
           </View>

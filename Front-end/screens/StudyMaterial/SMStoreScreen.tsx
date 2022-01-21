@@ -13,7 +13,7 @@ import Fallback from '../../components/UI/Fallback';
 import CategoryGrid from '../../components/CategoryGrid';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
-import { getStudyMaterials } from '../../store/slices/studyMaterial';
+import { fetchStudyMaterials } from '../../store/slices/studyMaterial';
 
 export default function SMStoreScreen({ navigation }: SMStoreStackScreenProps<'Store'>) {
   const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ export default function SMStoreScreen({ navigation }: SMStoreStackScreenProps<'S
   const studyMaterialsCategories = useAppSelector((s) => s.studyMaterial.studyMaterialsCategories);
 
   useEffect(() => {
-    dispatch(getStudyMaterials());
+    dispatch(fetchStudyMaterials());
   }, []);
 
   const onPressHelp = useCallback(() => Alert.alert(
@@ -65,7 +65,7 @@ export default function SMStoreScreen({ navigation }: SMStoreStackScreenProps<'S
       searchPlaceholder="Search Study Material Categories"
       onPress={(category) => navigation.navigate('CategoryStore', { category })}
       refreshing={isLoading}
-      onRefresh={() => dispatch(getStudyMaterials())}
+      onRefresh={() => dispatch(fetchStudyMaterials())}
     />
   );
 }

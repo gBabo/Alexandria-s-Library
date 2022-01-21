@@ -15,7 +15,7 @@ import StudyMaterialReviewCommentItem from '../../components/StudyMaterialReview
 import DiscussionList, { RenderListHeaderComponentProps } from '../../components/DiscussionList';
 import useAppSelector from '../../hooks/useAppSelector';
 import useAppDispatch from '../../hooks/useAppDispatch';
-import { getStudyMaterials, newStudyMaterialReviewComment } from '../../store/slices/studyMaterial';
+import { fetchStudyMaterials, addReviewComment } from '../../store/slices/studyMaterial';
 
 export default function SMDiscussionCommentsScreen({
   navigation,
@@ -82,9 +82,9 @@ export default function SMDiscussionCommentsScreen({
         items={[...review.comments].sort((a, b) => (b.date < a.date ? -1 : 1))}
         renderItem={renderItem}
         refreshing={isLoading}
-        onRefresh={() => dispatch(getStudyMaterials())}
+        onRefresh={() => dispatch(fetchStudyMaterials())}
         placeholder="Write your answer here"
-        onSend={(message) => dispatch(newStudyMaterialReviewComment({
+        onSend={(message) => dispatch(addReviewComment({
           studyMaterialId: route.params.studyMaterialId,
           reviewId: route.params.reviewId,
           comment: message,

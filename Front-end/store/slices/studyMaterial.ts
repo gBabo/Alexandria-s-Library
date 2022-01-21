@@ -31,16 +31,16 @@ const initialState: State = {
   isLoading: false,
 };
 
-export const getStudyMaterials = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
-  'studyMaterial/getStudyMaterials',
+export const fetchStudyMaterials = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
+  'studyMaterial/fetchStudyMaterials',
   // TODO
   async () => ({}),
 );
 
-export const toggleLikeStudyMaterial = createAsyncThunk<Partial<State>, {
+export const toggleStudyMaterialLike = createAsyncThunk<Partial<State>, {
   studyMaterialId: string
 }, ThunkApiConfig>(
-  'studyMaterial/toggleLikeStudyMaterial',
+  'studyMaterial/toggleStudyMaterialLike',
   // TODO
   async ({ studyMaterialId }, { getState }) => {
     const {
@@ -52,10 +52,10 @@ export const toggleLikeStudyMaterial = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const buyStudyMaterial = createAsyncThunk<Partial<State>, {
+export const purchaseStudyMaterial = createAsyncThunk<Partial<State>, {
   studyMaterialId: string
 }, ThunkApiConfig>(
-  'studyMaterial/buyStudyMaterial',
+  'studyMaterial/purchaseStudyMaterial',
   // TODO
   async ({ studyMaterialId }, { getState }) => {
     const {
@@ -71,11 +71,11 @@ export const buyStudyMaterial = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const exchangeStudyMaterial = createAsyncThunk<Partial<State>, {
+export const proposeExchange = createAsyncThunk<Partial<State>, {
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string
 }, ThunkApiConfig>(
-  'studyMaterial/exchangeStudyMaterial',
+  'studyMaterial/proposeExchange',
   // TODO
   async () => {
     alert('Study Material Exchange', 'Exchange has been successfully proposed.');
@@ -83,10 +83,10 @@ export const exchangeStudyMaterial = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const getStudyMaterialLink = createAsyncThunk<Partial<State>, {
+export const fetchStudyMaterialLink = createAsyncThunk<Partial<State>, {
   studyMaterialId: string
 }, ThunkApiConfig>(
-  'studyMaterial/getStudyMaterialLink',
+  'studyMaterial/fetchStudyMaterialLink',
   // TODO
   async () => {
     alert('Obtaining Study Material', 'Link copied to clipboard.');
@@ -94,11 +94,11 @@ export const getStudyMaterialLink = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const toggleLikeStudyMaterialReview = createAsyncThunk<Partial<State>, {
+export const toggleReviewLike = createAsyncThunk<Partial<State>, {
   studyMaterialId: string
   reviewId: string
 }, ThunkApiConfig>(
-  'studyMaterial/toggleLikeStudyMaterialReview',
+  'studyMaterial/toggleReviewLike',
   // TODO
   async ({
     studyMaterialId,
@@ -115,11 +115,11 @@ export const toggleLikeStudyMaterialReview = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const newStudyMaterialReview = createAsyncThunk<Partial<State>, {
+export const addReview = createAsyncThunk<Partial<State>, {
   studyMaterialId: string
   review: string
 }, ThunkApiConfig>(
-  'studyMaterial/newStudyMaterialReview',
+  'studyMaterial/addReview',
   // TODO
   async ({
     studyMaterialId,
@@ -144,12 +144,12 @@ export const newStudyMaterialReview = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const newStudyMaterialReviewComment = createAsyncThunk<Partial<State>, {
+export const addReviewComment = createAsyncThunk<Partial<State>, {
   studyMaterialId: string
   reviewId: string
   comment: string
 }, ThunkApiConfig>(
-  'studyMaterial/newStudyMaterialReviewComment',
+  'studyMaterial/addReviewComment',
   // TODO
   async ({
     studyMaterialId,
@@ -236,38 +236,72 @@ export const publishStudyMaterial = createAsyncThunk<Partial<State>, {
   },
 );
 
+export const settleExchange = createAsyncThunk<Partial<State>, {
+  studyMaterialExchangeId: string
+  accept: boolean
+}, ThunkApiConfig>(
+  'studyMaterial/settleExchange',
+  // TODO
+  async ({
+    studyMaterialExchangeId,
+    accept,
+  }, { getState }) => {
+    let {
+      studyMaterialsExchanges,
+      acquiredStudyMaterials,
+    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    const studyMaterialsExchange = studyMaterialsExchanges
+      .find(({ id }) => id === studyMaterialExchangeId)!;
+    studyMaterialsExchanges = studyMaterialsExchanges
+      .filter(({ id }) => id !== studyMaterialExchangeId);
+    if (accept) {
+      acquiredStudyMaterials = acquiredStudyMaterials
+        .filter((id) => id !== studyMaterialsExchange.requesteeStudyMaterialId);
+      acquiredStudyMaterials.push(studyMaterialsExchange.requesterStudyMaterialId);
+    }
+    alert('Study Materials Exchange', `The exchange was successfully ${accept ? 'accepted' : 'rejected'}.`);
+    return {
+      studyMaterialsExchanges,
+      acquiredStudyMaterials,
+    };
+  },
+);
+
 const studyMaterialSlice = createSlice({
   name: 'studyMaterial',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getStudyMaterials.pending, onPending);
-    builder.addCase(getStudyMaterials.fulfilled, onUpdate);
-    builder.addCase(getStudyMaterials.rejected, (state, action) => onError(state, action, 'Error getting study materials!'));
-    builder.addCase(toggleLikeStudyMaterial.pending, onPending);
-    builder.addCase(toggleLikeStudyMaterial.fulfilled, onUpdate);
-    builder.addCase(toggleLikeStudyMaterial.rejected, (state, action) => onError(state, action, 'Error liking a study material!'));
-    builder.addCase(buyStudyMaterial.pending, onPending);
-    builder.addCase(buyStudyMaterial.fulfilled, onUpdate);
-    builder.addCase(buyStudyMaterial.rejected, (state, action) => onError(state, action, 'Error buying a study material!'));
-    builder.addCase(exchangeStudyMaterial.pending, onPending);
-    builder.addCase(exchangeStudyMaterial.fulfilled, onUpdate);
-    builder.addCase(exchangeStudyMaterial.rejected, (state, action) => onError(state, action, 'Error trying to exchange study materials!'));
-    builder.addCase(getStudyMaterialLink.pending, onPending);
-    builder.addCase(getStudyMaterialLink.fulfilled, onUpdate);
-    builder.addCase(getStudyMaterialLink.rejected, (state, action) => onError(state, action, 'Error getting a study material link!'));
-    builder.addCase(toggleLikeStudyMaterialReview.pending, onPending);
-    builder.addCase(toggleLikeStudyMaterialReview.fulfilled, onUpdate);
-    builder.addCase(toggleLikeStudyMaterialReview.rejected, (state, action) => onError(state, action, 'Error liking a study material review!'));
-    builder.addCase(newStudyMaterialReview.pending, onPending);
-    builder.addCase(newStudyMaterialReview.fulfilled, onUpdate);
-    builder.addCase(newStudyMaterialReview.rejected, (state, action) => onError(state, action, 'Error reviewing a study material!'));
-    builder.addCase(newStudyMaterialReviewComment.pending, onPending);
-    builder.addCase(newStudyMaterialReviewComment.fulfilled, onUpdate);
-    builder.addCase(newStudyMaterialReviewComment.rejected, (state, action) => onError(state, action, 'Error responding to a study material review!'));
+    builder.addCase(fetchStudyMaterials.pending, onPending);
+    builder.addCase(fetchStudyMaterials.fulfilled, onUpdate);
+    builder.addCase(fetchStudyMaterials.rejected, (state, action) => onError(state, action, 'Error getting study materials!'));
+    builder.addCase(toggleStudyMaterialLike.pending, onPending);
+    builder.addCase(toggleStudyMaterialLike.fulfilled, onUpdate);
+    builder.addCase(toggleStudyMaterialLike.rejected, (state, action) => onError(state, action, 'Error liking a study material!'));
+    builder.addCase(purchaseStudyMaterial.pending, onPending);
+    builder.addCase(purchaseStudyMaterial.fulfilled, onUpdate);
+    builder.addCase(purchaseStudyMaterial.rejected, (state, action) => onError(state, action, 'Error buying a study material!'));
+    builder.addCase(proposeExchange.pending, onPending);
+    builder.addCase(proposeExchange.fulfilled, onUpdate);
+    builder.addCase(proposeExchange.rejected, (state, action) => onError(state, action, 'Error trying to exchange study materials!'));
+    builder.addCase(fetchStudyMaterialLink.pending, onPending);
+    builder.addCase(fetchStudyMaterialLink.fulfilled, onUpdate);
+    builder.addCase(fetchStudyMaterialLink.rejected, (state, action) => onError(state, action, 'Error getting a study material link!'));
+    builder.addCase(toggleReviewLike.pending, onPending);
+    builder.addCase(toggleReviewLike.fulfilled, onUpdate);
+    builder.addCase(toggleReviewLike.rejected, (state, action) => onError(state, action, 'Error liking a study material review!'));
+    builder.addCase(addReview.pending, onPending);
+    builder.addCase(addReview.fulfilled, onUpdate);
+    builder.addCase(addReview.rejected, (state, action) => onError(state, action, 'Error reviewing a study material!'));
+    builder.addCase(addReviewComment.pending, onPending);
+    builder.addCase(addReviewComment.fulfilled, onUpdate);
+    builder.addCase(addReviewComment.rejected, (state, action) => onError(state, action, 'Error responding to a study material review!'));
     builder.addCase(publishStudyMaterial.pending, onPending);
     builder.addCase(publishStudyMaterial.fulfilled, onUpdate);
     builder.addCase(publishStudyMaterial.rejected, (state, action) => onError(state, action, 'Error publishing a study material!'));
+    builder.addCase(settleExchange.pending, onPending);
+    builder.addCase(settleExchange.fulfilled, onUpdate);
+    builder.addCase(settleExchange.rejected, (state, action) => onError(state, action, 'Error settling exchange of study materials!'));
   },
 });
 

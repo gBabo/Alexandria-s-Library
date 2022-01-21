@@ -41,6 +41,7 @@ export type SMStoreStackParamList = {
 
 export type SMExchangesStackParamList = {
   Exchanges: undefined;
+  StudyMaterial: { id: string };
 };
 
 export type SMAcquiredStackParamList = {
@@ -66,11 +67,13 @@ export type TStoreStackParamList = {
 
 export type TEnrolledStackParamList = {
   Enrolled: undefined;
+  TutoringSession: { id: string };
 };
 
 export type TScheduledStackParamList = {
   Scheduled: undefined;
   Schedule: undefined;
+  TutoringSession: { id: string };
 };
 
 export type LoginStackParamList = {

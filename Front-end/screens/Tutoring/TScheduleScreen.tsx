@@ -27,7 +27,7 @@ type TextInputLabel = 'name' | 'categories' | 'description' | 'location' | 'dura
 
 export default function TScheduleScreen({ navigation }: TScheduledStackScreenProps<'Schedule'>) {
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector(({ tutoring }) => tutoring.isLoading);
+  const isLoading = useAppSelector((s) => s.tutoring.isLoading);
   const refs: Record<TextInputLabel, RefObject<TextInput>> = {
     name: useRef<TextInput>(null),
     categories: useRef<TextInput>(null),

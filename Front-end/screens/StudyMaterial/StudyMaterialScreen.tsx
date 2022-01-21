@@ -17,10 +17,10 @@ import CustomButton from '../../components/UI/CustomButton';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
 import {
-  buyStudyMaterial,
-  exchangeStudyMaterial,
-  getStudyMaterialLink,
-  toggleLikeStudyMaterial,
+  purchaseStudyMaterial,
+  proposeExchange,
+  fetchStudyMaterialLink,
+  toggleStudyMaterialLike,
 } from '../../store/slices/studyMaterial';
 
 export default function StudyMaterialScreen({
@@ -47,14 +47,14 @@ export default function StudyMaterialScreen({
       text: 'Yes',
       style: 'default',
       onPress: () => {
-        dispatch(buyStudyMaterial({ studyMaterialId: studyMaterial.id }));
+        dispatch(purchaseStudyMaterial({ studyMaterialId: studyMaterial.id }));
       },
     }, {
       text: 'Cancel',
       style: 'cancel',
     }], {
       cancelable: true,
-    }), [navigation, dispatch, exchangeStudyMaterial, studyMaterial],
+    }), [navigation, dispatch, proposeExchange, studyMaterial],
   );
 
   const confirmStudyMaterialExchange = useCallback(
@@ -64,7 +64,7 @@ export default function StudyMaterialScreen({
       text: 'Yes',
       style: 'default',
       onPress: () => {
-        dispatch(exchangeStudyMaterial({
+        dispatch(proposeExchange({
           requesterStudyMaterialId: requesterStudyMaterial.id,
           requesteeStudyMaterialId: studyMaterial.id,
         }));
@@ -74,7 +74,7 @@ export default function StudyMaterialScreen({
       style: 'cancel',
     }], {
       cancelable: true,
-    }), [pickerRef, navigation, dispatch, exchangeStudyMaterial, studyMaterial],
+    }), [pickerRef, navigation, dispatch, proposeExchange, studyMaterial],
   );
 
   return isLoading ? (
@@ -85,7 +85,7 @@ export default function StudyMaterialScreen({
         <View style={styles.line}>
           <CustomButton
             onPress={() => {
-              dispatch(toggleLikeStudyMaterial({ studyMaterialId: studyMaterial.id }));
+              dispatch(toggleStudyMaterialLike({ studyMaterialId: studyMaterial.id }));
             }}
             style={{
               backgroundColor: studyMaterial.hasLiked ? Colors.yellow : Colors.blue,
@@ -149,16 +149,14 @@ export default function StudyMaterialScreen({
                 color={Colors.white}
                 style={styles.iconL}
               />
-              <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-                Discussion
-              </SemiBoldText>
+              <SemiBoldText style={styles.actionText}>Discussion</SemiBoldText>
             </View>
             <View style={{
               flexDirection: 'row-reverse',
               backgroundColor: Colors.transparent,
             }}
             >
-              <RegularText style={[styles.subtext, { color: Colors.white }]}>
+              <RegularText style={styles.actionSubtext}>
                 {`${studyMaterial.reviews.length} Reviews`}
               </RegularText>
             </View>
@@ -167,7 +165,9 @@ export default function StudyMaterialScreen({
         {acquiredStudyMaterials.some(({ id }) => id === studyMaterial.id) ? (
           <View style={styles.line}>
             <CustomButton
-              onPress={() => dispatch(getStudyMaterialLink({ studyMaterialId: studyMaterial.id }))}
+              onPress={() => {
+                dispatch(fetchStudyMaterialLink({ studyMaterialId: studyMaterial.id }));
+              }}
               style={styles.action}
               row
             >
@@ -177,17 +177,12 @@ export default function StudyMaterialScreen({
                 color={Colors.white}
                 style={styles.iconL}
               />
-              <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-                Get link
-              </SemiBoldText>
+              <SemiBoldText style={styles.actionText}>Get Link</SemiBoldText>
             </CustomButton>
           </View>
         ) : (
           <View style={styles.line}>
-            <CustomButton
-              onPress={confirmStudyMaterialPurchase}
-              style={styles.action}
-            >
+            <CustomButton onPress={confirmStudyMaterialPurchase} style={styles.action}>
               <View style={styles.actionSeparation}>
                 <FontAwesome5
                   name="link"
@@ -195,12 +190,10 @@ export default function StudyMaterialScreen({
                   color={Colors.white}
                   style={styles.iconL}
                 />
-                <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-                  Purchase
-                </SemiBoldText>
+                <SemiBoldText style={styles.actionText}>Purchase</SemiBoldText>
               </View>
               <View style={styles.actionSeparation}>
-                <RegularText style={[styles.subtext, { color: Colors.white }]}>
+                <RegularText style={styles.actionSubtext}>
                   {studyMaterial.price}
                 </RegularText>
                 <FontAwesome5
@@ -222,9 +215,7 @@ export default function StudyMaterialScreen({
                 color={Colors.white}
                 style={styles.iconL}
               />
-              <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-                Exchange
-              </SemiBoldText>
+              <SemiBoldText style={styles.actionText}>Exchange</SemiBoldText>
             </CustomButton>
             <Picker
               ref={pickerRef}
@@ -323,5 +314,15 @@ const styles = StyleSheet.create({
   actionSeparation: {
     flexDirection: 'row',
     backgroundColor: Colors.transparent,
+  },
+  actionText: {
+    fontSize: 20,
+    textAlign: 'center',
+    color: Colors.white,
+  },
+  actionSubtext: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: Colors.white,
   },
 });

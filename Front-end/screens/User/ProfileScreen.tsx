@@ -11,7 +11,7 @@ import { View } from '../../components/UI/Themed';
 import Loading from '../../components/UI/Loading';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
-import { getUser } from '../../store/slices/user';
+import { fetchUser } from '../../store/slices/user';
 
 export default function ProfileScreen({ navigation }: ProfileScreenProps) {
   const dispatch = useAppDispatch();
@@ -24,7 +24,7 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
   }, [navigation, isFocused]);
 
   useEffect(() => {
-    dispatch(getUser());
+    dispatch(fetchUser());
   }, []);
 
   return isLoading || !user ? (

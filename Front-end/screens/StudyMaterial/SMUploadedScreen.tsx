@@ -15,7 +15,7 @@ import ItemList, { RenderItemProps } from '../../components/ItemList';
 import UploadedStudyMaterialItem from '../../components/UploadedStudyMaterialItem';
 import useAppSelector from '../../hooks/useAppSelector';
 import useAppDispatch from '../../hooks/useAppDispatch';
-import { getStudyMaterials } from '../../store/slices/studyMaterial';
+import { fetchStudyMaterials } from '../../store/slices/studyMaterial';
 
 export default function SMUploadedScreen({ navigation }: SMUploadedStackScreenProps<'Uploaded'>) {
   const dispatch = useAppDispatch();
@@ -67,7 +67,7 @@ export default function SMUploadedScreen({ navigation }: SMUploadedStackScreenPr
           }}
           renderItem={renderItem}
           refreshing={isLoading}
-          onRefresh={() => dispatch(getStudyMaterials())}
+          onRefresh={() => dispatch(fetchStudyMaterials())}
         />
       )}
       <CustomButton

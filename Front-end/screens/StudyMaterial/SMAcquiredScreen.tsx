@@ -11,7 +11,7 @@ import ItemList, { RenderItemProps } from '../../components/ItemList';
 import AcquiredStudyMaterialItem from '../../components/AcquiredStudyMaterialItem';
 import useAppSelector from '../../hooks/useAppSelector';
 import useAppDispatch from '../../hooks/useAppDispatch';
-import { getStudyMaterials } from '../../store/slices/studyMaterial';
+import { fetchStudyMaterials } from '../../store/slices/studyMaterial';
 
 export default function SMAcquiredScreen({ navigation }: SMAcquiredStackScreenProps<'Acquired'>) {
   const dispatch = useAppDispatch();
@@ -61,7 +61,7 @@ export default function SMAcquiredScreen({ navigation }: SMAcquiredStackScreenPr
       }}
       renderItem={renderItem}
       refreshing={isLoading}
-      onRefresh={() => dispatch(getStudyMaterials())}
+      onRefresh={() => dispatch(fetchStudyMaterials())}
     />
   );
 }

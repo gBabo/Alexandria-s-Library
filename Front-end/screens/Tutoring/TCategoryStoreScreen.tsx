@@ -11,7 +11,7 @@ import TutoringSessionItem from '../../components/TutoringSessionItem';
 import useAppSelector from '../../hooks/useAppSelector';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import TutoringSession from '../../models/TutoringSession';
-import { getTutoringSessions } from '../../store/slices/tutoring';
+import { fetchTutoringSessions } from '../../store/slices/tutoring';
 
 export default function TCategoryStoreScreen({
   navigation,
@@ -80,7 +80,7 @@ export default function TCategoryStoreScreen({
       }}
       renderItem={renderItem}
       refreshing={isLoading}
-      onRefresh={() => dispatch(getTutoringSessions())}
+      onRefresh={() => dispatch(fetchTutoringSessions())}
     />
   );
 }

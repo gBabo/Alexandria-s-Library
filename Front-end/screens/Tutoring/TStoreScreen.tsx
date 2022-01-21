@@ -13,7 +13,7 @@ import Fallback from '../../components/UI/Fallback';
 import CategoryGrid from '../../components/CategoryGrid';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
-import { getTutoringSessions } from '../../store/slices/tutoring';
+import { fetchTutoringSessions } from '../../store/slices/tutoring';
 
 export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Store'>) {
   const dispatch = useAppDispatch();
@@ -21,7 +21,7 @@ export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Sto
   const tutoringSessionsCategories = useAppSelector((s) => s.tutoring.tutoringSessionsCategories);
 
   useEffect(() => {
-    dispatch(getTutoringSessions());
+    dispatch(fetchTutoringSessions());
   }, []);
 
   const onPressHelp = useCallback(() => Alert.alert(
@@ -66,7 +66,7 @@ export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Sto
       searchPlaceholder="Search Tutoring Session Categories"
       onPress={(category) => navigation.navigate('CategoryStore', { category })}
       refreshing={isLoading}
-      onRefresh={() => dispatch(getTutoringSessions())}
+      onRefresh={() => dispatch(fetchTutoringSessions())}
     />
   );
 }

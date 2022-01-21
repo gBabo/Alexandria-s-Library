@@ -38,6 +38,7 @@ export function SMExchangesNavigator() {
   return (
     <SMExchangesStack.Navigator screenOptions={{ headerShown: false }}>
       <SMExchangesStack.Screen name="Exchanges" component={SMExchangesScreen} />
+      <SMExchangesStack.Screen name="StudyMaterial" component={StudyMaterialScreen} />
     </SMExchangesStack.Navigator>
   );
 }

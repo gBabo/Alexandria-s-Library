@@ -11,7 +11,7 @@ import StudyMaterialReviewItem from '../../components/StudyMaterialReviewItem';
 import DiscussionList from '../../components/DiscussionList';
 import useAppSelector from '../../hooks/useAppSelector';
 import useAppDispatch from '../../hooks/useAppDispatch';
-import { getStudyMaterials, newStudyMaterialReview } from '../../store/slices/studyMaterial';
+import { fetchStudyMaterials, addReview } from '../../store/slices/studyMaterial';
 
 export default function SMDiscussionScreen({
   navigation,
@@ -57,9 +57,9 @@ export default function SMDiscussionScreen({
       items={[...studyMaterial.reviews].sort((a, b) => (b.date < a.date ? -1 : 1))}
       renderItem={renderItem}
       refreshing={isLoading}
-      onRefresh={() => dispatch(getStudyMaterials())}
+      onRefresh={() => dispatch(fetchStudyMaterials())}
       placeholder="Write your review here"
-      onSend={(message) => dispatch(newStudyMaterialReview({
+      onSend={(message) => dispatch(addReview({
         studyMaterialId: route.params.studyMaterialId,
         review: message,
       }))}

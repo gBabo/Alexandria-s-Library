@@ -91,7 +91,27 @@ export const dummyStudyMaterialsCategories: Record<string, string[]> = {
   'Cyber-Security': ['id1', 'id2', 'id3'],
 };
 
-export const dummyStudyMaterialsExchanges: StudyMaterialExchange[] = [];
+export const dummyStudyMaterialsExchanges: StudyMaterialExchange[] = [{
+  id: 'id1',
+  requesterName: 'Sara Machado',
+  requesterInstitution: 'IST',
+  requesterRating: 5,
+  requesterStudyMaterialId: 'id1',
+  requesteeStudyMaterialId: 'id2',
+  date: moment()
+    .subtract('1', 'day')
+    .valueOf(),
+}, {
+  id: 'id2',
+  requesterName: 'Ricardo Grade',
+  requesterInstitution: 'IST',
+  requesterRating: 4,
+  requesterStudyMaterialId: 'id2',
+  requesteeStudyMaterialId: 'id3',
+  date: moment()
+    .subtract('2', 'day')
+    .valueOf(),
+}];
 
 export const dummyUploadedStudyMaterials: string[] = ['id1'];
 

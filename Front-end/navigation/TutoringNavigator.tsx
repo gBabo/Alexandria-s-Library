@@ -31,6 +31,7 @@ export function TEnrolledNavigator() {
   return (
     <TEnrolledStack.Navigator screenOptions={{ headerShown: false }}>
       <TEnrolledStack.Screen name="Enrolled" component={TEnrolledScreen} />
+      <TEnrolledStack.Screen name="TutoringSession" component={TutoringSessionScreen} />
     </TEnrolledStack.Navigator>
   );
 }
@@ -40,6 +41,7 @@ export function TScheduledNavigator() {
     <TScheduledStack.Navigator screenOptions={{ headerShown: false }}>
       <TScheduledStack.Screen name="Scheduled" component={TScheduledScreen} />
       <TScheduledStack.Screen name="Schedule" component={TScheduleScreen} />
+      <TScheduledStack.Screen name="TutoringSession" component={TutoringSessionScreen} />
     </TScheduledStack.Navigator>
   );
 }

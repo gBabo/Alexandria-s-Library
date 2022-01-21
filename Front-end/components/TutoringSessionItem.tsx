@@ -25,7 +25,7 @@ export default function TutoringSessionItem({
   return (
     <View style={containerStyle}>
       <CustomButton onPress={onPress} style={style}>
-        <View style={styles.lineReverse}>
+        <View style={[styles.line, styles.lineReverse]}>
           <View style={styles.iconContainer}>
             <SemiBoldText style={styles.text}>{tutoringSession.price}</SemiBoldText>
             <FontAwesome5
@@ -41,10 +41,12 @@ export default function TutoringSessionItem({
             </SemiBoldText>
           </View>
         </View>
-        <RegularText numberOfLines={1} style={styles.text}>
-          <SemiBoldText>Institution</SemiBoldText>
-          {`: ${tutoringSession.tutorInstitution}`}
-        </RegularText>
+        <View style={[styles.line, styles.textAlone]}>
+          <RegularText numberOfLines={1} style={styles.text}>
+            <SemiBoldText>Institution</SemiBoldText>
+            {`: ${tutoringSession.tutorInstitution}`}
+          </RegularText>
+        </View>
         <View style={styles.line}>
           <View style={styles.iconContainer}>
             <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
@@ -65,21 +67,21 @@ export default function TutoringSessionItem({
 }
 
 const styles = StyleSheet.create({
-  lineReverse: {
-    width: '100%',
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
   line: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 5,
+  },
+  lineReverse: {
+    flexDirection: 'row-reverse',
   },
   text: {
     fontSize: 16,
     textAlign: 'center',
+  },
+  textAlone: {
+    justifyContent: 'center',
   },
   textBetweenIcons: {
     width: '60%',
@@ -89,7 +91,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
   },
   icon: {
     marginHorizontal: 5,

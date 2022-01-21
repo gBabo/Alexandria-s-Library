@@ -11,7 +11,7 @@ import Colors from '../constants/Colors';
 import { RegularText, SemiBoldText } from './UI/StyledText';
 import CustomButton from './UI/CustomButton';
 import useAppDispatch from '../hooks/useAppDispatch';
-import { toggleLikeStudyMaterialReview } from '../store/slices/studyMaterial';
+import { toggleReviewLike } from '../store/slices/studyMaterial';
 
 interface StudyMaterialReviewItemProps {
   studyMaterial: StudyMaterial
@@ -37,7 +37,7 @@ export default function StudyMaterialReviewItem({
     <View style={[styles.container, containerStyle]}>
       <CustomButton
         onPress={() => {
-          dispatch(toggleLikeStudyMaterialReview({
+          dispatch(toggleReviewLike({
             studyMaterialId: studyMaterial.id,
             reviewId: review.id,
           }));

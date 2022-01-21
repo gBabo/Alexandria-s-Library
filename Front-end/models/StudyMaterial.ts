@@ -19,7 +19,7 @@ export default interface StudyMaterial {
 export interface StudyMaterialExchange {
   id: string
   requesterName: string
-  requesterRating: string
+  requesterRating: number
   requesterInstitution: string
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string

@@ -11,7 +11,7 @@ import ItemList, { RenderItemProps } from '../../components/ItemList';
 import StudyMaterialItem from '../../components/StudyMaterialItem';
 import useAppSelector from '../../hooks/useAppSelector';
 import useAppDispatch from '../../hooks/useAppDispatch';
-import { getStudyMaterials } from '../../store/slices/studyMaterial';
+import { fetchStudyMaterials } from '../../store/slices/studyMaterial';
 
 export default function SMCategoryStoreScreen({
   navigation,
@@ -84,7 +84,7 @@ export default function SMCategoryStoreScreen({
       }}
       renderItem={renderItem}
       refreshing={isLoading}
-      onRefresh={() => dispatch(getStudyMaterials())}
+      onRefresh={() => dispatch(fetchStudyMaterials())}
     />
   );
 }

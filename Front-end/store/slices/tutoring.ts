@@ -24,8 +24,8 @@ const initialState: State = {
   isLoading: false,
 };
 
-export const getTutoringSessions = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
-  'tutoring/getTutoringSessions',
+export const fetchTutoringSessions = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
+  'tutoring/fetchTutoringSessions',
   // TODO
   async () => ({}),
 );
@@ -91,9 +91,9 @@ const tutoringSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getTutoringSessions.pending, onPending);
-    builder.addCase(getTutoringSessions.fulfilled, onUpdate);
-    builder.addCase(getTutoringSessions.rejected, (state, action) => onError(state, action, 'Error getting tutoring sessions!'));
+    builder.addCase(fetchTutoringSessions.pending, onPending);
+    builder.addCase(fetchTutoringSessions.fulfilled, onUpdate);
+    builder.addCase(fetchTutoringSessions.rejected, (state, action) => onError(state, action, 'Error getting tutoring sessions!'));
     builder.addCase(scheduleTutoringSession.pending, onPending);
     builder.addCase(scheduleTutoringSession.fulfilled, onUpdate);
     builder.addCase(scheduleTutoringSession.rejected, (state, action) => onError(state, action, 'Error scheduling a tutoring session!'));

@@ -26,7 +26,7 @@ type TextInputLabel = 'name' | 'type' | 'categories' | 'description';
 
 export default function SMUploadScreen({ navigation }: SMUploadedStackScreenProps<'Upload'>) {
   const dispatch = useAppDispatch();
-  const isLoading = useAppSelector(({ studyMaterial }) => studyMaterial.isLoading);
+  const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
   const refs: Record<TextInputLabel, RefObject<TextInput>> = {
     name: useRef<TextInput>(null),
     categories: useRef<TextInput>(null),
