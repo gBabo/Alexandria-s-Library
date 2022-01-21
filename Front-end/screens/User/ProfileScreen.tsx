@@ -38,14 +38,14 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
         </View>
         <View style={styles.block}>
           <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Institution</SemiBoldText>
-            {`: ${user.institution}`}
+            <SemiBoldText>Institution: </SemiBoldText>
+            {user.institution}
           </RegularText>
         </View>
         <View style={[styles.block, styles.line]}>
           <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Credits</SemiBoldText>
-            {`: ${user.credits}`}
+            <SemiBoldText>Credits: </SemiBoldText>
+            {user.credits}
           </RegularText>
           <FontAwesome5
             name="ticket-alt"
@@ -56,8 +56,8 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
         </View>
         <View style={[styles.block, styles.line]}>
           <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Rating</SemiBoldText>
-            {`: ${user.rating}`}
+            <SemiBoldText>Rating: </SemiBoldText>
+            {user.rating}
           </RegularText>
           <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
         </View>

@@ -106,8 +106,8 @@ export const dummyStudyMaterialsExchanges: StudyMaterialExchange[] = [{
   requesterName: 'Ricardo Grade',
   requesterInstitution: 'IST',
   requesterRating: 4,
-  requesterStudyMaterialId: 'id2',
-  requesteeStudyMaterialId: 'id3',
+  requesterStudyMaterialId: 'id3',
+  requesteeStudyMaterialId: 'id1',
   date: moment()
     .subtract('2', 'day')
     .valueOf(),

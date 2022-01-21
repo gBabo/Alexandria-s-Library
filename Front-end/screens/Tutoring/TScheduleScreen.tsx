@@ -4,7 +4,7 @@ import {
 } from 'react';
 import { StyleSheet, ScrollView, TextInput } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
-import { MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { mapValues, pick } from 'lodash';
 import moment from 'moment';
 
@@ -177,7 +177,7 @@ export default function TScheduleScreen({ navigation }: TScheduledStackScreenPro
         <DateAndTimePicker dateState={dateState} />
         <View style={styles.actionsBar}>
           <CustomButton onPress={onPublish} style={styles.action} row>
-            <MaterialIcons name="schedule-send" size={24} color={Colors.white} />
+            <FontAwesome5 name="calendar-plus" size={24} color={Colors.white} />
             <SemiBoldText style={styles.actionText}>Schedule</SemiBoldText>
           </CustomButton>
         </View>

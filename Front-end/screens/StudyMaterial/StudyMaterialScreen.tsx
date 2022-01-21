@@ -113,7 +113,7 @@ export default function StudyMaterialScreen({
           </View>
         </View>
         <View style={styles.line}>
-          <View style={styles.iconStar}>
+          <View style={styles.iconLContainer}>
             <AntDesign
               name="star"
               size={24}
@@ -125,16 +125,16 @@ export default function StudyMaterialScreen({
             </SemiBoldText>
           </View>
           <View style={styles.textContainer}>
-            <RegularText numberOfLines={1} style={styles.text}>
-              <SemiBoldText>Author</SemiBoldText>
-              {`: ${studyMaterial.author}`}
+            <RegularText style={styles.text}>
+              <SemiBoldText>Author: </SemiBoldText>
+              {studyMaterial.author}
             </RegularText>
           </View>
         </View>
         <View style={styles.line}>
-          <RegularText numberOfLines={5} style={styles.subtext}>
-            <SemiBoldText>Description</SemiBoldText>
-            {`: ${studyMaterial.description}`}
+          <RegularText style={styles.subtext}>
+            <SemiBoldText>Description: </SemiBoldText>
+            {studyMaterial.description}
           </RegularText>
         </View>
         <View style={styles.line}>
@@ -262,38 +262,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   line: {
-    marginVertical: 20,
-    marginHorizontal: 15,
+    marginVertical: 15,
+    marginHorizontal: 20,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
     alignItems: 'center',
   },
   textContainer: {
     width: '75%',
-    padding: 5,
-    marginLeft: 10,
+    flexDirection: 'row',
+    marginLeft: 15,
   },
   text: {
     fontSize: 20,
-    textAlign: 'center',
   },
   subtext: {
     fontSize: 18,
-    textAlign: 'left',
   },
-  iconContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-  },
-  iconStar: {
+  iconLContainer: {
     width: '15%',
-    aspectRatio: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
     marginHorizontal: 5,
   },
   iconL: {
@@ -302,14 +290,11 @@ const styles = StyleSheet.create({
   iconR: {
     marginLeft: 10,
   },
-  hspace: {
-    width: 10,
-  },
   action: {
-    width: '47.5%',
-    marginHorizontal: 10,
+    minWidth: '47.5%',
     backgroundColor: Colors.blue,
     borderColor: Colors.transparent,
+    marginHorizontal: 2.5,
   },
   actionSeparation: {
     flexDirection: 'row',
@@ -317,12 +302,10 @@ const styles = StyleSheet.create({
   },
   actionText: {
     fontSize: 20,
-    textAlign: 'center',
     color: Colors.white,
   },
   actionSubtext: {
     fontSize: 18,
-    textAlign: 'center',
     color: Colors.white,
   },
 });

@@ -34,8 +34,23 @@ export const dummyTutoringSessions: Record<string, TutoringSession> = {
     date: moment()
       .subtract('2', 'day')
       .valueOf(),
-    pendingEnrolls: [],
-    enrolled: [],
+    pendingEnrolls: [{
+      email: 'sara.f.machado@tecnico.ulisboa.pt',
+      name: 'Sara Machado',
+    }, {
+      email: 'ricardo.grade@tecnico.ulisboa.pt',
+      name: 'Ricardo Grade',
+    }],
+    enrolled: [{
+      email: 'rafael.figueiredo@tecnico.ulisboa.pt',
+      name: 'Rafael Figueiredo',
+    }, {
+      email: 'manuel.mascarenhas@tecnico.ulisboa.pt',
+      name: 'Manuel Mascarenhas',
+    }, {
+      email: 'goncalo.freire@tecnico.ulisboa.pt',
+      name: 'Gonçalo Freire',
+    }],
   },
   id3: {
     id: 'id3',

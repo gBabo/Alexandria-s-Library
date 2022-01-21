@@ -28,12 +28,12 @@ export default function AcquiredStudyMaterialItem({
             {studyMaterial.name}
           </SemiBoldText>
           <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Institution</SemiBoldText>
-            {`: ${studyMaterial.authorInstitution}`}
+            <SemiBoldText>Institution: </SemiBoldText>
+            {studyMaterial.authorInstitution}
           </RegularText>
           <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Author</SemiBoldText>
-            {`: ${studyMaterial.author}`}
+            <SemiBoldText>Author: </SemiBoldText>
+            {studyMaterial.author}
           </RegularText>
         </View>
       </CustomButton>

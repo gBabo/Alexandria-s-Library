@@ -43,8 +43,8 @@ export default function TutoringSessionItem({
         </View>
         <View style={[styles.line, styles.textAlone]}>
           <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Institution</SemiBoldText>
-            {`: ${tutoringSession.tutorInstitution}`}
+            <SemiBoldText>Institution: </SemiBoldText>
+            {tutoringSession.tutorInstitution}
           </RegularText>
         </View>
         <View style={styles.line}>
@@ -56,8 +56,8 @@ export default function TutoringSessionItem({
           </View>
           <View style={styles.textBetweenIcons}>
             <RegularText numberOfLines={1} style={styles.text}>
-              <SemiBoldText>Author</SemiBoldText>
-              {`: ${tutoringSession.tutor}`}
+              <SemiBoldText>Author: </SemiBoldText>
+              {tutoringSession.tutor}
             </RegularText>
           </View>
         </View>

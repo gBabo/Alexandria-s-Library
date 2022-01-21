@@ -52,8 +52,8 @@ export default function StudyMaterialItem({
         </View>
         <View style={[styles.line, styles.textAlone]}>
           <RegularText numberOfLines={1} style={styles.text}>
-            <SemiBoldText>Institution</SemiBoldText>
-            {`: ${studyMaterial.authorInstitution}`}
+            <SemiBoldText>Institution: </SemiBoldText>
+            {studyMaterial.authorInstitution}
           </RegularText>
         </View>
         <View style={styles.line}>
@@ -65,8 +65,8 @@ export default function StudyMaterialItem({
           </View>
           <View style={styles.textBetweenIcons}>
             <RegularText numberOfLines={1} style={styles.text}>
-              <SemiBoldText>Author</SemiBoldText>
-              {`: ${studyMaterial.author}`}
+              <SemiBoldText>Author: </SemiBoldText>
+              {studyMaterial.author}
             </RegularText>
           </View>
         </View>

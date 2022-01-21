@@ -12,6 +12,7 @@ import useColorScheme from './hooks/useColorScheme';
 import store from './store';
 
 LogBox.ignoreLogs(['Setting a timer for a long period of time']);
+LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
