@@ -41,10 +41,10 @@ export default function Writingbar({
               onSend(message);
               setMessage('');
             }}
-            disabled={message.length === 0}
+            disabled={message.trim().length === 0}
             style={{
               flex: 1,
-              backgroundColor: message.length > 0 ? Colors.primary : Colors.secondary,
+              backgroundColor: message.trim().length > 0 ? Colors.primary : Colors.secondary,
               borderColor: Colors.transparent,
             }}
           >

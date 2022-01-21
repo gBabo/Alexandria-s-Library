@@ -97,7 +97,7 @@ export default function StudyMaterialScreen({
               name="thumb-up"
               size={30}
               color={studyMaterial.hasLiked ? Colors.primary : Colors.white}
-              style={styles.icon}
+              style={styles.iconL}
             />
             <SemiBoldText style={[styles.text, {
               color: studyMaterial.hasLiked ? Colors.primary : Colors.white,
@@ -114,7 +114,12 @@ export default function StudyMaterialScreen({
         </View>
         <View style={styles.line}>
           <View style={styles.iconStar}>
-            <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
+            <AntDesign
+              name="star"
+              size={24}
+              color={Colors.yellow}
+              style={styles.iconL}
+            />
             <SemiBoldText style={styles.text}>
               {studyMaterial.authorRating}
             </SemiBoldText>
@@ -136,17 +141,27 @@ export default function StudyMaterialScreen({
           <CustomButton
             onPress={() => navigation.navigate('Discussion', { studyMaterialId: route.params.id })}
             style={styles.action}
-            row
           >
-            <FontAwesome
-              name="comments"
-              size={24}
-              color={Colors.white}
-              style={styles.icon}
-            />
-            <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-              Discussion
-            </SemiBoldText>
+            <View style={styles.actionSeparation}>
+              <FontAwesome
+                name="comments"
+                size={24}
+                color={Colors.white}
+                style={styles.iconL}
+              />
+              <SemiBoldText style={[styles.text, { color: Colors.white }]}>
+                Discussion
+              </SemiBoldText>
+            </View>
+            <View style={{
+              flexDirection: 'row-reverse',
+              backgroundColor: Colors.transparent,
+            }}
+            >
+              <RegularText style={[styles.subtext, { color: Colors.white }]}>
+                {`${studyMaterial.reviews.length} Reviews`}
+              </RegularText>
+            </View>
           </CustomButton>
         </View>
         {acquiredStudyMaterials.some(({ id }) => id === studyMaterial.id) ? (
@@ -160,7 +175,7 @@ export default function StudyMaterialScreen({
                 name="link"
                 size={24}
                 color={Colors.white}
-                style={styles.icon}
+                style={styles.iconL}
               />
               <SemiBoldText style={[styles.text, { color: Colors.white }]}>
                 Get link
@@ -172,17 +187,29 @@ export default function StudyMaterialScreen({
             <CustomButton
               onPress={confirmStudyMaterialPurchase}
               style={styles.action}
-              row
             >
-              <FontAwesome5
-                name="link"
-                size={24}
-                color={Colors.white}
-                style={styles.icon}
-              />
-              <SemiBoldText style={[styles.text, { color: Colors.white }]}>
-                Purchase
-              </SemiBoldText>
+              <View style={styles.actionSeparation}>
+                <FontAwesome5
+                  name="link"
+                  size={24}
+                  color={Colors.white}
+                  style={styles.iconL}
+                />
+                <SemiBoldText style={[styles.text, { color: Colors.white }]}>
+                  Purchase
+                </SemiBoldText>
+              </View>
+              <View style={styles.actionSeparation}>
+                <RegularText style={[styles.subtext, { color: Colors.white }]}>
+                  {studyMaterial.price}
+                </RegularText>
+                <FontAwesome5
+                  name="ticket-alt"
+                  size={24}
+                  color={Colors.white}
+                  style={styles.iconR}
+                />
+              </View>
             </CustomButton>
             <CustomButton
               onPress={() => (pickerRef.current as any)?.focus()}
@@ -193,7 +220,7 @@ export default function StudyMaterialScreen({
                 name="exchange"
                 size={24}
                 color={Colors.white}
-                style={styles.icon}
+                style={styles.iconL}
               />
               <SemiBoldText style={[styles.text, { color: Colors.white }]}>
                 Exchange
@@ -278,8 +305,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 5,
   },
-  icon: {
+  iconL: {
     marginRight: 10,
+  },
+  iconR: {
+    marginLeft: 10,
   },
   hspace: {
     width: 10,
@@ -289,5 +319,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     backgroundColor: Colors.blue,
     borderColor: Colors.transparent,
+  },
+  actionSeparation: {
+    flexDirection: 'row',
+    backgroundColor: Colors.transparent,
   },
 });

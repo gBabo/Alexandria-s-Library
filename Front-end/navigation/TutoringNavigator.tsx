@@ -11,6 +11,7 @@ import TEnrolledScreen from '../screens/Tutoring/TEnrolledScreen';
 import TScheduledScreen from '../screens/Tutoring/TScheduledScreen';
 import TCategoryStoreScreen from '../screens/Tutoring/TCategoryStoreScreen';
 import TutoringSessionScreen from '../screens/Tutoring/TutoringSessionScreen';
+import TScheduleScreen from '../screens/Tutoring/TScheduleScreen';
 
 const TStoreStack = createNativeStackNavigator<TStoreStackParamList>();
 const TEnrolledStack = createNativeStackNavigator<TEnrolledStackParamList>();
@@ -38,6 +39,7 @@ export function TScheduledNavigator() {
   return (
     <TScheduledStack.Navigator screenOptions={{ headerShown: false }}>
       <TScheduledStack.Screen name="Scheduled" component={TScheduledScreen} />
+      <TScheduledStack.Screen name="Schedule" component={TScheduleScreen} />
     </TScheduledStack.Navigator>
   );
 }

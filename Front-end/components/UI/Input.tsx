@@ -1,5 +1,7 @@
-import React, { RefObject, useCallback } from 'react';
-import { StyleSheet, TextInputProps, TextInput } from 'react-native';
+import React, { RefObject, useCallback, useState } from 'react';
+import {
+  StyleSheet, TextInputProps, TextInput, KeyboardAvoidingView,
+} from 'react-native';
 import validator from 'validator';
 
 import Colors from '../../constants/Colors';
@@ -11,11 +13,13 @@ interface InputProps extends TextInputProps {
   ownRef?: RefObject<TextInput>
   nextRef?: RefObject<TextInput>
   label: string
+  placeholder: string
   initialValue: string
   onChangeValue: (value: string, validity: boolean) => void
   isRequired?: boolean
   isURL?: boolean
   isEmail?: boolean
+  isList?: boolean
   minLength?: number
   maxLength?: number
   min?: number
@@ -26,11 +30,13 @@ export default function Input({
   ownRef,
   nextRef,
   label,
+  placeholder,
   initialValue,
   onChangeValue,
-  isRequired,
-  isURL,
-  isEmail,
+  isRequired = false,
+  isURL = false,
+  isEmail = false,
+  isList = false,
   minLength,
   maxLength,
   min,
@@ -47,82 +53,94 @@ export default function Input({
     wasTouched: false,
   });
 
+  const [borderColor, setBorderColor] = useState(Colors.primary);
   const onInputUpdate = useCallback((newValue: string) => {
     const payload = {
       value: newValue,
       warning: '',
     };
-    if (isRequired && !newValue.trim().length) {
-      payload.warning = 'The field is required!';
-    } else if (isURL && !validator.isURL(newValue)) {
-      payload.warning = 'The field is not a valid URL!';
-    } else if (isEmail && !validator.isEmail(newValue)) {
-      payload.warning = 'The field is not a valid email!';
-    } else if (minLength && newValue.length < minLength) {
-      payload.warning = `The field cannot be less than ${minLength} characters!`;
-    } else if (maxLength && newValue.length > maxLength) {
-      payload.warning = `The field cannot be longer than ${maxLength} characters!`;
-    } else if (min && +newValue < min) {
-      payload.warning = `The field cannot be less than ${min}!`;
-    } else if (max && +newValue > max) {
-      payload.warning = `The field cannot be greater than ${max}!`;
+    const validate = (elementValue: string, warningPrefix: string) => {
+      if (isRequired && elementValue.length === 0) {
+        payload.warning = `${warningPrefix} is required!`;
+      } else if (isURL && !validator.isURL(elementValue)) {
+        payload.warning = `${warningPrefix} is not a valid URL!`;
+      } else if (isEmail && !validator.isEmail(elementValue)) {
+        payload.warning = `${warningPrefix} is not a valid email!`;
+      } else if (minLength && elementValue.length < minLength) {
+        payload.warning = `${warningPrefix} cannot be less than ${minLength} characters!`;
+      } else if (maxLength && elementValue.length > maxLength) {
+        payload.warning = `${warningPrefix} cannot be longer than ${maxLength} characters!`;
+      } else if (min && +elementValue < min) {
+        payload.warning = `${warningPrefix} cannot be less than ${min}!`;
+      } else if (max && +elementValue > max) {
+        payload.warning = `${warningPrefix} cannot be greater than ${max}!`;
+      } else {
+        return true;
+      }
+      return false;
+    };
+    if (isList) {
+      newValue.split(';')
+        .some((listElement, index) => !validate(listElement.trim(), `List element ${index + 1}`));
+    } else {
+      validate(newValue.trim(), 'This field');
     }
     inputDispatch({
       type: InputActionType.InputUpdate,
       payload,
     });
     onChangeValue(newValue, !payload.warning);
+    setBorderColor(payload.warning ? Colors.primary : Colors.accent);
   }, [inputDispatch, onChangeValue, isRequired, isURL, isEmail, minLength, maxLength, min, max]);
 
   return (
-    <Card style={[styles.container, { borderColor: Colors.primary }]}>
-      <SemiBoldText style={styles.label}>
-        {label}
-      </SemiBoldText>
-      <TextInput
-        ref={ownRef}
-        placeholder={label}
-        value={value}
-        onChangeText={onInputUpdate}
-        onSubmitEditing={nextRef && (() => nextRef.current?.focus())}
-        returnKeyType={nextRef && 'next'}
-        blurOnSubmit={!nextRef}
-        onBlur={() => inputDispatch({ type: InputActionType.InputTouched })}
-        style={[styles.input, {
-          borderBottomColor: Colors.secondary,
-        }]}
-        {...otherProps}
-      />
-      {wasTouched && !!warning && (
-        <RegularText style={[styles.warning, { color: Colors.error }]}>
-          {warning}
-        </RegularText>
-      )}
-    </Card>
+    <KeyboardAvoidingView behavior="padding">
+      <Card style={[styles.container, { borderColor }]}>
+        <SemiBoldText style={styles.label}>
+          {label}
+        </SemiBoldText>
+        <TextInput
+          ref={ownRef}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onInputUpdate}
+          onSubmitEditing={nextRef && (() => nextRef.current?.focus())}
+          returnKeyType={nextRef && 'next'}
+          blurOnSubmit={!nextRef}
+          onBlur={() => inputDispatch({ type: InputActionType.InputTouched })}
+          style={styles.input}
+          {...otherProps}
+        />
+        {wasTouched && !!warning && (
+        <RegularText style={styles.warning}>{warning}</RegularText>
+        )}
+      </Card>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    margin: 10,
+    margin: 5,
     padding: 10,
+    borderWidth: 1,
   },
   label: {
-    fontSize: 18,
-    paddingBottom: 10,
+    fontSize: 16,
   },
   input: {
     fontSize: 16,
     fontFamily: 'OpenSans-Regular',
     minWidth: '100%',
-    borderBottomWidth: 1,
-    marginTop: 10,
+    marginTop: 5,
     padding: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.secondary,
   },
   warning: {
+    marginTop: 10,
     fontSize: 14,
     textAlign: 'center',
-    marginTop: 10,
+    color: Colors.error,
   },
 });

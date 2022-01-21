@@ -43,11 +43,11 @@ export const toggleLikeStudyMaterial = createAsyncThunk<Partial<State>, {
   'studyMaterial/toggleLikeStudyMaterial',
   // TODO
   async ({ studyMaterialId }, { getState }) => {
-    const studyMaterials = { ...getState().studyMaterial.studyMaterials };
-    const studyMaterial = { ...studyMaterials[studyMaterialId] };
-    studyMaterial.likes += studyMaterial.hasLiked ? -1 : 1;
-    studyMaterial.hasLiked = !studyMaterial.hasLiked;
-    studyMaterials[studyMaterialId] = studyMaterial;
+    const {
+      studyMaterials,
+    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    studyMaterials[studyMaterialId].likes += studyMaterials[studyMaterialId].hasLiked ? -1 : 1;
+    studyMaterials[studyMaterialId].hasLiked = !studyMaterials[studyMaterialId].hasLiked;
     return { studyMaterials };
   },
 );
@@ -58,10 +58,13 @@ export const buyStudyMaterial = createAsyncThunk<Partial<State>, {
   'studyMaterial/buyStudyMaterial',
   // TODO
   async ({ studyMaterialId }, { getState }) => {
-    const { price } = getState().studyMaterial.studyMaterials[studyMaterialId];
+    const {
+      studyMaterials,
+      acquiredStudyMaterials,
+    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    const { price } = studyMaterials[studyMaterialId];
     const { credits } = getState().user.user!;
     if (credits < price) throw new Error('You don\'t have enough tokens!');
-    const acquiredStudyMaterials = [...getState().studyMaterial.acquiredStudyMaterials];
     acquiredStudyMaterials.push(studyMaterialId);
     alert('Study Material Purchase', 'Study material successfully acquired.');
     return { acquiredStudyMaterials };
@@ -101,16 +104,13 @@ export const toggleLikeStudyMaterialReview = createAsyncThunk<Partial<State>, {
     studyMaterialId,
     reviewId,
   }, { getState }) => {
-    const studyMaterials = { ...getState().studyMaterial.studyMaterials };
-    const studyMaterial = { ...studyMaterials[studyMaterialId] };
-    const reviewIndex = studyMaterial.reviews.findIndex((review) => review.id === reviewId);
-    const reviews = [...studyMaterial.reviews];
-    const review = { ...reviews[reviewIndex] };
+    const {
+      studyMaterials,
+    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    const review = studyMaterials[studyMaterialId].reviews
+      .find(({ id }) => id === reviewId)!;
     review.likes += review.hasLiked ? -1 : 1;
     review.hasLiked = !review.hasLiked;
-    reviews[reviewIndex] = review;
-    studyMaterial.reviews = reviews;
-    studyMaterials[studyMaterialId] = studyMaterial;
     return { studyMaterials };
   },
 );
@@ -125,22 +125,21 @@ export const newStudyMaterialReview = createAsyncThunk<Partial<State>, {
     studyMaterialId,
     review,
   }, { getState }) => {
-    const studyMaterials = { ...getState().studyMaterial.studyMaterials };
-    const studyMaterial = { ...studyMaterials[studyMaterialId] };
-    const reviews = [...studyMaterial.reviews];
-    reviews.push({
-      id: Math.random()
-        .toString(),
-      review,
-      date: moment()
-        .valueOf(),
-      comments: [],
-      hasLiked: false,
-      likes: 0,
-      author: getState().user.user!.name,
-    });
-    studyMaterial.reviews = reviews;
-    studyMaterials[studyMaterialId] = studyMaterial;
+    const {
+      studyMaterials,
+    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    studyMaterials[studyMaterialId].reviews
+      .push({
+        id: Math.random()
+          .toString(),
+        review,
+        date: moment()
+          .valueOf(),
+        comments: [],
+        hasLiked: false,
+        likes: 0,
+        author: getState().user.user!.name,
+      });
     return { studyMaterials };
   },
 );
@@ -157,25 +156,83 @@ export const newStudyMaterialReviewComment = createAsyncThunk<Partial<State>, {
     reviewId,
     comment,
   }, { getState }) => {
-    const studyMaterials = { ...getState().studyMaterial.studyMaterials };
-    const studyMaterial = { ...studyMaterials[studyMaterialId] };
-    const reviewIndex = studyMaterial.reviews.findIndex((review) => review.id === reviewId);
-    const reviews = [...studyMaterial.reviews];
-    const review = { ...reviews[reviewIndex] };
-    const comments = [...review.comments];
-    comments.push({
-      id: Math.random()
-        .toString(),
-      comment,
+    const {
+      studyMaterials,
+    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    studyMaterials[studyMaterialId].reviews
+      .find((review) => review.id === reviewId)!.comments
+      .push({
+        id: Math.random()
+          .toString(),
+        comment,
+        date: moment()
+          .valueOf(),
+        author: getState().user.user!.name,
+      });
+    return { studyMaterials };
+  },
+);
+
+export const publishStudyMaterial = createAsyncThunk<Partial<State>, {
+  name: string
+  type: string
+  categories: string[]
+  description: string
+  price: number
+  fileUri: string
+}, ThunkApiConfig>(
+  'studyMaterial/publishStudyMaterial',
+  // TODO
+  async ({
+    name,
+    type,
+    categories,
+    description,
+    price,
+    fileUri,
+  }, { getState }) => {
+    // eslint-disable-next-line no-console
+    console.log(fileUri);
+    const id = Math.random()
+      .toString();
+    const {
+      studyMaterials,
+      studyMaterialsCategories,
+      uploadedStudyMaterials,
+      acquiredStudyMaterials,
+    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    studyMaterials[id] = {
+      id,
+      authorEmail: getState().user.user!.email,
+      author: getState().user.user!.name,
+      authorInstitution: getState().user.user!.institution,
+      authorRating: getState().user.user!.rating,
+      likes: 0,
+      hasLiked: false,
+      name,
+      description,
+      price,
+      type,
+      reviews: [],
       date: moment()
         .valueOf(),
-      author: getState().user.user!.name,
+    };
+    categories.forEach((category) => {
+      if (studyMaterialsCategories[category]) {
+        studyMaterialsCategories[category].push(id);
+      } else {
+        studyMaterialsCategories[category] = [id];
+      }
     });
-    review.comments = comments;
-    reviews[reviewIndex] = review;
-    studyMaterial.reviews = reviews;
-    studyMaterials[studyMaterialId] = studyMaterial;
-    return { studyMaterials };
+    uploadedStudyMaterials.push(id);
+    acquiredStudyMaterials.push(id);
+    alert('Upload Study Material', `The study material '${name}' has been published.`);
+    return {
+      studyMaterials,
+      studyMaterialsCategories,
+      uploadedStudyMaterials,
+      acquiredStudyMaterials,
+    };
   },
 );
 
@@ -208,6 +265,9 @@ const studyMaterialSlice = createSlice({
     builder.addCase(newStudyMaterialReviewComment.pending, onPending);
     builder.addCase(newStudyMaterialReviewComment.fulfilled, onUpdate);
     builder.addCase(newStudyMaterialReviewComment.rejected, (state, action) => onError(state, action, 'Error responding to a study material review!'));
+    builder.addCase(publishStudyMaterial.pending, onPending);
+    builder.addCase(publishStudyMaterial.fulfilled, onUpdate);
+    builder.addCase(publishStudyMaterial.rejected, (state, action) => onError(state, action, 'Error publishing a study material!'));
   },
 });
 

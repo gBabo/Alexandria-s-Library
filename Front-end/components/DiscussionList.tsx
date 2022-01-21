@@ -46,12 +46,11 @@ export default function DiscussionList<T>({
 
   return (
     <View style={styles.container}>
-      <Writingbar
-        placeholder={placeholder}
-        onSend={onSend}
-      />
-      <HorizontalDivider />
-      {items.length > 0 ? (
+      <View>
+        <HorizontalDivider />
+        <Writingbar placeholder={placeholder} onSend={onSend} />
+      </View>
+      {items.length > 0 && (
         <FlatList
           ListHeaderComponent={ListHeaderComponent}
           data={items}
@@ -67,12 +66,9 @@ export default function DiscussionList<T>({
           refreshing={refreshing}
           onRefresh={onRefresh}
         />
-      ) : (
-        <View style={styles.contentContainer}>
-          {ListHeaderComponent}
-          <Fallback message={fallbackMessage} />
-        </View>
       )}
+      {items.length === 0 && <Fallback message={fallbackMessage} />}
+      {items.length === 0 && ListHeaderComponent}
     </View>
   );
 }

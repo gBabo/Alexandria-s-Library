@@ -10,7 +10,7 @@ import { mapValues, pick } from 'lodash';
 import { LoginStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import { View } from '../../components/UI/Themed';
-import { RegularText } from '../../components/UI/StyledText';
+import { SemiBoldText } from '../../components/UI/StyledText';
 import CustomButton from '../../components/UI/CustomButton';
 import Input from '../../components/UI/Input';
 import Loading from '../../components/UI/Loading';
@@ -50,7 +50,7 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.setOptions({ headerTitle: 'Login' });
+    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Login' });
   }, [navigation, isFocused]);
 
   const onInputUpdate = useCallback((label: Label, value: string, validity: boolean) => {
@@ -67,7 +67,7 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
   }, [formDispatch]);
   const onLogin = useCallback((action: LoginAction) => {
     if (isValid) {
-      const payload: LoginPayload = mapValues(pick(values, ['email', 'password']), (o) => o.value);
+      const payload: LoginPayload = mapValues(pick(values, ['email', 'password']), (o) => o.value.trim());
       dispatch(action(payload));
     } else {
       alert('The form is invalid!', 'Please fix them with the help of the error messages.');
@@ -82,6 +82,7 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
           ownRef={refs.email}
           nextRef={refs.password}
           label="Email"
+          placeholder="Enter your email"
           initialValue={values.email.value}
           onChangeValue={(value, validity) => onInputUpdate('email', value, validity)}
           isRequired
@@ -91,6 +92,7 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
         <Input
           ownRef={refs.password}
           label="Password"
+          placeholder="Enter your password"
           initialValue={values.password.value}
           onChangeValue={(value, validity) => onInputUpdate('password', value, validity)}
           isRequired
@@ -99,27 +101,23 @@ export default function LoginScreen({ navigation }: LoginStackScreenProps<'Login
         />
         <View style={styles.actionsBar}>
           <View style={styles.actionContainer}>
-            <CustomButton onPress={() => onLogin(signup)} style={styles.action}>
+            <CustomButton onPress={() => onLogin(signup)} style={styles.action} row>
               <MaterialCommunityIcons
                 name="account-plus"
                 size={30}
                 color={Colors.white}
               />
-              <RegularText style={{ color: Colors.white }}>
-                Sign up
-              </RegularText>
+              <SemiBoldText style={styles.actionText}>Sign up</SemiBoldText>
             </CustomButton>
           </View>
           <View style={styles.actionContainer}>
-            <CustomButton onPress={() => onLogin(signin)} style={styles.action}>
+            <CustomButton onPress={() => onLogin(signin)} style={styles.action} row>
               <FontAwesome5
                 name="sign-in-alt"
                 size={30}
                 color={Colors.white}
               />
-              <RegularText style={{ color: Colors.white }}>
-                Sign in
-              </RegularText>
+              <SemiBoldText style={styles.actionText}>Sign in</SemiBoldText>
             </CustomButton>
           </View>
         </View>
@@ -150,5 +148,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: Colors.blue,
     borderColor: Colors.transparent,
+  },
+  actionText: {
+    fontSize: 20,
+    color: Colors.white,
   },
 });

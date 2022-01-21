@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     paddingHorizontal: 20,
+    zIndex: -1,
   },
   fallback: {
     textAlign: 'center',

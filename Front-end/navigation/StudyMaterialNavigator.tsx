@@ -15,6 +15,7 @@ import SMCategoryStoreScreen from '../screens/StudyMaterial/SMCategoryStoreScree
 import StudyMaterialScreen from '../screens/StudyMaterial/StudyMaterialScreen';
 import SMDiscussionScreen from '../screens/StudyMaterial/SMDiscussionScreen';
 import SMDiscussionCommentsScreen from '../screens/StudyMaterial/SMDiscussionCommentsScreen';
+import SMUploadScreen from '../screens/StudyMaterial/SMUploadScreen';
 
 const SMStoreStack = createNativeStackNavigator<SMStoreStackParamList>();
 const SMExchangesStack = createNativeStackNavigator<SMExchangesStackParamList>();
@@ -65,6 +66,7 @@ export function SMUploadedNavigator() {
         name="DiscussionComments"
         component={SMDiscussionCommentsScreen}
       />
+      <SMUploadedStack.Screen name="Upload" component={SMUploadScreen} />
     </SMUploadedStack.Navigator>
   );
 }

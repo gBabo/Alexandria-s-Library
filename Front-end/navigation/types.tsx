@@ -55,6 +55,7 @@ export type SMUploadedStackParamList = {
   StudyMaterial: { id: string };
   Discussion: { studyMaterialId: string };
   DiscussionComments: { studyMaterialId: string, reviewId: string };
+  Upload: undefined;
 };
 
 export type TStoreStackParamList = {
@@ -69,6 +70,7 @@ export type TEnrolledStackParamList = {
 
 export type TScheduledStackParamList = {
   Scheduled: undefined;
+  Schedule: undefined;
 };
 
 export type LoginStackParamList = {

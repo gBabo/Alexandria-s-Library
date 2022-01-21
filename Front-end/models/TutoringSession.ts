@@ -7,7 +7,7 @@ export default interface TutoringSession {
   name: string
   description: string
   price: number
-  location: number[]
+  location: string
   date: number
   duration: number
   enrolled: UserEnroll[],

@@ -1,5 +1,7 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, View } from 'react-native';
+import {
+  Modal, StyleSheet, TouchableWithoutFeedback, View,
+} from 'react-native';
 
 import Colors from '../constants/Colors';
 import Searchbar from './Searchbar';
@@ -30,10 +32,14 @@ export default function Topbar<T>({
     ? useState<('Ascending' | 'Descending' | 'Unselected')[]>(Array(sortingOptions.length)
       .fill('Unselected'))
     : undefined;
+  const [barHeight, setBarHeight] = useState(0);
 
   return (
-    <KeyboardAvoidingView behavior="height">
-      <View style={styles.bar}>
+    <View>
+      <View
+        onLayout={(e) => setBarHeight(e.nativeEvent.layout.height)}
+        style={styles.bar}
+      >
         <Searchbar placeholder={searchPlaceholder} valueState={searchState} />
         {sortingOptions && (
         <View style={styles.sortingButton}>
@@ -55,34 +61,38 @@ export default function Topbar<T>({
         </View>
         )}
       </View>
-      {sortingOptions && sortingMethodState && orderState && sortingOptionsVisible[0] && (
-        <View style={styles.sortingOptions}>
-          {sortingOptions.map(({
-            label,
-            value,
-          }, index) => (
-            <SortingOption
-              key={index.toString()}
-              label={label}
-              value={orderState[0][index]}
-              onValueChange={(itemValue) => {
-                const newOrderState = Array(sortingOptions.length)
-                  .fill('Unselected');
-                newOrderState[index] = itemValue;
-                orderState[1](newOrderState);
-                if (itemValue !== 'Unselected') {
-                  sortingOptionsVisible[1](false);
-                  sortingMethodState[1]({
-                    value,
-                    order: itemValue,
-                  });
-                }
-              }}
-            />
-          ))}
-        </View>
+      {sortingOptions && sortingMethodState && orderState && (
+        <Modal visible={sortingOptionsVisible[0]} animationType="slide" transparent>
+          <TouchableWithoutFeedback onPress={() => sortingOptionsVisible[1](false)}>
+            <View style={[styles.sortingOptions, { paddingTop: 62 + barHeight }]}>
+              {sortingOptions.map(({
+                label,
+                value,
+              }, index) => (
+                <SortingOption
+                  key={index.toString()}
+                  label={label}
+                  value={orderState[0][index]}
+                  onValueChange={(itemValue) => {
+                    const newOrderState = Array(sortingOptions.length)
+                      .fill('Unselected');
+                    newOrderState[index] = itemValue;
+                    orderState[1](newOrderState);
+                    if (itemValue !== 'Unselected') {
+                      sortingOptionsVisible[1](false);
+                      sortingMethodState[1]({
+                        value,
+                        order: itemValue,
+                      });
+                    }
+                  }}
+                />
+              ))}
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
       )}
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -106,10 +116,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   sortingOptions: {
-    top: 66,
-    right: 0,
-    width: 333,
-    position: 'absolute',
-    zIndex: 1,
+    flex: 1,
   },
 });
