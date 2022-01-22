@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getDocumentAsync } from 'expo-document-picker';
 
@@ -13,8 +13,6 @@ interface PdfFilePickerProps {
 }
 
 export default function PdfFilePicker({ fileUriState }: PdfFilePickerProps) {
-  const windowDimensions = useWindowDimensions();
-
   const [borderColor, setBorderColor] = useState(Colors.primary);
   const [filename, setFilename] = useState('No file selected');
   const onChooseDocument = async () => {
@@ -30,11 +28,7 @@ export default function PdfFilePicker({ fileUriState }: PdfFilePickerProps) {
   };
 
   return (
-    <Card style={[styles.container, {
-      borderColor,
-      width: windowDimensions.width - 10,
-    }]}
-    >
+    <Card style={[styles.container, { borderColor }]}>
       <RegularText style={styles.label}>
         <SemiBoldText>Selected File: </SemiBoldText>
         {filename}
@@ -57,7 +51,7 @@ export default function PdfFilePicker({ fileUriState }: PdfFilePickerProps) {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 5,
+    flex: 1,
     padding: 10,
     borderWidth: 1,
     borderColor: Colors.primary,
@@ -77,7 +71,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: 18,
     color: Colors.white,
   },
 });

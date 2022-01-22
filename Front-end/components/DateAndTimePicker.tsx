@@ -89,7 +89,7 @@ export default function DateAndTimePicker({ dateState }: DateAndTimePickerProps)
 
 const styles = StyleSheet.create({
   container: {
-    margin: 5,
+    flex: 1,
     padding: 10,
     borderWidth: 1,
     borderColor: Colors.primary,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: 18,
     color: Colors.white,
   },
 });

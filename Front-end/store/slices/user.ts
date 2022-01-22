@@ -15,7 +15,8 @@ const initialState: State = {
   user: dummyUser,
 };
 
-export const fetchUser = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
+export const fetchUser = createAsyncThunk<Partial<State>,
+void, ThunkApiConfig>(
   'user/fetchUser',
   // TODO
   async () => ({}),

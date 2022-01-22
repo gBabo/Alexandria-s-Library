@@ -121,7 +121,6 @@ export default function Input({
 
 const styles = StyleSheet.create({
   container: {
-    margin: 5,
     padding: 10,
     borderWidth: 1,
   },

@@ -6,13 +6,9 @@ import moment from 'moment';
 import { FIREBASE_WEB_API_KEY } from '../../extra';
 import { AppDispatch, ThunkApiConfig } from '../index';
 import { onPending, onUpdate, onError } from '../../utils/ThunkActions';
+import { SigninPayload, SignupPayload } from './ThunkPayload';
 
 export type LoginAction = typeof signin | typeof signup;
-
-export interface LoginPayload {
-  email: string
-  password: string
-}
 
 interface LoginResponse {
   idToken: string
@@ -148,9 +144,10 @@ export const refreshAuthState = createAsyncThunk<Partial<State>, void, ThunkApiC
   },
 );
 
-export const signup = createAsyncThunk<Partial<State>, LoginPayload, ThunkApiConfig>(
+export const signup = createAsyncThunk<Partial<State>, SignupPayload, ThunkApiConfig>(
   'authentication/signup',
   async (payload, { dispatch }) => {
+    // TODO: Register the user on the server.
     let response;
     try {
       response = await axios.post<LoginResponse>(
@@ -179,7 +176,7 @@ export const signup = createAsyncThunk<Partial<State>, LoginPayload, ThunkApiCon
   },
 );
 
-export const signin = createAsyncThunk<Partial<State>, LoginPayload, ThunkApiConfig>(
+export const signin = createAsyncThunk<Partial<State>, SigninPayload, ThunkApiConfig>(
   'authentication/signin',
   async (payload, { dispatch }) => {
     let response;

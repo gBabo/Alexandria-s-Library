@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
+import QRCode from 'react-native-qrcode-svg';
 
 import { ProfileScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
@@ -32,18 +33,21 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
   ) : (
     <ScrollView contentContainerStyle={styles.scrollView}>
       <View style={styles.container}>
-        <View style={styles.block}>
-          <SemiBoldText style={styles.text}>{user.name}</SemiBoldText>
-          <RegularText numberOfLines={1} style={styles.subtext}>{user.email}</RegularText>
+        <View style={styles.line}>
+          <RegularText style={styles.subtext}>
+            <SemiBoldText style={styles.text}>{user.name}</SemiBoldText>
+            {'\n'}
+            {user.email}
+          </RegularText>
         </View>
-        <View style={styles.block}>
-          <RegularText numberOfLines={1} style={styles.text}>
+        <View style={styles.line}>
+          <RegularText style={styles.text}>
             <SemiBoldText>Institution: </SemiBoldText>
             {user.institution}
           </RegularText>
         </View>
-        <View style={[styles.block, styles.line]}>
-          <RegularText numberOfLines={1} style={styles.text}>
+        <View style={styles.line}>
+          <RegularText style={styles.text}>
             <SemiBoldText>Credits: </SemiBoldText>
             {user.credits}
           </RegularText>
@@ -51,15 +55,26 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
             name="ticket-alt"
             size={24}
             color={Colors.purple}
-            style={styles.icon}
+            style={styles.iconR}
           />
         </View>
-        <View style={[styles.block, styles.line]}>
-          <RegularText numberOfLines={1} style={styles.text}>
+        <View style={styles.line}>
+          <RegularText style={styles.text}>
             <SemiBoldText>Rating: </SemiBoldText>
             {user.rating}
           </RegularText>
-          <AntDesign name="star" size={24} color={Colors.yellow} style={styles.icon} />
+          <AntDesign name="star" size={24} color={Colors.yellow} style={styles.iconR} />
+        </View>
+        <View style={styles.line}>
+          <SemiBoldText style={styles.text}>
+            Pay with:
+            {'\n\n'}
+            <QRCode
+              value="https://ccu2122group03.wordpress.com/"
+              color={Colors.primary}
+              size={250}
+            />
+          </SemiBoldText>
         </View>
       </View>
     </ScrollView>
@@ -75,21 +90,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  block: {
-    marginVertical: 20,
-  },
   line: {
+    marginVertical: 15,
+    marginHorizontal: 20,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   text: {
     fontSize: 20,
-    textAlign: 'center',
   },
   subtext: {
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center',
   },
-  icon: {
-    marginHorizontal: 5,
+  iconR: {
+    marginLeft: 10,
   },
 });

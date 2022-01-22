@@ -9,6 +9,12 @@ import {
 import { ThunkApiConfig } from '../index';
 import { onError, onPending, onUpdate } from '../../utils/ThunkActions';
 import alert from '../../utils/alert';
+import clone from '../../utils/clone';
+import {
+  CancelTutoringSessionPayload, EnrollTutoringSessionPayload,
+  OnSettleAllEnrollmentStatusPayload,
+  OnSettleEnrollmentStatusPayload, ScheduleTutoringSessionPayload,
+} from './ThunkPayload';
 
 interface State {
   tutoringSessions: Record<string, TutoringSession>
@@ -24,54 +30,40 @@ const initialState: State = {
   isLoading: false,
 };
 
-export const fetchTutoringSessions = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
+export const fetchTutoringSessions = createAsyncThunk<Partial<State>,
+void, ThunkApiConfig>(
   'tutoring/fetchTutoringSessions',
   // TODO
   async () => ({}),
 );
 
-export const scheduleTutoringSession = createAsyncThunk<Partial<State>, {
-  name: string
-  categories: string[]
-  description: string
-  location: string
-  duration: number
-  price: number
-  date: number
-}, ThunkApiConfig>(
+export const scheduleTutoringSession = createAsyncThunk<Partial<State>,
+ScheduleTutoringSessionPayload, ThunkApiConfig>(
   'tutoring/scheduleTutoringSession',
-  // TODO
-  async ({
-    name,
-    categories,
-    description,
-    location,
-    duration,
-    price,
-    date,
-  }, { getState }) => {
-    const id = Math.random()
-      .toString();
+  async (p, { getState }) => {
+    // TODO
     const {
       tutoringSessions,
       tutoringSessionsCategories,
-    }: State = JSON.parse(JSON.stringify(getState().tutoring));
+    } = clone(getState().tutoring);
+    const id = Math.random()
+      .toString();
     tutoringSessions[id] = {
       id,
       tutorEmail: getState().user.user!.email,
       tutor: getState().user.user!.name,
       tutorInstitution: getState().user.user!.institution,
       tutorRating: getState().user.user!.rating,
-      name,
-      description,
-      price,
-      location,
+      name: p.name,
+      description: p.description,
+      price: p.price,
+      location: p.location,
       pendingEnrolls: [],
       enrolled: [],
-      date,
-      duration,
+      date: p.date,
+      duration: p.duration,
     };
-    categories.forEach((category) => {
+    p.categories.forEach((category) => {
       if (tutoringSessionsCategories[category]) {
         tutoringSessionsCategories[category].push(id);
       } else {
@@ -86,27 +78,27 @@ export const scheduleTutoringSession = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const enrollTutoringSession = createAsyncThunk<Partial<State>, {
-  tutoringSessionId: string
-}, ThunkApiConfig>(
+export const enrollTutoringSession = createAsyncThunk<Partial<State>,
+EnrollTutoringSessionPayload, ThunkApiConfig>(
   'tutoring/enrollTutoringSession',
-  // TODO
-  async ({ tutoringSessionId }, { getState }) => {
-    const id = Math.random()
-      .toString();
+  async (p, { getState }) => {
+    // TODO
     const {
       tutoringSessions,
       enrollments,
-    }: State = JSON.parse(JSON.stringify(getState().tutoring));
+    } = clone(getState().tutoring);
+    const id = Math.random()
+      .toString();
     enrollments.push({
       id,
-      tutoringSessionId,
+      tutoringSessionId: p.tutoringSessionId,
       status: EnrollmentStatus.PENDING,
       requester: getState().user.user!.name,
-      date: tutoringSessions[tutoringSessionId].date,
+      date: tutoringSessions[p.tutoringSessionId].date,
     });
-    tutoringSessions[tutoringSessionId].pendingEnrolls.push(getState().user.user!);
-    alert('Tutoring Session Enroll', `You have successfully signed up for the tutoring session '${tutoringSessions[tutoringSessionId].name}'.`);
+    tutoringSessions[p.tutoringSessionId].pendingEnrolls.push(getState().user.user!);
+    alert('Tutoring Session Enroll',
+      `You have successfully signed up for the tutoring session '${tutoringSessions[p.tutoringSessionId].name}'.`);
     return {
       tutoringSessions,
       enrollments,
@@ -114,21 +106,20 @@ export const enrollTutoringSession = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const cancelTutoringSession = createAsyncThunk<Partial<State>, {
-  tutoringSessionId: string
-}, ThunkApiConfig>(
+export const cancelTutoringSession = createAsyncThunk<Partial<State>,
+CancelTutoringSessionPayload, ThunkApiConfig>(
   'tutoring/cancelTutoringSession',
-  // TODO
-  async ({ tutoringSessionId }, { getState }) => {
+  async (p, { getState }) => {
+    // TODO
     const {
       tutoringSessions,
       tutoringSessionsCategories,
-    }: State = JSON.parse(JSON.stringify(getState().tutoring));
-    delete tutoringSessions[tutoringSessionId];
+    } = clone(getState().tutoring);
+    delete tutoringSessions[p.tutoringSessionId];
     Object.keys(tutoringSessionsCategories)
       .forEach((category) => {
         tutoringSessionsCategories[category] = Object.values(tutoringSessionsCategories[category])
-          .filter((id) => id !== tutoringSessionId);
+          .filter((id) => id !== p.tutoringSessionId);
       });
     alert('Tutoring Session Cancel', 'You have successfully canceled the tutoring session.');
     return {
@@ -138,30 +129,23 @@ export const cancelTutoringSession = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const onSettleEnrollmentStatus = createAsyncThunk<Partial<State>, {
-  tutoringSessionId: string
-  enrollIndex: number
-  accept: boolean
-}, ThunkApiConfig>(
+export const onSettleEnrollmentStatus = createAsyncThunk<Partial<State>,
+OnSettleEnrollmentStatusPayload, ThunkApiConfig>(
   'tutoring/onSettleEnrollmentStatus',
-  // TODO
-  async ({
-    tutoringSessionId,
-    enrollIndex,
-    accept,
-  }, { getState }) => {
+  async (p, { getState }) => {
+    // TODO
     const {
       tutoringSessions,
       enrollments,
-    }: State = JSON.parse(JSON.stringify(getState().tutoring));
-    if (accept) {
-      tutoringSessions[tutoringSessionId].enrolled
-        .push(tutoringSessions[tutoringSessionId].pendingEnrolls[enrollIndex]);
+    } = clone(getState().tutoring);
+    if (p.accept) {
+      tutoringSessions[p.tutoringSessionId].enrolled
+        .push(tutoringSessions[p.tutoringSessionId].pendingEnrolls[p.enrollIndex]);
     }
-    tutoringSessions[tutoringSessionId].pendingEnrolls.splice(enrollIndex, 1);
+    tutoringSessions[p.tutoringSessionId].pendingEnrolls.splice(p.enrollIndex, 1);
     enrollments.forEach((enrollment) => {
       if (enrollment.tutoringSessionId) {
-        enrollment.status = accept ? EnrollmentStatus.CONFIRMED : EnrollmentStatus.REJECTED;
+        enrollment.status = p.accept ? EnrollmentStatus.CONFIRMED : EnrollmentStatus.REJECTED;
       }
     });
     return {
@@ -171,28 +155,23 @@ export const onSettleEnrollmentStatus = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const onSettleAllEnrollmentStatus = createAsyncThunk<Partial<State>, {
-  tutoringSessionId: string
-  accept: boolean
-}, ThunkApiConfig>(
+export const onSettleAllEnrollmentStatus = createAsyncThunk<Partial<State>,
+OnSettleAllEnrollmentStatusPayload, ThunkApiConfig>(
   'tutoring/onSettleAllEnrollmentStatus',
-  // TODO
-  async ({
-    tutoringSessionId,
-    accept,
-  }, { getState }) => {
+  async (p, { getState }) => {
+    // TODO
     const {
       tutoringSessions,
       enrollments,
-    }: State = JSON.parse(JSON.stringify(getState().tutoring));
-    if (accept) {
-      tutoringSessions[tutoringSessionId].enrolled
-        .push(...tutoringSessions[tutoringSessionId].pendingEnrolls);
+    } = clone(getState().tutoring);
+    if (p.accept) {
+      tutoringSessions[p.tutoringSessionId].enrolled
+        .push(...tutoringSessions[p.tutoringSessionId].pendingEnrolls);
     }
-    tutoringSessions[tutoringSessionId].pendingEnrolls = [];
+    tutoringSessions[p.tutoringSessionId].pendingEnrolls = [];
     enrollments.forEach((enrollment) => {
       if (enrollment.tutoringSessionId) {
-        enrollment.status = accept ? EnrollmentStatus.CONFIRMED : EnrollmentStatus.REJECTED;
+        enrollment.status = p.accept ? EnrollmentStatus.CONFIRMED : EnrollmentStatus.REJECTED;
       }
     });
     return {

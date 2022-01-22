@@ -5,8 +5,11 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { RootStackParamList } from './types';
+import Loading from '../components/UI/Loading';
+import BrowseScreen from '../screens/BrowseScreen';
 import DrawerNavigator from './DrawerNavigator';
 import useAppDispatch from '../hooks/useAppDispatch';
+import useAppSelector from '../hooks/useAppSelector';
 import { getAuthState } from '../store/slices/authentication';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -24,9 +27,16 @@ function RootNavigator() {
   useEffect(() => {
     dispatch(getAuthState());
   }, []);
+  const isLoading = useAppSelector((s) => s.authentication.isLoading);
+  const localId = useAppSelector((s) => s.authentication.localId);
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
+      {!localId && (
+        <RootStack.Screen name="Browse" component={BrowseScreen} />
+      )}
       <RootStack.Screen name="Drawer" component={DrawerNavigator} />
     </RootStack.Navigator>
   );

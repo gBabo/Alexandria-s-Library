@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import Colors from '../constants/Colors';
@@ -22,16 +22,10 @@ export default function NumberPicker({
   max,
   valueState,
 }: NumberPickerProps) {
-  const windowDimensions = useWindowDimensions();
-
   const [borderColor, setBorderColor] = useState(Colors.primary);
 
   return (
-    <Card style={[styles.container, {
-      borderColor,
-      width: windowDimensions.width - 10,
-    }]}
-    >
+    <Card style={[styles.container, { borderColor }]}>
       <SemiBoldText style={styles.label}>
         {label}
       </SemiBoldText>
@@ -83,7 +77,7 @@ export default function NumberPicker({
 
 const styles = StyleSheet.create({
   container: {
-    margin: 5,
+    flex: 1,
     padding: 10,
     flexDirection: 'row',
     alignItems: 'center',

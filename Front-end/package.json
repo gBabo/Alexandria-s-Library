@@ -48,13 +48,15 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-maps": "0.28.0",
+    "react-native-qrcode-svg": "^6.1.2",
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-web": "^0.17.5",
     "react-navigation-header-buttons": "^9.0.0",
     "react-redux": "^7.2.4",
-    "validator": "^13.6.0"
+    "validator": "^13.6.0",
+    "react-native-svg": "12.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

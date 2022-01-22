@@ -58,7 +58,7 @@ export default function TScheduleScreen({ navigation }: TScheduledStackScreenPro
       },
       duration: {
         value: '60',
-        validity: false,
+        validity: true,
       },
     },
     isValid: false,
@@ -104,78 +104,92 @@ export default function TScheduleScreen({ navigation }: TScheduledStackScreenPro
   return isLoading ? (
     <Loading />
   ) : (
-    <ScrollView contentContainerStyle={styles.contentContainer}>
+    <ScrollView contentContainerStyle={styles.scrollView}>
       <View style={styles.container}>
-        <Input
-          ownRef={refs.name}
-          nextRef={refs.categories}
-          label="Name:"
-          placeholder="Enter the name of the study material"
-          initialValue={values.name.value}
-          onChangeValue={(value, validity) => onInputUpdate('name', value, validity)}
-          multiline
-          textContentType="name"
-          isRequired
-          minLength={10}
-          maxLength={50}
-        />
-        <Input
-          ownRef={refs.categories}
-          nextRef={refs.description}
-          label="Categories:"
-          placeholder="Enter semicolon-separated categories"
-          initialValue={values.categories.value}
-          onChangeValue={(value, validity) => onInputUpdate('categories', value, validity)}
-          multiline
-          isRequired
-          isList
-          minLength={5}
-          maxLength={20}
-        />
-        <Input
-          ownRef={refs.description}
-          nextRef={refs.location}
-          label="Description:"
-          placeholder="Enter a brief description"
-          initialValue={values.description.value}
-          onChangeValue={(value, validity) => onInputUpdate('description', value, validity)}
-          multiline
-          isRequired
-          minLength={20}
-          maxLength={200}
-        />
-        <Input
-          ownRef={refs.location}
-          nextRef={refs.duration}
-          label="Location:"
-          placeholder="Enter the session location"
-          initialValue={values.location.value}
-          onChangeValue={(value, validity) => onInputUpdate('location', value, validity)}
-          multiline
-          isRequired
-          minLength={5}
-          maxLength={50}
-        />
-        <Input
-          ownRef={refs.duration}
-          label="Duration in minutes:"
-          placeholder="Enter the estimated duration of the session"
-          initialValue={values.duration.value}
-          onChangeValue={(value, validity) => onInputUpdate('duration', value, validity)}
-          keyboardType="number-pad"
-          isRequired
-          min={15}
-          max={720}
-        />
-        <NumberPicker
-          label="Price:"
-          iconName="ticket-alt"
-          min={1}
-          max={50}
-          valueState={priceState}
-        />
-        <DateAndTimePicker dateState={dateState} />
-        <View style={styles.actionsBar}>
+        <View style={styles.line}>
+          <Input
+            ownRef={refs.name}
+            nextRef={refs.categories}
+            label="Name:"
+            placeholder="Enter the name of the study material"
+            initialValue={values.name.value}
+            onChangeValue={(value, validity) => onInputUpdate('name', value, validity)}
+            multiline
+            textContentType="name"
+            isRequired
+            minLength={10}
+            maxLength={50}
+          />
+        </View>
+        <View style={styles.line}>
+          <Input
+            ownRef={refs.categories}
+            nextRef={refs.description}
+            label="Categories:"
+            placeholder="Enter semicolon-separated categories"
+            initialValue={values.categories.value}
+            onChangeValue={(value, validity) => onInputUpdate('categories', value, validity)}
+            multiline
+            isRequired
+            isList
+            minLength={5}
+            maxLength={20}
+          />
+        </View>
+        <View style={styles.line}>
+          <Input
+            ownRef={refs.description}
+            nextRef={refs.location}
+            label="Description:"
+            placeholder="Enter a brief description"
+            initialValue={values.description.value}
+            onChangeValue={(value, validity) => onInputUpdate('description', value, validity)}
+            multiline
+            isRequired
+            minLength={20}
+            maxLength={200}
+          />
+        </View>
+        <View style={styles.line}>
+          <Input
+            ownRef={refs.location}
+            nextRef={refs.duration}
+            label="Location:"
+            placeholder="Enter the session location"
+            initialValue={values.location.value}
+            onChangeValue={(value, validity) => onInputUpdate('location', value, validity)}
+            multiline
+            isRequired
+            minLength={5}
+            maxLength={50}
+          />
+        </View>
+        <View style={styles.line}>
+          <Input
+            ownRef={refs.duration}
+            label="Duration in minutes:"
+            placeholder="Enter the estimated duration of the session"
+            initialValue={values.duration.value}
+            onChangeValue={(value, validity) => onInputUpdate('duration', value, validity)}
+            keyboardType="number-pad"
+            isRequired
+            min={15}
+            max={720}
+          />
+        </View>
+        <View style={styles.line}>
+          <NumberPicker
+            label="Price:"
+            iconName="ticket-alt"
+            min={1}
+            max={50}
+            valueState={priceState}
+          />
+        </View>
+        <View style={styles.line}>
+          <DateAndTimePicker dateState={dateState} />
+        </View>
+        <View style={styles.line}>
           <CustomButton onPress={onPublish} style={styles.action} row>
             <FontAwesome5 name="calendar-plus" size={24} color={Colors.white} />
             <SemiBoldText style={styles.actionText}>Schedule</SemiBoldText>
@@ -187,24 +201,27 @@ export default function TScheduleScreen({ navigation }: TScheduledStackScreenPro
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  scrollView: {
     flexGrow: 1,
   },
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'center',
   },
-  actionsBar: {
+  line: {
+    marginVertical: 5,
+    marginHorizontal: 10,
     flexDirection: 'row',
-    margin: 5,
+    alignItems: 'center',
   },
   action: {
+    minWidth: '47.5%',
     backgroundColor: Colors.blue,
     borderColor: Colors.transparent,
+    marginHorizontal: 2.5,
   },
   actionText: {
-    marginLeft: 10,
     fontSize: 20,
     color: Colors.white,
   },

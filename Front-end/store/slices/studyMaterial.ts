@@ -12,6 +12,15 @@ import {
 import { ThunkApiConfig } from '../index';
 import { onError, onPending, onUpdate } from '../../utils/ThunkActions';
 import alert from '../../utils/alert';
+import clone from '../../utils/clone';
+import {
+  AddReviewCommentPayload,
+  AddReviewPayload,
+  FetchStudyMaterialLinkPayload,
+  ProposeExchangePayload, PublishStudyMaterialPayload,
+  PurchaseStudyMaterialPayload, SettleExchangePayload, ToggleReviewLikePayload,
+  ToggleStudyMaterialLikePayload,
+} from './ThunkPayload';
 
 interface State {
   studyMaterials: Record<string, StudyMaterial>
@@ -31,108 +40,88 @@ const initialState: State = {
   isLoading: false,
 };
 
-export const fetchStudyMaterials = createAsyncThunk<Partial<State>, void, ThunkApiConfig>(
+export const fetchStudyMaterials = createAsyncThunk<Partial<State>,
+void, ThunkApiConfig>(
   'studyMaterial/fetchStudyMaterials',
   // TODO
   async () => ({}),
 );
 
-export const toggleStudyMaterialLike = createAsyncThunk<Partial<State>, {
-  studyMaterialId: string
-}, ThunkApiConfig>(
+export const toggleStudyMaterialLike = createAsyncThunk<Partial<State>,
+ToggleStudyMaterialLikePayload, ThunkApiConfig>(
   'studyMaterial/toggleStudyMaterialLike',
-  // TODO
-  async ({ studyMaterialId }, { getState }) => {
-    const {
-      studyMaterials,
-    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
-    studyMaterials[studyMaterialId].likes += studyMaterials[studyMaterialId].hasLiked ? -1 : 1;
-    studyMaterials[studyMaterialId].hasLiked = !studyMaterials[studyMaterialId].hasLiked;
+  async (p, { getState }) => {
+    // TODO
+    const { studyMaterials } = clone(getState().studyMaterial);
+    studyMaterials[p.studyMaterialId].likes += studyMaterials[p.studyMaterialId].hasLiked ? -1 : 1;
+    studyMaterials[p.studyMaterialId].hasLiked = !studyMaterials[p.studyMaterialId].hasLiked;
     return { studyMaterials };
   },
 );
 
-export const purchaseStudyMaterial = createAsyncThunk<Partial<State>, {
-  studyMaterialId: string
-}, ThunkApiConfig>(
+export const purchaseStudyMaterial = createAsyncThunk<Partial<State>,
+PurchaseStudyMaterialPayload, ThunkApiConfig>(
   'studyMaterial/purchaseStudyMaterial',
-  // TODO
-  async ({ studyMaterialId }, { getState }) => {
+  async (p, { getState }) => {
+    // TODO
     const {
       studyMaterials,
       acquiredStudyMaterials,
-    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
-    const { price } = studyMaterials[studyMaterialId];
+    } = clone(getState().studyMaterial);
+    const { price } = studyMaterials[p.studyMaterialId];
     const { credits } = getState().user.user!;
     if (credits < price) throw new Error('You don\'t have enough tokens!');
-    acquiredStudyMaterials.push(studyMaterialId);
+    acquiredStudyMaterials.push(p.studyMaterialId);
     alert('Study Material Purchase', 'Study material successfully acquired.');
     return { acquiredStudyMaterials };
   },
 );
 
-export const proposeExchange = createAsyncThunk<Partial<State>, {
-  requesterStudyMaterialId: string
-  requesteeStudyMaterialId: string
-}, ThunkApiConfig>(
+export const proposeExchange = createAsyncThunk<Partial<State>,
+ProposeExchangePayload, ThunkApiConfig>(
   'studyMaterial/proposeExchange',
-  // TODO
   async () => {
+    // TODO
     alert('Study Material Exchange', 'Exchange has been successfully proposed.');
     return {};
   },
 );
 
-export const fetchStudyMaterialLink = createAsyncThunk<Partial<State>, {
-  studyMaterialId: string
-}, ThunkApiConfig>(
+export const fetchStudyMaterialLink = createAsyncThunk<Partial<State>,
+FetchStudyMaterialLinkPayload, ThunkApiConfig>(
   'studyMaterial/fetchStudyMaterialLink',
-  // TODO
   async () => {
+    // TODO
     alert('Obtaining Study Material', 'Link copied to clipboard.');
     return {};
   },
 );
 
-export const toggleReviewLike = createAsyncThunk<Partial<State>, {
-  studyMaterialId: string
-  reviewId: string
-}, ThunkApiConfig>(
+export const toggleReviewLike = createAsyncThunk<Partial<State>,
+ToggleReviewLikePayload, ThunkApiConfig>(
   'studyMaterial/toggleReviewLike',
-  // TODO
-  async ({
-    studyMaterialId,
-    reviewId,
-  }, { getState }) => {
-    const {
-      studyMaterials,
-    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
-    const review = studyMaterials[studyMaterialId].reviews
-      .find(({ id }) => id === reviewId)!;
+  async (p, { getState }) => {
+    // TODO
+    const { studyMaterials } = clone(getState().studyMaterial);
+    const review = studyMaterials[p.studyMaterialId].reviews
+      .find(({ id }) => id === p.reviewId)!;
     review.likes += review.hasLiked ? -1 : 1;
     review.hasLiked = !review.hasLiked;
     return { studyMaterials };
   },
 );
 
-export const addReview = createAsyncThunk<Partial<State>, {
-  studyMaterialId: string
-  review: string
-}, ThunkApiConfig>(
+export const addReview = createAsyncThunk<Partial<State>,
+AddReviewPayload, ThunkApiConfig>(
   'studyMaterial/addReview',
-  // TODO
-  async ({
-    studyMaterialId,
-    review,
-  }, { getState }) => {
-    const {
-      studyMaterials,
-    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
-    studyMaterials[studyMaterialId].reviews
+  async (p, { getState }) => {
+    // TODO
+    const { studyMaterials } = clone(getState().studyMaterial);
+    studyMaterials[p.studyMaterialId].reviews
       .push({
         id: Math.random()
           .toString(),
-        review,
+        review: p.review,
         date: moment()
           .valueOf(),
         comments: [],
@@ -144,27 +133,18 @@ export const addReview = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const addReviewComment = createAsyncThunk<Partial<State>, {
-  studyMaterialId: string
-  reviewId: string
-  comment: string
-}, ThunkApiConfig>(
+export const addReviewComment = createAsyncThunk<Partial<State>,
+AddReviewCommentPayload, ThunkApiConfig>(
   'studyMaterial/addReviewComment',
-  // TODO
-  async ({
-    studyMaterialId,
-    reviewId,
-    comment,
-  }, { getState }) => {
-    const {
-      studyMaterials,
-    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
-    studyMaterials[studyMaterialId].reviews
-      .find((review) => review.id === reviewId)!.comments
+  async (p, { getState }) => {
+    // TODO
+    const { studyMaterials } = clone(getState().studyMaterial);
+    studyMaterials[p.studyMaterialId].reviews
+      .find((review) => review.id === p.reviewId)!.comments
       .push({
         id: Math.random()
           .toString(),
-        comment,
+        comment: p.comment,
         date: moment()
           .valueOf(),
         author: getState().user.user!.name,
@@ -173,34 +153,19 @@ export const addReviewComment = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const publishStudyMaterial = createAsyncThunk<Partial<State>, {
-  name: string
-  type: string
-  categories: string[]
-  description: string
-  price: number
-  fileUri: string
-}, ThunkApiConfig>(
+export const publishStudyMaterial = createAsyncThunk<Partial<State>,
+PublishStudyMaterialPayload, ThunkApiConfig>(
   'studyMaterial/publishStudyMaterial',
-  // TODO
-  async ({
-    name,
-    type,
-    categories,
-    description,
-    price,
-    fileUri,
-  }, { getState }) => {
-    // eslint-disable-next-line no-console
-    console.log(fileUri);
-    const id = Math.random()
-      .toString();
+  async (p, { getState }) => {
+    // TODO
     const {
       studyMaterials,
       studyMaterialsCategories,
       uploadedStudyMaterials,
       acquiredStudyMaterials,
-    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    } = clone(getState().studyMaterial);
+    const id = Math.random()
+      .toString();
     studyMaterials[id] = {
       id,
       authorEmail: getState().user.user!.email,
@@ -209,15 +174,15 @@ export const publishStudyMaterial = createAsyncThunk<Partial<State>, {
       authorRating: getState().user.user!.rating,
       likes: 0,
       hasLiked: false,
-      name,
-      description,
-      price,
-      type,
+      name: p.name,
+      description: p.description,
+      price: p.price,
+      type: p.type,
       reviews: [],
       date: moment()
         .valueOf(),
     };
-    categories.forEach((category) => {
+    p.categories.forEach((category) => {
       if (studyMaterialsCategories[category]) {
         studyMaterialsCategories[category].push(id);
       } else {
@@ -226,7 +191,7 @@ export const publishStudyMaterial = createAsyncThunk<Partial<State>, {
     });
     uploadedStudyMaterials.push(id);
     acquiredStudyMaterials.push(id);
-    alert('Upload Study Material', `The study material '${name}' has been published.`);
+    alert('Upload Study Material', `The study material '${p.name}' has been published.`);
     return {
       studyMaterials,
       studyMaterialsCategories,
@@ -236,30 +201,25 @@ export const publishStudyMaterial = createAsyncThunk<Partial<State>, {
   },
 );
 
-export const settleExchange = createAsyncThunk<Partial<State>, {
-  studyMaterialExchangeId: string
-  accept: boolean
-}, ThunkApiConfig>(
+export const settleExchange = createAsyncThunk<Partial<State>,
+SettleExchangePayload, ThunkApiConfig>(
   'studyMaterial/settleExchange',
-  // TODO
-  async ({
-    studyMaterialExchangeId,
-    accept,
-  }, { getState }) => {
+  async (p, { getState }) => {
+    // TODO
     let {
       studyMaterialsExchanges,
       acquiredStudyMaterials,
-    }: State = JSON.parse(JSON.stringify(getState().studyMaterial));
+    } = clone(getState().studyMaterial);
     const studyMaterialsExchange = studyMaterialsExchanges
-      .find(({ id }) => id === studyMaterialExchangeId)!;
+      .find(({ id }) => id === p.studyMaterialExchangeId)!;
     studyMaterialsExchanges = studyMaterialsExchanges
-      .filter(({ id }) => id !== studyMaterialExchangeId);
-    if (accept) {
+      .filter(({ id }) => id !== p.studyMaterialExchangeId);
+    if (p.accept) {
       acquiredStudyMaterials = acquiredStudyMaterials
         .filter((id) => id !== studyMaterialsExchange.requesteeStudyMaterialId);
       acquiredStudyMaterials.push(studyMaterialsExchange.requesterStudyMaterialId);
     }
-    alert('Study Materials Exchange', `The exchange was successfully ${accept ? 'accepted' : 'rejected'}.`);
+    alert('Study Materials Exchange', `The exchange was successfully ${p.accept ? 'accepted' : 'rejected'}.`);
     return {
       studyMaterialsExchanges,
       acquiredStudyMaterials,

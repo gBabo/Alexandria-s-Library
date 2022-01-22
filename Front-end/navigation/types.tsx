@@ -15,7 +15,8 @@ declare global {
 }
 
 export type RootStackParamList = {
-  Drawer: NavigatorScreenParams<DrawerParamList>
+  Drawer: undefined;
+  Browse: undefined;
 };
 
 export type DrawerParamList = {
@@ -78,8 +79,11 @@ export type TScheduledStackParamList = {
 
 export type LoginStackParamList = {
   Login: undefined
-  Register: undefined
+  Register: { email: string, password: string }
 };
+
+export type RootStackProps<Screen extends keyof RootStackParamList> =
+    NativeStackScreenProps<RootStackParamList, Screen>;
 
 export type ProfileScreenProps = DrawerScreenProps<DrawerParamList, 'Profile'>;
 

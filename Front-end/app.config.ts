@@ -7,8 +7,8 @@ export interface Extra {
 }
 
 export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
-  name: 'Library of Alexandria',
-  slug: 'LibraryOfAlexandria',
+  name: 'Alexandria\'s Library',
+  slug: 'alexandria-library',
   version: '1.1.1',
   orientation: 'default',
   icon: './assets/images/icon.png',
@@ -26,12 +26,12 @@ export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
     '**/*',
   ],
   ios: {
-    bundleIdentifier: 'pt.ulisboa.tecnico.CCU2122G03.LibraryOfAlexandria',
+    bundleIdentifier: 'pt.ulisboa.tecnico.CCU2122G03.AlexandriaLibrary',
     buildNumber: '1.1.1',
     supportsTablet: true,
   },
   android: {
-    package: 'pt.ulisboa.tecnico.CCU2122G03.LibraryOfAlexandria',
+    package: 'pt.ulisboa.tecnico.CCU2122G03.AlexandriaLibrary',
     versionCode: 3,
     permissions: [
       'CAMERA',
