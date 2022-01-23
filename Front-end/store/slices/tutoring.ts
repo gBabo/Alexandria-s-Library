@@ -70,7 +70,7 @@ ScheduleTutoringSessionPayload, ThunkApiConfig>(
         tutoringSessionsCategories[category] = [id];
       }
     });
-    alert('Tutoring Session Schedule', `The tutoring session '${name}' has been scheduled.`);
+    alert('Tutoring Session Schedule', `The tutoring session '${p.name}' has been scheduled.`);
     return {
       tutoringSessions,
       tutoringSessionsCategories,
