@@ -86,7 +86,11 @@ export default function StudyMaterialScreen({
         <View style={styles.line}>
           <CustomButton
             onPress={() => {
-              dispatch(toggleStudyMaterialLike({ studyMaterialId: studyMaterial.id }));
+              if (localId) {
+                dispatch(toggleStudyMaterialLike({ studyMaterialId: studyMaterial.id }));
+              } else {
+                navigation.navigate('A_Login');
+              }
             }}
             style={{
               backgroundColor: studyMaterial.hasLiked ? Colors.yellow : Colors.blue,
