@@ -28,6 +28,7 @@ export default function TutoringSessionScreen({
   route,
 }: TStoreStackScreenProps<'TutoringSession'>) {
   const dispatch = useAppDispatch();
+  const localId = useAppSelector((s) => s.authentication.localId);
   const isLoading = useAppSelector((s) => s.tutoring.isLoading);
   const email = useAppSelector((s) => s.user.user!.email);
   const tutoringSessions = useAppSelector((s) => s.tutoring.tutoringSessions);
@@ -195,7 +196,13 @@ export default function TutoringSessionScreen({
         ) : (
           <View style={styles.line}>
             <CustomButton
-              onPress={confirmTutoringSessionEnroll}
+              onPress={() => {
+                if (localId) {
+                  confirmTutoringSessionEnroll();
+                } else {
+                  navigation.navigate('A_Login');
+                }
+              }}
               disabled={isEnrolled}
               style={[styles.action, {
                 backgroundColor: isEnrolled ? Colors.success : Colors.blue,

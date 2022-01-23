@@ -28,7 +28,7 @@ export type DrawerParamList = {
   T_Store: NavigatorScreenParams<TStoreStackParamList>;
   T_Enrolled: NavigatorScreenParams<TEnrolledStackParamList>;
   T_Scheduled: NavigatorScreenParams<TScheduledStackParamList>;
-  A_Login: NavigatorScreenParams<LoginStackParamList>;
+  A_Login: undefined;
   A_Logout: undefined;
 };
 

@@ -29,6 +29,7 @@ export default function StudyMaterialScreen({
 }: SMStoreStackScreenProps<'StudyMaterial'>) {
   const dispatch = useAppDispatch();
   const pickerRef = useRef<Picker<string>>(null);
+  const localId = useAppSelector((s) => s.authentication.localId);
   const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
   const studyMaterials = useAppSelector((s) => s.studyMaterial.studyMaterials);
   const studyMaterial = studyMaterials[route.params.id];
@@ -139,7 +140,13 @@ export default function StudyMaterialScreen({
         </View>
         <View style={styles.line}>
           <CustomButton
-            onPress={() => navigation.navigate('Discussion', { studyMaterialId: route.params.id })}
+            onPress={() => {
+              if (localId) {
+                navigation.navigate('Discussion', { studyMaterialId: route.params.id });
+              } else {
+                navigation.navigate('A_Login');
+              }
+            }}
             style={styles.action}
           >
             <View style={styles.actionSeparation}>
@@ -182,7 +189,16 @@ export default function StudyMaterialScreen({
           </View>
         ) : (
           <View style={styles.line}>
-            <CustomButton onPress={confirmStudyMaterialPurchase} style={styles.action}>
+            <CustomButton
+              onPress={() => {
+                if (localId) {
+                  confirmStudyMaterialPurchase();
+                } else {
+                  navigation.navigate('A_Login');
+                }
+              }}
+              style={styles.action}
+            >
               <View style={styles.actionSeparation}>
                 <FontAwesome5
                   name="link"
@@ -205,7 +221,13 @@ export default function StudyMaterialScreen({
               </View>
             </CustomButton>
             <CustomButton
-              onPress={() => (pickerRef.current as any)?.focus()}
+              onPress={() => {
+                if (localId) {
+                  (pickerRef.current as any)?.focus();
+                } else {
+                  navigation.navigate('A_Login');
+                }
+              }}
               style={styles.action}
               row
             >

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ColorSchemeName } from 'react-native';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -29,13 +29,18 @@ function RootNavigator() {
   }, []);
   const isLoading = useAppSelector((s) => s.authentication.isLoading);
   const localId = useAppSelector((s) => s.authentication.localId);
+  const [showBrowse, setShowBrowse] = useState(true);
 
   return isLoading ? (
     <Loading />
   ) : (
     <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      {!localId && (
-        <RootStack.Screen name="Browse" component={BrowseScreen} />
+      {showBrowse && !localId && (
+        <RootStack.Screen
+          name="Browse"
+          component={BrowseScreen}
+          listeners={{ blur: () => setShowBrowse(false) }}
+        />
       )}
       <RootStack.Screen name="Drawer" component={DrawerNavigator} />
     </RootStack.Navigator>
