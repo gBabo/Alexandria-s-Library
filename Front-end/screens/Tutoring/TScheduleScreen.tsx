@@ -111,7 +111,7 @@ export default function TScheduleScreen({ navigation }: TScheduledStackScreenPro
             ownRef={refs.name}
             nextRef={refs.categories}
             label="Name:"
-            placeholder="Enter the name of the study material"
+            placeholder="Enter the name of the session"
             initialValue={values.name.value}
             onChangeValue={(value, validity) => onInputUpdate('name', value, validity)}
             multiline
