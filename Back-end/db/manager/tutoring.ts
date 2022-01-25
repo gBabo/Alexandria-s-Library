@@ -11,8 +11,8 @@ export async function createTutoringSession(
   tutor: string,
   price: number,
   categories: string[],
-  location: number[],
-  date: Date,
+  location: string,
+  date: string,
   duration: number,
 ) {
   const con = await pool.connect();
@@ -20,7 +20,7 @@ export async function createTutoringSession(
     await con.query('BEGIN');
 
     const values = [name, tutor, description,
-      location[0], location[1], price, date.toISOString(), duration];
+      location, price, date, duration];
     let query = insert.insertTutoringSession;
     const tutoringSessionId = (await con.query(query, values)).rows.pop().session_id;
 
@@ -37,7 +37,7 @@ export async function createTutoringSession(
     await con.query('ROLLBACK');
     console.error('ERROR:createTutoringSession');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -48,7 +48,7 @@ export async function enroll(
   sessionId:string,
 ) {
   const con = await pool.connect();
-  const date = new Date(Date.now());
+  const date = new Date(Date.now()).toISOString();
   try {
     await con.query('BEGIN');
 
@@ -61,7 +61,7 @@ export async function enroll(
       return -1;
     }
     await con.query(insert.insertUserCredit, [-price, email]);
-    result = await con.query(insert.insertEnrollment, [sessionId, email, date.toISOString()]);
+    result = await con.query(insert.insertEnrollment, [sessionId, email, date]);
     const enrollmentId = result.rows.pop().enrollment_id;
     await con.query('COMMIT');
     notification.newEnrollment(tutor, name).then();
@@ -70,7 +70,7 @@ export async function enroll(
     await con.query('ROLLBACK');
     console.error('ERROR:enroll');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -81,7 +81,7 @@ export async function settleEnrollment(enrollmentId: string, email: string, acce
   try {
     await con.query('BEGIN');
     const result = (await con.query(select.selectEnrollment, [enrollmentId])).rows.pop();
-    if (result === undefined || result.tutor !== email) {
+    if (result == null || result.tutor !== email) {
       await con.query('ROLLBACK');
       console.error('ERROR:settleEnrollment:InvalidRights');
       return -1;
@@ -90,7 +90,7 @@ export async function settleEnrollment(enrollmentId: string, email: string, acce
     const status = accept ? 'Accepted' : 'Rejected';
     await con.query(insert.insertStatusEnrollment, [status, enrollmentId]);
     await con.query('COMMIT');
-    notification.settleEnrollment(email, result.name, status);
+    notification.settleEnrollment(email, result.name, status).then();
     return 1;
   } catch (error: any) {
     await con.query('ROLLBACK');
@@ -123,7 +123,7 @@ export async function getMyEnrollments(email: string) {
   } catch (error: any) {
     console.error('ERROR:getMyEnrollments');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -145,7 +145,7 @@ async function getSessionEnrollments(con: PoolClient, sessionId: string) {
   }
   return { enrolled, pendingEnrolls };
 }
-export async function getTutoringSessions(email: string | undefined) {
+export async function getTutoringSessions(email: string | null) {
   const con = await pool.connect();
   try {
     const { rows } = await con.query(select.selectTutoringSessions);
@@ -189,7 +189,7 @@ export async function getTutoringSessions(email: string | undefined) {
   } catch (error: any) {
     console.error('ERROR:getTutoringSessions');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -202,7 +202,7 @@ export async function getTutoringSessionName(sessionId: string) {
   } catch (error: any) {
     console.error('ERROR:getStudyMaterialName');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }

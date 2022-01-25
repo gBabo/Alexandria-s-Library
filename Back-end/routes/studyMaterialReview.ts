@@ -13,13 +13,13 @@ router.post('/review', async (
 ) => {
   const { idToken, studyMaterialId, review } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
 
   const result = await db.createReview(email, studyMaterialId, review);
-  if (result === undefined) {
+  if (result == null) {
     res.status(500).send();
     return;
   }
@@ -32,7 +32,7 @@ router.put('/review-like', async (
 ) => {
   const { idToken, studyMaterialReviewId } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -45,13 +45,13 @@ router.post('/review-comment', async (
 ) => {
   const { idToken, reviewId, comment } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
 
   const result = await db.createReviewComment(email, reviewId, comment);
-  if (result === undefined) {
+  if (result == null) {
     res.status(500).send();
     return;
   }

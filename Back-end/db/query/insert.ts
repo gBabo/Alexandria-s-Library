@@ -33,7 +33,7 @@ const insertStudyMExchangeR = `INSERT INTO study_material_exchange_requests
     (requester, requestee, study_id_requester, study_id_requestee, date) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
 
 const insertTutoringSession = `INSERT INTO tutoring_session 
-    (name, tutor, description, latitude, longitude, price, date, duration) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;`;
+    (name, tutor, description, location, price, date, duration) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`;
 
 const insertTutoringSessionCategory = 'INSERT INTO tutoring_session_category (category, session_id) VALUES ($1, $2);';
 

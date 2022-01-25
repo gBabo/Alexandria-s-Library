@@ -9,7 +9,7 @@ export async function newStudyMaterialExchange(
   studyMIdTee: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(requestee);
-  if (registrationToken === undefined) {
+  if (registrationToken == null) {
     console.error(`No Registration Token for user: ${requestee}`);
     return;
   }
@@ -36,7 +36,7 @@ export async function settleStudyMaterialExchange(
   status: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(requester);
-  if (registrationToken === undefined) {
+  if (registrationToken == null) {
     console.error(`No Registration Token for user: ${requester}`);
     return;
   }
@@ -61,7 +61,7 @@ export async function newEnrollment(
   sessionName: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(tutor);
-  if (registrationToken === undefined) {
+  if (registrationToken == null) {
     console.error(`No Registration Token for user: ${tutor}`);
     return;
   }
@@ -85,7 +85,7 @@ export async function settleEnrollment(
   status: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(requester);
-  if (registrationToken === undefined) {
+  if (registrationToken == null) {
     console.error(`No Registration Token for user: ${requester}`);
     return;
   }

@@ -2,14 +2,14 @@ export interface StudyMaterialReviewComment {
     id: string
     author: string
     comment: string
-    date: Date
+    date: string
 }
 export interface StudyMaterialReview {
     id: string
     author: string
-    likes: string
+    likes: number
     review: string
     hasLiked: boolean
     comments: StudyMaterialReviewComment[]
-    date: Date
+    date: string
 }

@@ -1,20 +1,19 @@
 import pool from '../index';
-import User from '../../models/User';
 import select from '../query/select';
 import insert from '../query/insert';
 
-export async function getUser(email:string) : Promise<undefined|User> {
+export async function getUser(email:string) {
   const con = await pool.connect();
   try {
     const result = await con.query(select.selectUser, [email]);
     if (result.rowCount !== 1) {
-      return undefined;
+      return null;
     }
     delete result.rows[0].pushNotificationToken;
     return result.rows[0];
   } catch (error: any) {
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -40,7 +39,7 @@ export async function getPushNotificationToken(email:string) {
     return (await con.query(query, [email])).rows.pop().push_notification_token;
   } catch (error: any) {
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }

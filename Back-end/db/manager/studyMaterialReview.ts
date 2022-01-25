@@ -40,24 +40,24 @@ export async function getStudyMaterialReviews(
 
 export async function createReview(email: string, studyMaterialId: string, review: string) {
   const con = await pool.connect();
-  const date = new Date(Date.now());
+  const date = new Date(Date.now()).toISOString();
   try {
     const r = await con.query(select.selectStudyMRightsSQL, [studyMaterialId, email]);
     const access = r.rowCount;
     if (access === 0) {
       console.error('ERROR:createReview:InvalidRights');
-      return undefined;
+      return null;
     }
 
     const reviewId = (await con.query(
       insert.insertStudyMReview,
-      [email, studyMaterialId, review, date.toISOString()],
+      [email, studyMaterialId, review, date],
     )).rows.pop().study_id;
     return { reviewId, date };
   } catch (error: any) {
     console.error('ERROR:createReview');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -65,7 +65,7 @@ export async function createReview(email: string, studyMaterialId: string, revie
 
 export async function createReviewComment(email: string, reviewId: string, comment: string) {
   const con = await pool.connect();
-  const date = new Date(Date.now());
+  const date = new Date(Date.now()).toISOString();
   try {
     let r = await con.query(select.selectStudyMIdOfReview, [reviewId]);
     const studyMaterialId = r.rows.pop().study_id;
@@ -74,19 +74,19 @@ export async function createReviewComment(email: string, reviewId: string, comme
     const access = r.rowCount;
     if (access === 0) {
       console.error('ERROR:createReviewComment:InvalidRights');
-      return undefined;
+      return null;
     }
 
     const reviewCommentId = (await con.query(
       insert.insertStudyMReviewComment,
-      [reviewId, email, comment, date.toISOString()],
+      [reviewId, email, comment, date],
     )).rows.pop().comment_id;
 
     return { reviewCommentId, date };
   } catch (error: any) {
     console.error('ERROR:createReviewComment');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -98,7 +98,7 @@ export async function likeStudyMaterialReview(email: string, reviewId: string) {
     deleteLike: remove.removeLikeStudyMReview[0],
     removeLikeItem: remove.removeLikeStudyMReview[1],
     insertLike: insert.insertLikeStudyMReview[0],
-    addLikeItem: insert.insertLikeStudyMReview[0],
+    addLikeItem: insert.insertLikeStudyMReview[1],
     selectAuthor: select.selectStudyMReviewAuthor,
   };
   await like(email, reviewId, queries);

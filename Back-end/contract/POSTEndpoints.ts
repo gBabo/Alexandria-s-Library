@@ -25,7 +25,7 @@ export interface StudyMaterialPOSTRequest {
 
 export interface StudyMaterialPOSTResponse {
   studyMaterialId: string
-  date: Date
+  date: string
 }
 
 // TutoringSession POST
@@ -35,8 +35,8 @@ export interface TutoringSessionPOSTRequest {
   description: string
   price: number
   categories: string[]
-  location: number[]
-  date: Date
+  location: string
+  date: string
   duration: number
 }
 
@@ -53,7 +53,7 @@ export interface StudyMaterialReviewPOSTRequest {
 
 export interface StudyMaterialReviewPOSTResponse {
   reviewId: string
-  date: Date
+  date: string
 }
 
 // StudyMaterialReviewComment POST
@@ -65,7 +65,7 @@ export interface StudyMaterialReviewCommentPOSTRequest {
 
 export interface StudyMaterialReviewCommentPOSTResponse {
   reviewCommentId: string
-  date: Date
+  date: string
 }
 
 // StudyMaterialPurchase POST
@@ -84,7 +84,7 @@ export interface StudyMaterialExchangePOSTRequest {
 
 export interface StudyMaterialExchangePOSTResponse {
   studyMaterialExchangeId: string
-  date: Date
+  date: string
 }
 
 // TutoringSessionEnrollment POST
@@ -95,5 +95,5 @@ export interface TutoringSessionEnrollmentPOSTRequest {
 
 export interface TutoringSessionEnrollmentPOSTResponse {
   enrollmentId: string
-  date: Date
+  date: string
 }

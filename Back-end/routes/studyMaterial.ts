@@ -16,10 +16,9 @@ router.post('/', async (
   const {
     idToken, name, description, price, type, categories, file,
   } = req.body;
-  // TODO FILE Path + Link
 
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -33,7 +32,7 @@ router.post('/', async (
     categories,
   );
 
-  if (result === undefined) {
+  if (result == null) {
     res.status(500).send();
     return;
   }
@@ -45,10 +44,10 @@ router.get('/', async (
   req: Request<{}, {}, {}, getEndpoints.StudyMaterialsGETRequest>,
   res: Response<getEndpoints.StudyMaterialsGETResponse>,
 ) => {
-  const email = req.query.idToken === undefined ? undefined : await authenticate(req.query.idToken);
+  const email = req.query.idToken == null ? null : await authenticate(req.query.idToken);
 
   const result = await db.getStudyMaterials(email);
-  if (result === undefined) {
+  if (result == null) {
     res.status(500).send();
     return;
   }
@@ -61,7 +60,7 @@ router.post('/purchase', async (
 ) => {
   const { idToken, studyMaterialId } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -77,7 +76,7 @@ router.put('/like', async (
 ) => {
   const { idToken, studyMaterialId } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -90,12 +89,12 @@ router.get('/pending-exchanges', async (
 ) => {
   const { idToken } = req.query;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
   const result = await db.getStudyMaterialExchangeRequests(email);
-  if (result === undefined) {
+  if (result == null) {
     res.status(500).send();
     return;
   }
@@ -109,13 +108,13 @@ router.get('/get-link', async (
 ) => {
   const { idToken, studyMaterialId } = req.query;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
   const path = await db.getStudyMaterialPath(email, studyMaterialId);
   const link = await getLink(path);
-  if (path === undefined || link === undefined) {
+  if (path == null || link == null) {
     res.status(500).send();
     return;
   }
@@ -131,7 +130,7 @@ router.post('/exchange-request', async (
     idToken, requesterStudyMaterialId, requesteeStudyMaterialId, requesteeStudyMaterialAuthor,
   } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -154,7 +153,7 @@ router.put('/exchange-request-settle', async (
     idToken, studyMaterialExchangeId, accept,
   } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }

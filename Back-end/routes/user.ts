@@ -11,13 +11,13 @@ router.get('/', async (
   res: Response<UserGETResponse>,
 ) => {
   const email = await authenticate(req.query.idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
   const user = await getUser(email);
 
-  if (user === undefined) {
+  if (user == null) {
     res.status(403).send();
     return;
   }
@@ -30,7 +30,7 @@ router.post('/register', async (
 ) => {
   const { idToken, name, institution } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -46,7 +46,7 @@ router.post('/registerPushNotificationToken', async (
   const { idToken, pushNotificationToken } = req.body;
   const email = await authenticate(idToken);
 
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }

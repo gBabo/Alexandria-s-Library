@@ -16,11 +16,11 @@ export async function createStudyMaterial(
   categories: string[],
 ) {
   const con = await pool.connect();
-  const date = new Date(Date.now());
+  const date = new Date(Date.now()).toISOString();
   try {
     await con.query('BEGIN');
 
-    const values = [name, description, author, type, price, date.toISOString()];
+    const values = [name, description, author, type, price, date];
     const studyMaterialId = (await con.query(insert.insertStudyM, values)).rows.pop().study_id;
 
     const path = studyMaterialId + Math.random().toString(36).slice(2);
@@ -38,29 +38,29 @@ export async function createStudyMaterial(
     await con.query('ROLLBACK');
     console.error('ERROR:createStudyMaterial');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
 }
 
-async function getIdsList(con: PoolClient, email: string | undefined, query: string) {
+async function getIdsList(con: PoolClient, email: string | null, query: string) {
   const ids: string[] = [];
-  if (email === undefined) return ids;
+  if (email == null) return ids;
   const { rows } = await con.query(query, [email]);
   rows.forEach((r) => { ids.push(r[Object.keys(r)[0]]); });
   return ids;
 }
 
-async function getIdsSet(con: PoolClient, email: string | undefined, query: string) {
+async function getIdsSet(con: PoolClient, email: string | null, query: string) {
   const ids: Set<string> = new Set();
-  if (email === undefined) return ids;
+  if (email == null) return ids;
   const { rows } = await con.query(query, [email]);
   rows.forEach((r) => { ids.add(r[Object.keys(r)[0]]); });
   return ids;
 }
 
-export async function getStudyMaterials(email: string | undefined) {
+export async function getStudyMaterials(email: string | null) {
   const con = await pool.connect();
   try {
     const { rows } = await con.query(select.selectStudyMs);
@@ -108,7 +108,7 @@ export async function getStudyMaterials(email: string | undefined) {
   } catch (error: any) {
     console.error('ERROR:getStudyMaterials');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -175,7 +175,7 @@ export async function likeStudyMaterial(email: string, studyMaterialId: string) 
     deleteLike: remove.removeLikeStudyM[0],
     removeLikeItem: remove.removeLikeStudyM[1],
     insertLike: insert.insertLikeStudyM[0],
-    addLikeItem: insert.insertLikeStudyM[0],
+    addLikeItem: insert.insertLikeStudyM[1],
     selectAuthor: select.selectStudyMAuthor,
   };
   await like(email, studyMaterialId, queries);
@@ -188,23 +188,23 @@ export async function createStudyMaterialExchangeRequest(
   studyMaterialIdTee: string,
 ) {
   const con = await pool.connect();
-  const date = new Date(Date.now());
+  const date = new Date(Date.now()).toISOString();
   try {
     await con.query('BEGIN');
     let r = await con.query(select.selectStudyMRightsSQL, [studyMaterialIdTer, requester]);
     const accessRequester = r.rowCount;
     r = await con.query(select.selectStudyMRightsSQL, [studyMaterialIdTee, requestee]);
-    const accessRequestee = r.rowCount;
 
+    const accessRequestee = r.rowCount;
     if (accessRequestee === 0 || accessRequester === 0) {
       await con.query('ROLLBACK');
       console.error('ERROR:createStudyMaterialExchangeRequest:InvalidRights');
       return -1;
     }
-    const v = [requester, requestee, studyMaterialIdTer, studyMaterialIdTee, date.toISOString()];
+    const v = [requester, requestee, studyMaterialIdTer, studyMaterialIdTee, date];
     r = await con.query(insert.insertStudyMExchangeR, v);
-    const studyMaterialExchangeId = r.rows.pop().exchange_id;
 
+    const studyMaterialExchangeId = r.rows.pop().exchange_id;
     await con.query('COMMIT');
     notification.newStudyMaterialExchange(requestee, studyMaterialIdTer, studyMaterialIdTee).then();
     return { studyMaterialExchangeId, date };
@@ -239,7 +239,7 @@ export async function getStudyMaterialExchangeRequests(email:string) {
     await con.query('ROLLBACK');
     console.error('ERROR:getStudyMaterialExchangeRequests');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -250,7 +250,7 @@ export async function rejectStudyMaterialExchangeRequest(exchangeId: string, ema
   try {
     await con.query('BEGIN');
     const result = (await con.query(select.selectStudyMExchangeR, [exchangeId])).rows.pop();
-    if (result === undefined || result.requestee !== email) {
+    if (result == null || result.requestee !== email) {
       await con.query('ROLLBACK');
       console.error('ERROR:rejectStudyMaterialExchangeRequest:InvalidRights');
       return -1;
@@ -279,7 +279,7 @@ export async function acceptStudyMaterialExchangeRequest(exchangeId: string, ema
   try {
     await con.query('BEGIN');
     const result = (await con.query(select.selectStudyMExchangeR, [exchangeId])).rows.pop();
-    if (result === undefined || result.requestee !== email) {
+    if (result == null || result.requestee !== email) {
       await con.query('ROLLBACK');
       console.error('ERROR:acceptStudyMaterialExchangeRequest:InvalidRights');
       return -1;
@@ -316,7 +316,7 @@ export async function getStudyMaterialName(studyMaterialId: string) {
   } catch (error: any) {
     console.error('ERROR:getStudyMaterialName');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }
@@ -336,7 +336,7 @@ export async function getStudyMaterialPath(email: string, studyMaterialId: strin
   } catch (error: any) {
     console.error('ERROR:getStudyMaterialName');
     console.error(error.stack);
-    return undefined;
+    return null;
   } finally {
     await con.release();
   }

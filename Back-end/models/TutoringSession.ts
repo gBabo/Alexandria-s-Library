@@ -12,8 +12,8 @@ export default interface TutoringSession {
   name: string
   description: string
   price: number
-  location: number[]
-  date: Date
+  location: string
+  date: string
   duration: number
   enrolled: UserEnroll[],
   pendingEnrolls: UserEnroll[],
@@ -24,5 +24,5 @@ export interface Enrollment {
   requester: string
   tutoringSessionId: string
   status: string
-  date: Date
+  date: string
 }

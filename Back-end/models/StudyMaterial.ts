@@ -4,7 +4,7 @@ export default interface StudyMaterial {
   id: string
   authorEmail: string
   author: string
-  authorRating: string
+  authorRating: number
   authorInstitution: string
   name: string
   description: string
@@ -13,7 +13,7 @@ export default interface StudyMaterial {
   likes: number
   hasLiked: boolean
   reviews: StudyMaterialReview[]
-  date: Date
+  date: string
 }
 
 export interface StudyMaterialExchange {
@@ -23,5 +23,5 @@ export interface StudyMaterialExchange {
   requesterInstitution: string
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string
-  date: Date
+  date: string
 }

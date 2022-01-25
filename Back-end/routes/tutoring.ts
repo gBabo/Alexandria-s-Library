@@ -18,7 +18,7 @@ router.post('/', async (
   } = req.body;
 
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -33,7 +33,7 @@ router.post('/', async (
     date,
     duration,
   );
-  if (result === undefined) {
+  if (result == null) {
     res.status(500).send();
     return;
   }
@@ -47,13 +47,13 @@ router.post('/enroll', async (
   const { idToken, tutoringSessionId } = req.body;
 
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
 
   const result = await db.enroll(email, tutoringSessionId);
-  if (result === undefined || result === -1) {
+  if (result == null || result === -1) {
     res.status(500).send();
     return;
   }
@@ -66,7 +66,7 @@ router.put('/enroll-settle', async (
 ) => {
   const { idToken, enrollmentId, accept } = req.body;
   const email = await authenticate(idToken);
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
@@ -81,10 +81,10 @@ router.get('/', async (
   req: Request<{}, {}, {}, getEndpoints.TutoringSessionsGetRequest>,
   res: Response<getEndpoints.TutoringSessionsGETResponse>,
 ) => {
-  const email = req.query.idToken === undefined ? undefined : await authenticate(req.query.idToken);
+  const email = req.query.idToken == null ? null : await authenticate(req.query.idToken);
 
   const result = await db.getTutoringSessions(email);
-  if (result === undefined) {
+  if (result === null) {
     res.status(500).send();
     return;
   }
@@ -98,13 +98,13 @@ router.get('/myEnrollments', async (
   const { idToken } = req.query;
   const email = await authenticate(idToken);
 
-  if (email === undefined) {
+  if (email == null) {
     res.status(403).send();
     return;
   }
 
   const result = await db.getMyEnrollments(email);
-  if (result === undefined) {
+  if (result == null) {
     res.status(500).send();
     return;
   }
