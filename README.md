@@ -14,7 +14,9 @@ $ npm install
 $ ./resources/newDB.sh
 $ npm start
 ```
-To run the Frontend run the following commands in the *Front-end* directory:
+To run the Frontend:
+Change `SERVER_BASE_URL` variable defined in the file *Front-end/.env* to match `http://<P>:3000` where `<P>` is the private IP of the PC where the Backend is running.
+And then run the following commands in the *Front-end* directory:
 ```sh
 $ npm install
 $ expo start
