@@ -1,3 +1,5 @@
+import { FileInfo } from '../../components/PdfFilePicker';
+
 /* Authentication */
 
 export interface SigninPayload {
@@ -32,8 +34,7 @@ export interface FetchStudyMaterialLinkPayload {
 }
 
 export interface ToggleReviewLikePayload {
-  studyMaterialId: string
-  reviewId: string
+  studyMaterialReviewId: string
 }
 
 export interface AddReviewPayload {
@@ -42,7 +43,6 @@ export interface AddReviewPayload {
 }
 
 export interface AddReviewCommentPayload {
-  studyMaterialId: string
   reviewId: string
   comment: string
 }
@@ -53,7 +53,7 @@ export interface PublishStudyMaterialPayload {
   categories: string[]
   description: string
   price: number
-  fileUri: string
+  fileInfo: FileInfo
 }
 
 export interface SettleExchangePayload {
@@ -70,24 +70,28 @@ export interface ScheduleTutoringSessionPayload {
   location: string
   duration: number
   price: number
-  date: number
+  date: string
 }
 
 export interface EnrollTutoringSessionPayload {
   tutoringSessionId: string
 }
 
-export interface CancelTutoringSessionPayload {
-  tutoringSessionId: string
-}
-
 export interface OnSettleEnrollmentStatusPayload {
-  tutoringSessionId: string
-  enrollIndex: number
+  enrollmentId: string
   accept: boolean
 }
 
 export interface OnSettleAllEnrollmentStatusPayload {
   tutoringSessionId: string
   accept: boolean
+}
+
+/* User */
+
+export interface SignupUserPayload {
+  idToken: string
+  email: string
+  name: string
+  institution: string
 }

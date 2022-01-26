@@ -33,7 +33,6 @@ export default function SMDiscussionScreen({
     marginVertical,
   }: RenderItemProps<StudyMaterialReview>) => (
     <StudyMaterialReviewItem
-      studyMaterial={studyMaterial}
       review={dataInfo.item}
       onPress={() => navigation.navigate('DiscussionComments', {
         studyMaterialId: route.params.studyMaterialId,

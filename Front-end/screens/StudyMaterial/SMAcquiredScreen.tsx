@@ -17,12 +17,15 @@ export default function SMAcquiredScreen({ navigation }: SMAcquiredStackScreenPr
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
   const studyMaterials = useAppSelector((s) => s.studyMaterial.studyMaterials);
-  const acquiredStudyMaterials = useAppSelector((s) => s.studyMaterial.acquiredStudyMaterials)
+  const acquiredStudyMaterials = useAppSelector((s) => s.studyMaterial.acquired)
     .map((studyMaterialId) => studyMaterials[studyMaterialId]);
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Acquired Materials' });
+    if (isFocused) {
+      navigation.getParent()!.setOptions({ headerTitle: 'Acquired Materials' });
+      dispatch(fetchStudyMaterials());
+    }
   }, [navigation, isFocused]);
 
   const renderItem = ({
@@ -57,7 +60,7 @@ export default function SMAcquiredScreen({ navigation }: SMAcquiredStackScreenPr
       searchPlaceholder="Search Acquired Study Materials"
       defaultSortingMethod={{
         value: 'date',
-        order: 'Ascending',
+        order: 'Descending',
       }}
       renderItem={renderItem}
       refreshing={isLoading}

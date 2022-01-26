@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
@@ -21,12 +21,11 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Profile' });
+    if (isFocused) {
+      navigation.getParent()!.setOptions({ headerTitle: 'Profile' });
+      dispatch(fetchUser());
+    }
   }, [navigation, isFocused]);
-
-  useEffect(() => {
-    dispatch(fetchUser());
-  }, []);
 
   return isLoading || !user ? (
     <Loading />

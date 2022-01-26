@@ -7,6 +7,6 @@ export default async function authenticate(idToken: string) {
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
     return decodedIdToken.email;
   } catch (err) {
-    return undefined;
+    return null;
   }
 }

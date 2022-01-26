@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useCallback, useEffect, useLayoutEffect } from 'react';
+import { useCallback, useLayoutEffect } from 'react';
 import { Alert } from 'react-native';
 import { Item } from 'react-navigation-header-buttons';
 import { useIsFocused } from '@react-navigation/core';
-import { isEmpty } from 'lodash';
 
 import Colors from '../../constants/Colors';
 import { TStoreStackScreenProps } from '../../navigation/types';
@@ -18,11 +17,22 @@ import { fetchTutoringSessions } from '../../store/slices/tutoring';
 export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Store'>) {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((s) => s.tutoring.isLoading);
-  const tutoringSessionsCategories = useAppSelector((s) => s.tutoring.tutoringSessionsCategories);
-
-  useEffect(() => {
-    dispatch(fetchTutoringSessions());
-  }, []);
+  const email = useAppSelector((s) => s.user.user?.email);
+  const myTutoringSessionIds = [
+    ...useAppSelector((s) => s.tutoring.created),
+    ...Object.values(useAppSelector((s) => s.tutoring.tutoringSessions))
+      .filter(({
+        pendingEnrolls,
+        enrolled,
+      }) => [...pendingEnrolls, ...enrolled]
+        .some((e) => e.email === email))
+      .map(({ id }) => id),
+  ];
+  const tutoringSessionsCategories = Object.entries(useAppSelector(
+    (s) => s.tutoring.tutoringSessionsCategories,
+  ))
+    .filter(([, v]) => v.some((id) => !myTutoringSessionIds.includes(id)))
+    .map(([k]) => k);
 
   const onPressHelp = useCallback(() => Alert.alert(
     'Help', `
@@ -53,16 +63,17 @@ export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Sto
           </MaterialIconsHeaderButtons>
         ),
       });
+      dispatch(fetchTutoringSessions());
     }
   }, [navigation, onPressHelp, isFocused]);
 
   return isLoading ? (
     <Loading />
-  ) : isEmpty(tutoringSessionsCategories) ? (
+  ) : tutoringSessionsCategories.length === 0 ? (
     <Fallback message="There are no announced tutoring sessions yet." />
   ) : (
     <CategoryGrid
-      categories={Object.keys(tutoringSessionsCategories)}
+      categories={tutoringSessionsCategories}
       searchPlaceholder="Search Tutoring Session Categories"
       onPress={(category) => navigation.navigate('CategoryStore', { category })}
       refreshing={isLoading}

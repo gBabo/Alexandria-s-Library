@@ -2,21 +2,22 @@ export default interface TutoringSession {
   id: string
   tutorEmail: string
   tutor: string
-  tutorRating: number,
-  tutorInstitution: string,
+  tutorRating: number
+  tutorInstitution: string
   name: string
   description: string
   price: number
   location: string
-  date: number
+  date: string
   duration: number
-  enrolled: UserEnroll[],
-  pendingEnrolls: UserEnroll[],
+  enrolled: UserEnroll[]
+  pendingEnrolls: UserEnroll[]
 }
 
 export interface UserEnroll {
-  email: string,
-  name: string,
+  id: string
+  email: string
+  name: string
 }
 
 export interface Enrollment {
@@ -24,11 +25,11 @@ export interface Enrollment {
   requester: string
   tutoringSessionId: string
   status: EnrollmentStatus
-  date: number
+  date: string
 }
 
 export enum EnrollmentStatus {
-  PENDING,
-  CONFIRMED,
-  REJECTED,
+  PENDING = 'Pending',
+  CONFIRMED = 'Accepted',
+  REJECTED = 'Rejected',
 }

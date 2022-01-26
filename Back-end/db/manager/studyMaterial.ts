@@ -8,8 +8,8 @@ import { getStudyMaterialReviews } from './studyMaterialReview';
 import * as notification from '../../services/notification';
 
 export async function createStudyMaterial(
-  name:string,
-  description:string,
+  name: string,
+  description: string,
   author: string,
   type: string,
   price: number,
@@ -23,7 +23,7 @@ export async function createStudyMaterial(
     const values = [name, description, author, type, price, date];
     const studyMaterialId = (await con.query(insert.insertStudyM, values)).rows.pop().study_id;
 
-    const path = studyMaterialId + Math.random().toString(36).slice(2);
+    const path = `${name}_${Math.random().toString(36).slice(2)}.pdf`;
     await con.query(insert.insertPathToStudyM, [path, studyMaterialId]);
 
     const promiseCatg = [];
@@ -48,7 +48,9 @@ async function getIdsList(con: PoolClient, email: string | null, query: string) 
   const ids: string[] = [];
   if (email == null) return ids;
   const { rows } = await con.query(query, [email]);
-  rows.forEach((r) => { ids.push(r[Object.keys(r)[0]]); });
+  rows.forEach((r) => {
+    ids.push(r[Object.keys(r)[0]]);
+  });
   return ids;
 }
 
@@ -56,7 +58,9 @@ async function getIdsSet(con: PoolClient, email: string | null, query: string) {
   const ids: Set<string> = new Set();
   if (email == null) return ids;
   const { rows } = await con.query(query, [email]);
-  rows.forEach((r) => { ids.add(r[Object.keys(r)[0]]); });
+  rows.forEach((r) => {
+    ids.add(r[Object.keys(r)[0]]);
+  });
   return ids;
 }
 
@@ -99,7 +103,9 @@ export async function getStudyMaterials(email: string | null) {
       }
       if (row.category in studyMaterialsCategories) {
         studyMaterialsCategories[row.category].push(row.study_id);
-      } else { studyMaterialsCategories[row.category] = [row.study_id]; }
+      } else {
+        studyMaterialsCategories[row.category] = [row.study_id];
+      }
     }
     await Promise.all(promiseReviews);
     return {
@@ -169,6 +175,7 @@ export async function like(email: string, id: string, queries: Record<string, st
     await con.release();
   }
 }
+
 export async function likeStudyMaterial(email: string, studyMaterialId: string) {
   const queries: Record<string, string> = {
     selectLikedItem: select.selectLikedStudyM,
@@ -218,7 +225,7 @@ export async function createStudyMaterialExchangeRequest(
   }
 }
 
-export async function getStudyMaterialExchangeRequests(email:string) {
+export async function getStudyMaterialExchangeRequests(email: string) {
   const con = await pool.connect();
   const studyMaterialsExchanges: StudyMaterialExchange[] = [];
   try {

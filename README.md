@@ -1,12 +1,21 @@
-# Alexandria’s Library
-Project for the CCU course in 2021/2022.
+# Alexandria's Library
 
-We are group number 3 consisted by:
+Visit our [website](https://ccu2122group03.wordpress.com/)!
 
-Gonçalo Freire 90719,
-Manuel Mascarenhas 90751,
-Rafael Figueiredo 90770,
-Ricardo Grade 90774,
-Sara Machado 86923.
+## Prerequisites:
+- **Postgresql**: Installation [link](https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04) on Ubuntu 20.04 (Used `psql` version: 12.9);
+- **Nodejs**: Installation [link](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-20-04) (Option 3) on Ubuntu 20.04 (Used `node` version: 14.18.2) (Used `npm` version: 6.14.15);
+- **Expo CLI**: Installation [link](https://docs.expo.dev/get-started/installation/) on Ubuntu 20.04 (Used `expo` version: 5.0.1).
 
-Our project consists of a smart library for students where they can submit educational resources in exchange for tokens i.e cryptocurrency contributions. These tokens can then be used in order to acquire new educational materials supplemented by other users in the library. The main goal is to allow for the exchange of knowledge in a secure and traceable manner. This marketplace enables higher-quality materials to naturally rise to the top of the most coveted items in the library.
+## Steps to run the system:
+To run the Backend run the following commands in the *Back-end* directory:
+```sh
+$ npm install
+$ ./resources/newDB.sh
+$ npm start
+```
+To run the Frontend run the following commands in the *Front-end* directory:
+```sh
+$ npm install
+$ expo start
+```

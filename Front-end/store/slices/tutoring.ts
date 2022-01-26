@@ -1,183 +1,153 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-import TutoringSession, { Enrollment, EnrollmentStatus } from '../../models/TutoringSession';
-import {
-  dummyEnrollments,
-  dummyTutoringSessions,
-  dummyTutoringSessionsCategories,
-} from '../../constants/DummyTutoringSessions';
+import TutoringSession, { Enrollment, UserEnroll } from '../../models/TutoringSession';
 import { ThunkApiConfig } from '../index';
 import { onError, onPending, onUpdate } from '../../utils/ThunkActions';
 import alert from '../../utils/alert';
-import clone from '../../utils/clone';
 import {
-  CancelTutoringSessionPayload, EnrollTutoringSessionPayload,
+  EnrollTutoringSessionPayload,
   OnSettleAllEnrollmentStatusPayload,
-  OnSettleEnrollmentStatusPayload, ScheduleTutoringSessionPayload,
+  OnSettleEnrollmentStatusPayload,
+  ScheduleTutoringSessionPayload,
 } from './ThunkPayload';
+import {
+  TutoringSessionEnrollmentPOSTRequest,
+  TutoringSessionEnrollmentPOSTResponse,
+  TutoringSessionPOSTRequest,
+  TutoringSessionPOSTResponse,
+} from './contract/POSTEndpoints';
+import { EnrollmentStatusSettlePUTRequest } from './contract/PUTEndpoints';
+import {
+  MyEnrollmentsGETRequest,
+  MyEnrollmentsGETResponse,
+  TutoringSessionsGetRequest,
+  TutoringSessionsGETResponse,
+} from './contract/GETEndpoints';
+import { SERVER_BASE_URL } from '../../extra';
 
 interface State {
   tutoringSessions: Record<string, TutoringSession>
   tutoringSessionsCategories: Record<string, string[]>
+  created: string[]
   enrollments: Enrollment[]
   isLoading: boolean
 }
 
 const initialState: State = {
-  tutoringSessions: dummyTutoringSessions,
-  tutoringSessionsCategories: dummyTutoringSessionsCategories,
-  enrollments: dummyEnrollments,
+  tutoringSessions: {},
+  tutoringSessionsCategories: {},
+  created: [],
+  enrollments: [],
   isLoading: false,
 };
 
 export const fetchTutoringSessions = createAsyncThunk<Partial<State>,
 void, ThunkApiConfig>(
   'tutoring/fetchTutoringSessions',
-  // TODO
-  async () => ({}),
+  async (_, { getState }) => {
+    const { idToken } = getState().authentication;
+    const paramsSessions: TutoringSessionsGetRequest = { idToken: idToken || undefined };
+    const responseSessionsPromise = axios.get<TutoringSessionsGETResponse>(`${SERVER_BASE_URL}/tutoring`, {
+      params: paramsSessions,
+    });
+    let responseEnrollments;
+    if (idToken) {
+      const paramsEnrollments: MyEnrollmentsGETRequest = { idToken };
+      const responseEnrollmentsPromise = axios.get<MyEnrollmentsGETResponse>(`${SERVER_BASE_URL}/tutoring/myEnrollments`, {
+        params: paramsEnrollments,
+      });
+      responseEnrollments = await responseEnrollmentsPromise;
+      if (responseEnrollments.status !== 200) throw new Error('Status code not okay!');
+    }
+    const responseSessions = await responseSessionsPromise;
+    if (responseSessions.status !== 200) throw new Error('Status code not okay!');
+    return {
+      ...responseSessions.data,
+      ...responseEnrollments?.data,
+    };
+  },
 );
 
-export const scheduleTutoringSession = createAsyncThunk<Partial<State>,
+export const scheduleTutoringSession = createAsyncThunk<void,
 ScheduleTutoringSessionPayload, ThunkApiConfig>(
   'tutoring/scheduleTutoringSession',
-  async (p, { getState }) => {
-    // TODO
-    const {
-      tutoringSessions,
-      tutoringSessionsCategories,
-    } = clone(getState().tutoring);
-    const id = Math.random()
-      .toString();
-    tutoringSessions[id] = {
-      id,
-      tutorEmail: getState().user.user!.email,
-      tutor: getState().user.user!.name,
-      tutorInstitution: getState().user.user!.institution,
-      tutorRating: getState().user.user!.rating,
-      name: p.name,
-      description: p.description,
-      price: p.price,
-      location: p.location,
-      pendingEnrolls: [],
-      enrolled: [],
-      date: p.date,
-      duration: p.duration,
+  async (p, {
+    getState,
+    dispatch,
+  }) => {
+    const params: TutoringSessionPOSTRequest = {
+      idToken: getState().authentication.idToken!,
+      ...p,
     };
-    p.categories.forEach((category) => {
-      if (tutoringSessionsCategories[category]) {
-        tutoringSessionsCategories[category].push(id);
-      } else {
-        tutoringSessionsCategories[category] = [id];
-      }
-    });
+    const response = await axios.post<TutoringSessionPOSTResponse>(`${SERVER_BASE_URL}/tutoring`, params);
+    if (response.status !== 200) throw new Error('Status code not okay!');
     alert('Tutoring Session Schedule', `The tutoring session '${p.name}' has been scheduled.`);
-    return {
-      tutoringSessions,
-      tutoringSessionsCategories,
-    };
+    dispatch(fetchTutoringSessions());
   },
 );
 
-export const enrollTutoringSession = createAsyncThunk<Partial<State>,
+export const enrollTutoringSession = createAsyncThunk<void,
 EnrollTutoringSessionPayload, ThunkApiConfig>(
   'tutoring/enrollTutoringSession',
-  async (p, { getState }) => {
-    // TODO
-    const {
-      tutoringSessions,
-      enrollments,
-    } = clone(getState().tutoring);
-    const id = Math.random()
-      .toString();
-    enrollments.push({
-      id,
-      tutoringSessionId: p.tutoringSessionId,
-      status: EnrollmentStatus.PENDING,
-      requester: getState().user.user!.name,
-      date: tutoringSessions[p.tutoringSessionId].date,
-    });
-    tutoringSessions[p.tutoringSessionId].pendingEnrolls.push(getState().user.user!);
-    alert('Tutoring Session Enroll',
-      `You have successfully signed up for the tutoring session '${tutoringSessions[p.tutoringSessionId].name}'.`);
-    return {
-      tutoringSessions,
-      enrollments,
+  async (p, {
+    getState,
+    dispatch,
+  }) => {
+    const params: TutoringSessionEnrollmentPOSTRequest = {
+      idToken: getState().authentication.idToken!,
+      ...p,
     };
+    let response;
+    try {
+      response = await axios.post<TutoringSessionEnrollmentPOSTResponse>(`${SERVER_BASE_URL}/tutoring/enroll`, params);
+    } catch (err) {
+      if (err.response.status === 402) throw new Error('You are out of credits!');
+      throw err;
+    }
+    if (response.status !== 200) throw new Error('Status code not okay!');
+    alert('Tutoring Session Enroll', 'You have successfully signed up for the tutoring session.');
+    dispatch(fetchTutoringSessions());
   },
 );
 
-export const cancelTutoringSession = createAsyncThunk<Partial<State>,
-CancelTutoringSessionPayload, ThunkApiConfig>(
-  'tutoring/cancelTutoringSession',
-  async (p, { getState }) => {
-    // TODO
-    const {
-      tutoringSessions,
-      tutoringSessionsCategories,
-    } = clone(getState().tutoring);
-    delete tutoringSessions[p.tutoringSessionId];
-    Object.keys(tutoringSessionsCategories)
-      .forEach((category) => {
-        tutoringSessionsCategories[category] = Object.values(tutoringSessionsCategories[category])
-          .filter((id) => id !== p.tutoringSessionId);
-      });
-    alert('Tutoring Session Cancel', 'You have successfully canceled the tutoring session.');
-    return {
-      tutoringSessions,
-      tutoringSessionsCategories,
-    };
-  },
-);
-
-export const onSettleEnrollmentStatus = createAsyncThunk<Partial<State>,
+export const onSettleEnrollmentStatus = createAsyncThunk<void,
 OnSettleEnrollmentStatusPayload, ThunkApiConfig>(
   'tutoring/onSettleEnrollmentStatus',
-  async (p, { getState }) => {
-    // TODO
-    const {
-      tutoringSessions,
-      enrollments,
-    } = clone(getState().tutoring);
-    if (p.accept) {
-      tutoringSessions[p.tutoringSessionId].enrolled
-        .push(tutoringSessions[p.tutoringSessionId].pendingEnrolls[p.enrollIndex]);
-    }
-    tutoringSessions[p.tutoringSessionId].pendingEnrolls.splice(p.enrollIndex, 1);
-    enrollments.forEach((enrollment) => {
-      if (enrollment.tutoringSessionId) {
-        enrollment.status = p.accept ? EnrollmentStatus.CONFIRMED : EnrollmentStatus.REJECTED;
-      }
-    });
-    return {
-      tutoringSessions,
-      enrollments,
+  async (p, {
+    getState,
+    dispatch,
+  }) => {
+    const params: EnrollmentStatusSettlePUTRequest = {
+      idToken: getState().authentication.idToken!,
+      ...p,
     };
+    const response = await axios.put(`${SERVER_BASE_URL}/tutoring/enroll-settle`, params);
+    if (response.status !== 200) throw new Error('Status code not okay!');
+    dispatch(fetchTutoringSessions());
   },
 );
 
-export const onSettleAllEnrollmentStatus = createAsyncThunk<Partial<State>,
+export const onSettleAllEnrollmentStatus = createAsyncThunk<void,
 OnSettleAllEnrollmentStatusPayload, ThunkApiConfig>(
   'tutoring/onSettleAllEnrollmentStatus',
-  async (p, { getState }) => {
-    // TODO
-    const {
-      tutoringSessions,
-      enrollments,
-    } = clone(getState().tutoring);
-    if (p.accept) {
-      tutoringSessions[p.tutoringSessionId].enrolled
-        .push(...tutoringSessions[p.tutoringSessionId].pendingEnrolls);
-    }
-    tutoringSessions[p.tutoringSessionId].pendingEnrolls = [];
-    enrollments.forEach((enrollment) => {
-      if (enrollment.tutoringSessionId) {
-        enrollment.status = p.accept ? EnrollmentStatus.CONFIRMED : EnrollmentStatus.REJECTED;
-      }
+  async (p, {
+    getState,
+    dispatch,
+  }) => {
+    const { pendingEnrolls } = getState().tutoring.tutoringSessions[p.tutoringSessionId];
+    const responses = await Promise.all(pendingEnrolls.map((enroll: UserEnroll) => {
+      const params: EnrollmentStatusSettlePUTRequest = {
+        idToken: getState().authentication.idToken!,
+        enrollmentId: enroll.id,
+        accept: p.accept,
+      };
+      return axios.put(`${SERVER_BASE_URL}/tutoring/enroll-settle`, params);
+    }));
+    responses.forEach(({ status }) => {
+      if (status !== 200) throw new Error('Status code not okay!');
     });
-    return {
-      tutoringSessions,
-      enrollments,
-    };
+    dispatch(fetchTutoringSessions());
   },
 );
 
@@ -190,19 +160,12 @@ const tutoringSlice = createSlice({
     builder.addCase(fetchTutoringSessions.fulfilled, onUpdate);
     builder.addCase(fetchTutoringSessions.rejected, (state, action) => onError(state, action, 'Error getting tutoring sessions!'));
     builder.addCase(scheduleTutoringSession.pending, onPending);
-    builder.addCase(scheduleTutoringSession.fulfilled, onUpdate);
     builder.addCase(scheduleTutoringSession.rejected, (state, action) => onError(state, action, 'Error scheduling a tutoring session!'));
     builder.addCase(enrollTutoringSession.pending, onPending);
-    builder.addCase(enrollTutoringSession.fulfilled, onUpdate);
     builder.addCase(enrollTutoringSession.rejected, (state, action) => onError(state, action, 'Error signing up for the tutoring session!'));
-    builder.addCase(cancelTutoringSession.pending, onPending);
-    builder.addCase(cancelTutoringSession.fulfilled, onUpdate);
-    builder.addCase(cancelTutoringSession.rejected, (state, action) => onError(state, action, 'Error canceling your tutoring session!'));
     builder.addCase(onSettleEnrollmentStatus.pending, onPending);
-    builder.addCase(onSettleEnrollmentStatus.fulfilled, onUpdate);
     builder.addCase(onSettleEnrollmentStatus.rejected, (state, action) => onError(state, action, 'Error settling enrollment status in your tutoring session!'));
     builder.addCase(onSettleAllEnrollmentStatus.pending, onPending);
-    builder.addCase(onSettleAllEnrollmentStatus.fulfilled, onUpdate);
     builder.addCase(onSettleAllEnrollmentStatus.rejected, (state, action) => onError(state, action, 'Error settling status of all enrollments in your tutoring session!'));
   },
 });

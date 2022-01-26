@@ -6,8 +6,8 @@ import { Enrollment, UserEnroll } from '../../models/TutoringSession';
 import * as notification from '../../services/notification';
 
 export async function createTutoringSession(
-  name:string,
-  description:string,
+  name: string,
+  description: string,
   tutor: string,
   price: number,
   categories: string[],
@@ -44,8 +44,8 @@ export async function createTutoringSession(
 }
 
 export async function enroll(
-  email:string,
-  sessionId:string,
+  email: string,
+  sessionId: string,
 ) {
   const con = await pool.connect();
   const date = new Date(Date.now()).toISOString();
@@ -76,7 +76,7 @@ export async function enroll(
   }
 }
 
-export async function settleEnrollment(enrollmentId: string, email: string, accept:boolean) {
+export async function settleEnrollment(enrollmentId: string, email: string, accept: boolean) {
   const con = await pool.connect();
   try {
     await con.query('BEGIN');
@@ -90,7 +90,7 @@ export async function settleEnrollment(enrollmentId: string, email: string, acce
     const status = accept ? 'Accepted' : 'Rejected';
     await con.query(insert.insertStatusEnrollment, [status, enrollmentId]);
     await con.query('COMMIT');
-    notification.settleEnrollment(email, result.name, status).then();
+    notification.settleEnrollment(result.requester, result.name, status).then();
     return 1;
   } catch (error: any) {
     await con.query('ROLLBACK');
@@ -114,7 +114,7 @@ export async function getMyEnrollments(email: string) {
       enrollments.push({
         id: row.enrollment_id,
         requester: row.requester,
-        tutoringSessionId: row.tutoringSessionId,
+        tutoringSessionId: row.session_id,
         status: row.status,
         date: row.date,
       });
@@ -137,14 +137,18 @@ async function getSessionEnrollments(con: PoolClient, sessionId: string) {
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i];
     const user = {
+      id: row.enrollment_id,
       email: row.requester,
       name: row.requester_name,
     };
     if (row.status === 'Pending') pendingEnrolls.push(user);
-    else if (row.status === 'Accepted') { enrolled.push(user); }
+    else if (row.status === 'Accepted') {
+      enrolled.push(user);
+    }
   }
   return { enrolled, pendingEnrolls };
 }
+
 export async function getTutoringSessions(email: string | null) {
   const con = await pool.connect();
   try {
@@ -167,7 +171,7 @@ export async function getTutoringSessions(email: string | null) {
           name: row.name,
           description: row.description,
           price: row.price,
-          location: [row.latitude, row.longitude],
+          location: row.location,
           date: row.date,
           duration: row.duration,
           enrolled: [],
@@ -182,7 +186,9 @@ export async function getTutoringSessions(email: string | null) {
       }
       if (row.category in tutoringSessionsCategories) {
         tutoringSessionsCategories[row.category].push(row.session_id);
-      } else { tutoringSessionsCategories[row.category] = [row.session_id]; }
+      } else {
+        tutoringSessionsCategories[row.category] = [row.session_id];
+      }
     }
     await Promise.all(promiseEnrollments);
     return { tutoringSessions, tutoringSessionsCategories, created };

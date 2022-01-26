@@ -92,7 +92,7 @@ export default function TScheduleScreen({ navigation }: TScheduledStackScreenPro
           .map((v) => v.trim()),
         duration: +values.duration.value,
         price: priceState[0],
-        date: dateState[0].valueOf(),
+        date: dateState[0].toISOString(),
       };
       dispatch(scheduleTutoringSession(payload))
         .then(() => navigation.goBack());

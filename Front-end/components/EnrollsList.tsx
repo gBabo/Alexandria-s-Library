@@ -14,7 +14,7 @@ interface EnrollsListProps {
   title: string
   enrolls: UserEnroll[]
   pending?: boolean
-  onSettleEnrollmentStatus?: (enrollIndex: number, accept: boolean) => void
+  onSettleEnrollmentStatus?: (enrollmentId: string, accept: boolean) => void
   onSettleAllEnrollmentStatus?: (accept: boolean) => void
 }
 
@@ -26,14 +26,14 @@ export default function EnrollsList({
   onSettleAllEnrollmentStatus,
 }: EnrollsListProps) {
   const confirmEnrollment = useCallback(
-    (enroll: UserEnroll, enrollIndex: number, accept: boolean) => Alert.alert('Enrollment Acceptance', accept ? `
+    (enroll: UserEnroll, accept: boolean) => Alert.alert('Enrollment Acceptance', accept ? `
     Are you sure you want to accept ${enroll.name.split(' ')[0]}'s enrollment?
     ` : `
     Are you sure you want to reject ${enroll.name.split(' ')[0]}'s enrollment?
     `, [{
       text: 'Yes',
       style: 'default',
-      onPress: () => onSettleEnrollmentStatus && onSettleEnrollmentStatus(enrollIndex, accept),
+      onPress: () => onSettleEnrollmentStatus && onSettleEnrollmentStatus(enroll.id, accept),
     }, {
       text: 'Cancel',
       style: 'cancel',
@@ -93,39 +93,36 @@ export default function EnrollsList({
     </View>
   );
 
-  const renderItem: ListRenderItem<UserEnroll> = ({
-    item,
-    index,
-  }) => (
+  const renderItem: ListRenderItem<UserEnroll> = ({ item }) => (
     <View style={styles.enrollContainer}>
       <RegularText style={styles.subtext}>
         {item.name}
       </RegularText>
       {pending && (
-      <View style={styles.buttonContainer}>
-        <CustomButton
-          onPress={() => confirmEnrollment(item, index, true)}
-          style={styles.acceptButton}
-          small
-        >
-          <Entypo
-            name="check"
-            size={24}
-            color={Colors.white}
-          />
-        </CustomButton>
-        <CustomButton
-          onPress={() => confirmEnrollment(item, index, false)}
-          style={styles.rejectButton}
-          small
-        >
-          <Entypo
-            name="cross"
-            size={24}
-            color={Colors.white}
-          />
-        </CustomButton>
-      </View>
+        <View style={styles.buttonContainer}>
+          <CustomButton
+            onPress={() => confirmEnrollment(item, true)}
+            style={styles.acceptButton}
+            small
+          >
+            <Entypo
+              name="check"
+              size={24}
+              color={Colors.white}
+            />
+          </CustomButton>
+          <CustomButton
+            onPress={() => confirmEnrollment(item, false)}
+            style={styles.rejectButton}
+            small
+          >
+            <Entypo
+              name="cross"
+              size={24}
+              color={Colors.white}
+            />
+          </CustomButton>
+        </View>
       )}
     </View>
   );

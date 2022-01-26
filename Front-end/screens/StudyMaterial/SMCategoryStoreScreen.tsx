@@ -6,7 +6,6 @@ import { SMStoreStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
 import StudyMaterial from '../../models/StudyMaterial';
 import Loading from '../../components/UI/Loading';
-import Fallback from '../../components/UI/Fallback';
 import ItemList, { RenderItemProps } from '../../components/ItemList';
 import StudyMaterialItem from '../../components/StudyMaterialItem';
 import useAppSelector from '../../hooks/useAppSelector';
@@ -19,6 +18,10 @@ export default function SMCategoryStoreScreen({
 }: SMStoreStackScreenProps<'CategoryStore'>) {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
+  const myStudyMaterialIds = [
+    ...useAppSelector((s) => s.studyMaterial.acquired),
+    ...useAppSelector((s) => s.studyMaterial.uploaded),
+  ];
   const studyMaterialsCategories = useAppSelector((s) => s.studyMaterial.studyMaterialsCategories);
   const studyMaterials = useAppSelector((s) => s.studyMaterial.studyMaterials);
 
@@ -28,6 +31,7 @@ export default function SMCategoryStoreScreen({
   }, [navigation, isFocused]);
 
   const items = studyMaterialsCategories[route.params.category]
+    .filter((studyMaterialId) => !myStudyMaterialIds.includes(studyMaterialId))
     .map((studyMaterialId) => studyMaterials[studyMaterialId]);
 
   const renderItem = ({
@@ -51,10 +55,9 @@ export default function SMCategoryStoreScreen({
     />
   );
 
+  if (items.length === 0) navigation.goBack();
   return isLoading ? (
     <Loading />
-  ) : items.length === 0 ? (
-    <Fallback message="This category has no published study materials yet." />
   ) : (
     <ItemList
       items={items}
@@ -80,7 +83,7 @@ export default function SMCategoryStoreScreen({
       ]}
       defaultSortingMethod={{
         value: 'date',
-        order: 'Ascending',
+        order: 'Descending',
       }}
       renderItem={renderItem}
       refreshing={isLoading}

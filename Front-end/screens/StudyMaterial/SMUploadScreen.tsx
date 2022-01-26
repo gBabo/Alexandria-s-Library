@@ -15,7 +15,7 @@ import Loading from '../../components/UI/Loading';
 import CustomButton from '../../components/UI/CustomButton';
 import Input from '../../components/UI/Input';
 import NumberPicker from '../../components/NumberPicker';
-import FilePicker from '../../components/PdfFilePicker';
+import FilePicker, { FileInfo } from '../../components/PdfFilePicker';
 import useFormReducer, { FormActionType } from '../../hooks/useFormReducer';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
@@ -58,7 +58,7 @@ export default function SMUploadScreen({ navigation }: SMUploadedStackScreenProp
     isValid: false,
   });
   const priceState = useState(3);
-  const fileUriState = useState('');
+  const fileInfoState = useState<FileInfo>();
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
@@ -78,20 +78,22 @@ export default function SMUploadScreen({ navigation }: SMUploadedStackScreenProp
     });
   }, [formDispatch]);
   const onPublish = useCallback(() => {
-    if (isValid && fileUriState[0]) {
+    if (isValid && fileInfoState[0]) {
       const payload = {
         ...mapValues(pick(values, ['name', 'type', 'description']), (o) => o.value.trim()),
         categories: values.categories.value.split(';')
           .map((v) => v.trim()),
         price: priceState[0],
-        fileUri: fileUriState[0],
+        fileInfo: fileInfoState[0],
       };
       dispatch(publishStudyMaterial(payload))
         .then(() => navigation.goBack());
     } else {
       alert('The form is invalid!', 'Please fix them.');
     }
-  }, [navigation, dispatch, publishStudyMaterial, isValid, priceState[0], fileUriState[0], values]);
+  }, [
+    navigation, dispatch, publishStudyMaterial, isValid, priceState[0], fileInfoState[0], values,
+  ]);
   return isLoading ? (
     <Loading />
   ) : (
@@ -165,7 +167,7 @@ export default function SMUploadScreen({ navigation }: SMUploadedStackScreenProp
           />
         </View>
         <View style={styles.line}>
-          <FilePicker fileUriState={fileUriState} />
+          <FilePicker fileInfoState={fileInfoState} />
         </View>
         <View style={styles.line}>
           <CustomButton onPress={onPublish} style={styles.action} row>

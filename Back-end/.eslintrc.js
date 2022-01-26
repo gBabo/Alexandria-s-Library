@@ -22,5 +22,11 @@ module.exports = {
     'no-console': 'off',
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
+    'global-require': 'off',
+    'no-case-declarations': 'off',
+    'no-param-reassign': 'off',
+    'no-nested-ternary': 'off',
+    'import/no-cycle': 'off',
+    'no-use-before-define': 'off',
   },
 };

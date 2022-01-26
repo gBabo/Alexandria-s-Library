@@ -3,10 +3,12 @@ import { setItemAsync, getItemAsync, deleteItemAsync } from 'expo-secure-store';
 import axios from 'axios';
 import moment from 'moment';
 
+import { pick } from 'lodash';
 import { FIREBASE_WEB_API_KEY } from '../../extra';
 import { AppDispatch, ThunkApiConfig } from '../index';
 import { onPending, onUpdate, onError } from '../../utils/ThunkActions';
 import { SigninPayload, SignupPayload } from './ThunkPayload';
+import { signupUser } from './user';
 
 export type LoginAction = typeof signin | typeof signup;
 
@@ -52,13 +54,12 @@ const initialState: State = {
   isLoading: false,
 };
 
-const setAuthState = async (payload: LoginResponse): Promise<Partial<State>> => {
-  const {
-    idToken,
-    refreshToken,
-    localId,
-    expiresIn,
-  } = payload;
+const setAuthState = async ({
+  idToken,
+  refreshToken,
+  localId,
+  expiresIn,
+}: LoginResponse): Promise<Partial<State>> => {
   const expirationDate = moment()
     .add(expiresIn, 's')
     .toISOString();
@@ -146,13 +147,12 @@ export const refreshAuthState = createAsyncThunk<Partial<State>, void, ThunkApiC
 
 export const signup = createAsyncThunk<Partial<State>, SignupPayload, ThunkApiConfig>(
   'authentication/signup',
-  async (payload, { dispatch }) => {
-    // TODO: Register the user on the server.
+  async (p, { dispatch }) => {
     let response;
     try {
       response = await axios.post<LoginResponse>(
         `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${FIREBASE_WEB_API_KEY}`, {
-          ...payload,
+          ...p,
           returnSecureToken: true,
         },
       );
@@ -172,18 +172,22 @@ export const signup = createAsyncThunk<Partial<State>, SignupPayload, ThunkApiCo
     if (response.status !== 200) throw new Error('Status code not okay!');
     const authState = await setAuthState(response.data);
     setRefreshAuthStateTimeout(dispatch, authState.expirationDate);
+    dispatch(signupUser({
+      idToken: authState.idToken!,
+      ...pick(p, ['email', 'name', 'institution']),
+    }));
     return authState;
   },
 );
 
 export const signin = createAsyncThunk<Partial<State>, SigninPayload, ThunkApiConfig>(
   'authentication/signin',
-  async (payload, { dispatch }) => {
+  async (p, { dispatch }) => {
     let response;
     try {
       response = await axios.post<LoginResponse>(
         `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${FIREBASE_WEB_API_KEY}`, {
-          ...payload,
+          ...p,
           returnSecureToken: true,
         },
       );

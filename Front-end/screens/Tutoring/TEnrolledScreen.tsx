@@ -25,7 +25,10 @@ export default function TEnrolledScreen({ navigation }: TEnrolledStackScreenProp
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Sessions Enrollments' });
+    if (isFocused) {
+      navigation.getParent()!.setOptions({ headerTitle: 'Sessions Enrollments' });
+      dispatch(fetchTutoringSessions());
+    }
   }, [navigation, isFocused]);
 
   const renderItem = ({
@@ -60,7 +63,7 @@ export default function TEnrolledScreen({ navigation }: TEnrolledStackScreenProp
       searchPlaceholder="Search Enrollment"
       defaultSortingMethod={{
         value: 'date',
-        order: 'Ascending',
+        order: 'Descending',
       }}
       renderItem={renderItem}
       refreshing={isLoading}

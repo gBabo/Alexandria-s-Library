@@ -10,7 +10,7 @@ export interface StudyMaterialsGETRequest {
 export interface StudyMaterialsGETResponse {
     studyMaterials: Record<string, StudyMaterial>
     studyMaterialsCategories: Record<string, string[]>
-    uploaded: string[],
+    uploaded: string[]
     acquired: string[]
 }
 
@@ -22,7 +22,7 @@ export interface TutoringSessionsGetRequest {
 export interface TutoringSessionsGETResponse {
     tutoringSessions: Record<string, TutoringSession>
     tutoringSessionsCategories: Record<string, string[]>
-    created: string[],
+    created: string[]
 }
 
 // StudyMaterialsPendingExchanges GET
@@ -54,7 +54,7 @@ export interface UserGETResponse {
 
 // StudyMaterial Link GET
 export interface StudyMaterialLinkGETRequest {
-    idToken: string,
+    idToken: string
     studyMaterialId: string
 }
 

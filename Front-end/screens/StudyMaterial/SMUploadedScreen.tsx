@@ -21,12 +21,15 @@ export default function SMUploadedScreen({ navigation }: SMUploadedStackScreenPr
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
   const studyMaterials = useAppSelector((s) => s.studyMaterial.studyMaterials);
-  const uploadedStudyMaterials = useAppSelector((s) => s.studyMaterial.uploadedStudyMaterials)
+  const uploadedStudyMaterials = useAppSelector((s) => s.studyMaterial.uploaded)
     .map((studyMaterialId) => studyMaterials[studyMaterialId]);
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Uploaded Materials' });
+    if (isFocused) {
+      navigation.getParent()!.setOptions({ headerTitle: 'Uploaded Materials' });
+      dispatch(fetchStudyMaterials());
+    }
   }, [navigation, isFocused]);
 
   const renderItem = ({
@@ -63,7 +66,7 @@ export default function SMUploadedScreen({ navigation }: SMUploadedStackScreenPr
           searchPlaceholder="Search Uploaded Study Materials"
           defaultSortingMethod={{
             value: 'date',
-            order: 'Ascending',
+            order: 'Descending',
           }}
           renderItem={renderItem}
           refreshing={isLoading}

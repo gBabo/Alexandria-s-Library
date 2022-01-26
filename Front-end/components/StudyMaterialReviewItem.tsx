@@ -5,7 +5,6 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
 
-import StudyMaterial from '../models/StudyMaterial';
 import StudyMaterialReview from '../models/StudyMaterialReview';
 import Colors from '../constants/Colors';
 import { RegularText, SemiBoldText } from './UI/StyledText';
@@ -14,7 +13,6 @@ import useAppDispatch from '../hooks/useAppDispatch';
 import { toggleReviewLike } from '../store/slices/studyMaterial';
 
 interface StudyMaterialReviewItemProps {
-  studyMaterial: StudyMaterial
   review: StudyMaterialReview
   containerStyle: ViewProps['style']
   style: ViewProps['style']
@@ -23,7 +21,6 @@ interface StudyMaterialReviewItemProps {
 }
 
 export default function StudyMaterialReviewItem({
-  studyMaterial,
   review,
   containerStyle,
   style,
@@ -37,10 +34,7 @@ export default function StudyMaterialReviewItem({
     <View style={[styles.container, containerStyle]}>
       <CustomButton
         onPress={() => {
-          dispatch(toggleReviewLike({
-            studyMaterialId: studyMaterial.id,
-            reviewId: review.id,
-          }));
+          dispatch(toggleReviewLike({ studyMaterialReviewId: review.id }));
         }}
         style={[styles.button, { backgroundColor: review.hasLiked ? Colors.yellow : Colors.blue }]}
         row

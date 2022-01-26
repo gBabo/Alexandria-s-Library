@@ -33,7 +33,10 @@ export default function StudyMaterialScreen({
   const isLoading = useAppSelector((s) => s.studyMaterial.isLoading);
   const studyMaterials = useAppSelector((s) => s.studyMaterial.studyMaterials);
   const studyMaterial = studyMaterials[route.params.id];
-  const acquiredStudyMaterials = useAppSelector((s) => s.studyMaterial.acquiredStudyMaterials)
+  const myStudyMaterials = useAppSelector((s) => [
+    ...s.studyMaterial.acquired,
+    ...s.studyMaterial.uploaded,
+  ])
     .map((studyMaterialId) => studyMaterials[studyMaterialId]);
 
   const isFocused = useIsFocused();
@@ -173,7 +176,7 @@ export default function StudyMaterialScreen({
             </View>
           </CustomButton>
         </View>
-        {acquiredStudyMaterials.some(({ id }) => id === studyMaterial.id) ? (
+        {myStudyMaterials.some(({ id }) => id === studyMaterial.id) ? (
           <View style={styles.line}>
             <CustomButton
               onPress={() => {
@@ -261,11 +264,11 @@ export default function StudyMaterialScreen({
                 enabled={false}
                 color={Colors.black}
               />
-              {acquiredStudyMaterials.map((acquiredStudyMaterial) => (
+              {myStudyMaterials.map((myStudyMaterial) => (
                 <Picker.Item
-                  key={acquiredStudyMaterial.id}
-                  label={`📚 ${acquiredStudyMaterial.name}`}
-                  value={acquiredStudyMaterial.id}
+                  key={myStudyMaterial.id}
+                  label={`📚 ${myStudyMaterial.name}`}
+                  value={myStudyMaterial.id}
                   fontFamily="OpenSans-Regular"
                   color={Colors.primary}
                 />

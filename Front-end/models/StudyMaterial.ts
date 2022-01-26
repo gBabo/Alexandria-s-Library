@@ -13,7 +13,7 @@ export default interface StudyMaterial {
   likes: number
   hasLiked: boolean
   reviews: StudyMaterialReview[]
-  date: number
+  date: string
 }
 
 export interface StudyMaterialExchange {
@@ -23,5 +23,5 @@ export interface StudyMaterialExchange {
   requesterInstitution: string
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string
-  date: number
+  date: string
 }

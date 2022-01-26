@@ -81,6 +81,7 @@ router.put('/like', async (
     return;
   }
   await db.likeStudyMaterial(email, studyMaterialId);
+  res.status(200).send();
 });
 
 router.get('/pending-exchanges', async (

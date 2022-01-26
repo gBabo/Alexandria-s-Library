@@ -8,22 +8,30 @@ import { RegularText, SemiBoldText } from './UI/StyledText';
 import Card from './UI/Card';
 import CustomButton from './UI/CustomButton';
 
-interface PdfFilePickerProps {
-  fileUriState: [string, Dispatch<SetStateAction<string>>]
+export interface FileInfo {
+  uri: string
+  type: string
 }
 
-export default function PdfFilePicker({ fileUriState }: PdfFilePickerProps) {
+interface PdfFilePickerProps {
+  fileInfoState: [FileInfo | undefined, Dispatch<SetStateAction<FileInfo | undefined>>]
+}
+
+export default function PdfFilePicker({ fileInfoState }: PdfFilePickerProps) {
   const [borderColor, setBorderColor] = useState(Colors.primary);
   const [filename, setFilename] = useState('No file selected');
   const onChooseDocument = async () => {
     const result = await getDocumentAsync({
-      copyToCacheDirectory: false,
+      copyToCacheDirectory: true,
       type: 'application/pdf',
     });
     if (result.type === 'success') {
       setBorderColor(Colors.success);
       setFilename(result.name);
-      fileUriState[1](result.uri);
+      fileInfoState[1]({
+        uri: `file://${result.uri}`,
+        type: 'application/pdf',
+      });
     }
   };
 

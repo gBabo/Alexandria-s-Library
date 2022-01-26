@@ -56,7 +56,9 @@
     "react-navigation-header-buttons": "^9.0.0",
     "react-redux": "^7.2.4",
     "validator": "^13.6.0",
-    "react-native-svg": "12.1.1"
+    "react-native-svg": "12.1.1",
+    "expo-clipboard": "~1.1.0",
+    "expo-notifications": "~0.12.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

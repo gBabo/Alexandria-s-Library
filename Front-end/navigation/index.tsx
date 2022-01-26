@@ -11,6 +11,7 @@ import DrawerNavigator from './DrawerNavigator';
 import useAppDispatch from '../hooks/useAppDispatch';
 import useAppSelector from '../hooks/useAppSelector';
 import { getAuthState } from '../store/slices/authentication';
+import { registerForPushNotificationToken } from '../store/slices/user';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -24,12 +25,16 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(getAuthState());
-  }, []);
   const isLoading = useAppSelector((s) => s.authentication.isLoading);
   const localId = useAppSelector((s) => s.authentication.localId);
   const [showBrowse, setShowBrowse] = useState(true);
+
+  useEffect(() => {
+    dispatch(getAuthState());
+  }, []);
+  useEffect(() => {
+    if (localId) dispatch(registerForPushNotificationToken());
+  }, [localId]);
 
   return isLoading ? (
     <Loading />

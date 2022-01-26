@@ -5,12 +5,12 @@ export default interface StudyMaterialReview {
   review: string
   hasLiked: boolean
   comments: StudyMaterialReviewComment[]
-  date: number
+  date: string
 }
 
 export interface StudyMaterialReviewComment {
   id: string
   author: string
   comment: string
-  date: number
+  date: string
 }

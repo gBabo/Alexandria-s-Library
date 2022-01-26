@@ -20,13 +20,16 @@ import { fetchTutoringSessions } from '../../store/slices/tutoring';
 export default function TScheduledScreen({ navigation }: TScheduledStackScreenProps<'Scheduled'>) {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((s) => s.tutoring.isLoading);
-  const email = useAppSelector((s) => s.user.user!.email);
-  const tutoringSessions = Object.values(useAppSelector((s) => s.tutoring.tutoringSessions))
-    .filter((tutoringSession) => tutoringSession.tutorEmail === email);
+  const tutoringSessions = useAppSelector((s) => s.tutoring.tutoringSessions);
+  const createdTutoringSessions = useAppSelector((s) => s.tutoring.created)
+    .map((tutoringSessionId) => tutoringSessions[tutoringSessionId]);
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Scheduled Sessions' });
+    if (isFocused) {
+      navigation.getParent()!.setOptions({ headerTitle: 'Scheduled Sessions' });
+      dispatch(fetchTutoringSessions());
+    }
   }, [navigation, isFocused]);
 
   const renderItem = ({
@@ -54,16 +57,16 @@ export default function TScheduledScreen({ navigation }: TScheduledStackScreenPr
     <View style={styles.container}>
       {isLoading ? (
         <Loading />
-      ) : tutoringSessions.length === 0 ? (
+      ) : createdTutoringSessions.length === 0 ? (
         <Fallback message="You have not yet scheduled any tutoring sessions." />
       ) : (
         <ItemList
-          items={tutoringSessions}
+          items={createdTutoringSessions}
           keys={['name', 'location']}
           searchPlaceholder="Search Scheduled Tutoring Sessions"
           defaultSortingMethod={{
             value: 'date',
-            order: 'Ascending',
+            order: 'Descending',
           }}
           renderItem={renderItem}
           refreshing={isLoading}

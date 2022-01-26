@@ -7,7 +7,7 @@ import * as putEndpoints from '../contract/PUTEndpoints';
 const router = Router();
 export default router;
 
-router.post('/review', async (
+router.post('/', async (
   req: Request<{}, {}, postEndpoints.StudyMaterialReviewPOSTRequest, {}>,
   res: Response<postEndpoints.StudyMaterialReviewPOSTResponse>,
 ) => {
@@ -26,7 +26,7 @@ router.post('/review', async (
   res.json(result);
 });
 
-router.put('/review-like', async (
+router.put('/like', async (
   req: Request<{}, {}, putEndpoints.StudyMaterialReviewLikePUTRequest, {}>,
   res: Response,
 ) => {
@@ -37,9 +37,10 @@ router.put('/review-like', async (
     return;
   }
   await db.likeStudyMaterialReview(email, studyMaterialReviewId);
+  res.status(200).send();
 });
 
-router.post('/review-comment', async (
+router.post('/comment', async (
   req: Request<{}, {}, postEndpoints.StudyMaterialReviewCommentPOSTRequest, {}>,
   res: Response<postEndpoints.StudyMaterialReviewCommentPOSTResponse>,
 ) => {

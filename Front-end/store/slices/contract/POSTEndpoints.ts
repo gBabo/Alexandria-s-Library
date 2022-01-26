@@ -20,12 +20,12 @@ export interface StudyMaterialPOSTRequest {
   price: number
   categories: string[]
   type: string
-  file: File
+  file: string
 }
 
 export interface StudyMaterialPOSTResponse {
   studyMaterialId: string
-  date: Date
+  date: string
 }
 
 // TutoringSession POST
@@ -35,14 +35,13 @@ export interface TutoringSessionPOSTRequest {
   description: string
   price: number
   categories: string[]
-  location: number[]
-  date: Date
+  location: string
+  date: string
   duration: number
 }
 
 export interface TutoringSessionPOSTResponse {
   tutoringSessionId: string
-  date: Date
 }
 
 // StudyMaterialReview POST
@@ -54,7 +53,7 @@ export interface StudyMaterialReviewPOSTRequest {
 
 export interface StudyMaterialReviewPOSTResponse {
   reviewId: string
-  date: Date
+  date: string
 }
 
 // StudyMaterialReviewComment POST
@@ -66,7 +65,7 @@ export interface StudyMaterialReviewCommentPOSTRequest {
 
 export interface StudyMaterialReviewCommentPOSTResponse {
   reviewCommentId: string
-  date: Date
+  date: string
 }
 
 // StudyMaterialPurchase POST
@@ -80,10 +79,21 @@ export interface StudyMaterialExchangePOSTRequest {
   idToken: string
   requesterStudyMaterialId: string
   requesteeStudyMaterialId: string
+  requesteeStudyMaterialAuthor: string
+}
+
+export interface StudyMaterialExchangePOSTResponse {
+  studyMaterialExchangeId: string
+  date: string
 }
 
 // TutoringSessionEnrollment POST
 export interface TutoringSessionEnrollmentPOSTRequest {
   idToken: string
   tutoringSessionId: string
+}
+
+export interface TutoringSessionEnrollmentPOSTResponse {
+  enrollmentId: string
+  date: string
 }

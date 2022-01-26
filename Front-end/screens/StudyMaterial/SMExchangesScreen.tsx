@@ -27,7 +27,10 @@ export default function SMExchangesScreen({ navigation }: SMExchangesStackScreen
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
-    if (isFocused) navigation.getParent()!.setOptions({ headerTitle: 'Study Materials Exchanges' });
+    if (isFocused) {
+      navigation.getParent()!.setOptions({ headerTitle: 'Study Materials Exchanges' });
+      dispatch(fetchStudyMaterials());
+    }
   }, [navigation, isFocused]);
 
   const renderItem = ({
@@ -76,7 +79,7 @@ export default function SMExchangesScreen({ navigation }: SMExchangesStackScreen
       ]}
       defaultSortingMethod={{
         value: 'date',
-        order: 'Ascending',
+        order: 'Descending',
       }}
       renderItem={renderItem}
       refreshing={isLoading}

@@ -2,7 +2,7 @@ import pool from '../index';
 import select from '../query/select';
 import insert from '../query/insert';
 
-export async function getUser(email:string) {
+export async function getUser(email: string) {
   const con = await pool.connect();
   try {
     const result = await con.query(select.selectUser, [email]);
@@ -19,7 +19,7 @@ export async function getUser(email:string) {
   }
 }
 
-export async function registerUser(email:string, name:string, institution: string) {
+export async function registerUser(email: string, name: string, institution: string) {
   const con = await pool.connect();
   try {
     await con.query(insert.insertUser, [email, name, institution]);
@@ -32,7 +32,7 @@ export async function registerUser(email:string, name:string, institution: strin
   }
 }
 
-export async function getPushNotificationToken(email:string) {
+export async function getPushNotificationToken(email: string) {
   const con = await pool.connect();
   try {
     const query = select.selectPushNotificationToken;
@@ -45,7 +45,7 @@ export async function getPushNotificationToken(email:string) {
   }
 }
 
-export async function registerPushNotification(email:string, pushNotificationToken: string) {
+export async function registerPushNotification(email: string, pushNotificationToken: string) {
   const con = await pool.connect();
   try {
     await con.query(insert.insertPushNotification, [pushNotificationToken, email]);

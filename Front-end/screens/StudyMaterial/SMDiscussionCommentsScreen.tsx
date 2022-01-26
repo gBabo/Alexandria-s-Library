@@ -38,7 +38,6 @@ export default function SMDiscussionCommentsScreen({
   }: RenderListHeaderComponentProps) => (
     <View>
       <StudyMaterialReviewItem
-        studyMaterial={studyMaterial}
         review={review}
         containerStyle={{
           marginHorizontal,
@@ -85,7 +84,6 @@ export default function SMDiscussionCommentsScreen({
         onRefresh={() => dispatch(fetchStudyMaterials())}
         placeholder="Write your answer here"
         onSend={(message) => dispatch(addReviewComment({
-          studyMaterialId: route.params.studyMaterialId,
           reviewId: route.params.reviewId,
           comment: message,
         }))}

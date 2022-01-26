@@ -2,9 +2,7 @@ import * as React from 'react';
 import { useCallback, useLayoutEffect } from 'react';
 import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
-import {
-  AntDesign, FontAwesome5, MaterialCommunityIcons, MaterialIcons,
-} from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
 
 import { TStoreStackScreenProps } from '../../navigation/types';
@@ -19,7 +17,6 @@ import {
   enrollTutoringSession,
   onSettleEnrollmentStatus,
   onSettleAllEnrollmentStatus,
-  cancelTutoringSession,
 } from '../../store/slices/tutoring';
 import EnrollsList from '../../components/EnrollsList';
 
@@ -54,24 +51,6 @@ export default function TutoringSessionScreen({
     }], {
       cancelable: true,
     }), [navigation, dispatch, enrollTutoringSession, tutoringSession],
-  );
-
-  const confirmTutoringSessionCancel = useCallback(
-    () => Alert.alert('Tutoring Session Cancel', `
-    Are you sure you want to cancel the tutoring session '${tutoringSession.name}'?
-    `, [{
-      text: 'Yes',
-      style: 'default',
-      onPress: () => {
-        dispatch(cancelTutoringSession({ tutoringSessionId: tutoringSession.id }));
-        navigation.goBack();
-      },
-    }, {
-      text: 'Cancel',
-      style: 'cancel',
-    }], {
-      cancelable: true,
-    }), [navigation, dispatch, cancelTutoringSession, tutoringSession],
   );
 
   const isEnrolled = [
@@ -146,10 +125,9 @@ export default function TutoringSessionScreen({
                 title="Pending Enrollments"
                 enrolls={tutoringSession.pendingEnrolls}
                 pending
-                onSettleEnrollmentStatus={(enrollIndex, accept) => dispatch(
+                onSettleEnrollmentStatus={(enrollmentId, accept) => dispatch(
                   onSettleEnrollmentStatus({
-                    tutoringSessionId: tutoringSession.id,
-                    enrollIndex,
+                    enrollmentId,
                     accept,
                   }),
                 )}
@@ -177,21 +155,6 @@ export default function TutoringSessionScreen({
               </SemiBoldText>
             </View>
             )}
-            <View style={styles.line}>
-              <CustomButton
-                onPress={confirmTutoringSessionCancel}
-                style={[styles.action, { backgroundColor: Colors.error }]}
-                row
-              >
-                <MaterialCommunityIcons
-                  name="cancel"
-                  size={24}
-                  color={Colors.white}
-                  style={styles.iconL}
-                />
-                <SemiBoldText style={styles.actionText}>Cancel</SemiBoldText>
-              </CustomButton>
-            </View>
           </View>
         ) : (
           <View style={styles.line}>
@@ -205,7 +168,7 @@ export default function TutoringSessionScreen({
               }}
               disabled={isEnrolled}
               style={[styles.action, {
-                backgroundColor: isEnrolled ? Colors.success : Colors.blue,
+                backgroundColor: isEnrolled ? Colors.secondary : Colors.blue,
               }]}
             >
               <View style={styles.actionSeparation}>

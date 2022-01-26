@@ -19,6 +19,17 @@ export default function TCategoryStoreScreen({
 }: TStoreStackScreenProps<'CategoryStore'>) {
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((s) => s.tutoring.isLoading);
+  const email = useAppSelector((s) => s.user.user?.email);
+  const myTutoringSessionIds = [
+    ...useAppSelector((s) => s.tutoring.created),
+    ...Object.values(useAppSelector((s) => s.tutoring.tutoringSessions))
+      .filter(({
+        pendingEnrolls,
+        enrolled,
+      }) => [...pendingEnrolls, ...enrolled]
+        .some((e) => e.email === email))
+      .map(({ id }) => id),
+  ];
   const tutoringSessionsCategories = useAppSelector((s) => s.tutoring.tutoringSessionsCategories);
   const tutoringSessions = useAppSelector((s) => s.tutoring.tutoringSessions);
 
@@ -28,6 +39,7 @@ export default function TCategoryStoreScreen({
   }, [navigation, isFocused]);
 
   const items = tutoringSessionsCategories[route.params.category]
+    .filter((tutoringSessionId) => !myTutoringSessionIds.includes(tutoringSessionId))
     .map((tutoringSessionId) => tutoringSessions[tutoringSessionId]);
 
   const renderItem = ({
@@ -51,10 +63,9 @@ export default function TCategoryStoreScreen({
     />
   );
 
+  if (items.length === 0) navigation.goBack();
   return isLoading ? (
     <Loading />
-  ) : items.length === 0 ? (
-    <Fallback message="There are no announced tutoring sessions in this category yet." />
   ) : (
     <ItemList
       items={items}
@@ -76,7 +87,7 @@ export default function TCategoryStoreScreen({
       ]}
       defaultSortingMethod={{
         value: 'date',
-        order: 'Ascending',
+        order: 'Descending',
       }}
       renderItem={renderItem}
       refreshing={isLoading}

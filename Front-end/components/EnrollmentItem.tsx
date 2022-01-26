@@ -26,9 +26,6 @@ export default function EnrollmentItem({
   containerStyle,
   style,
 }: EnrollmentItemProps) {
-  const status = enrollment.status === EnrollmentStatus.PENDING ? 'Pending'
-    : enrollment.status === EnrollmentStatus.CONFIRMED ? 'Confirmed'
-      : 'Rejected';
   const color = enrollment.status === EnrollmentStatus.PENDING ? '#E65100'
     : enrollment.status === EnrollmentStatus.CONFIRMED ? '#1B5E20'
       : '#B71C1C';
@@ -57,7 +54,7 @@ export default function EnrollmentItem({
         <View style={styles.line}>
           <RegularText numberOfLines={1} style={styles.text}>
             <SemiBoldText>Enrollment Status: </SemiBoldText>
-            <SemiBoldText style={{ color }}>{status}</SemiBoldText>
+            <SemiBoldText style={{ color }}>{enrollment.status}</SemiBoldText>
           </RegularText>
         </View>
       </CustomButton>
