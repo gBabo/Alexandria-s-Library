@@ -25,7 +25,8 @@ export default function SMStoreScreen({ navigation }: SMStoreStackScreenProps<'S
     (s) => s.studyMaterial.studyMaterialsCategories,
   ))
     .filter(([, v]) => v.some((id) => !myStudyMaterialIds.includes(id)))
-    .map(([k]) => k);
+    .map(([k]) => k)
+    .reverse();
 
   const onPressHelp = useCallback(() => Alert.alert('Help', 'Here you can search, purchase and exchange study materials.\nIt is possible to acquire materials using tokens or by trading materials already owned.', [{
     text: 'Got it!',

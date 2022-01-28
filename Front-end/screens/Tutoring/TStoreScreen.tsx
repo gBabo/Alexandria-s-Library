@@ -32,7 +32,8 @@ export default function TStoreScreen({ navigation }: TStoreStackScreenProps<'Sto
     (s) => s.tutoring.tutoringSessionsCategories,
   ))
     .filter(([, v]) => v.some((id) => !myTutoringSessionIds.includes(id)))
-    .map(([k]) => k);
+    .map(([k]) => k)
+    .reverse();
 
   const onPressHelp = useCallback(() => Alert.alert('Help', 'Here you can sign up for tutoring sessions.\nIn doing so, the tutor will be notified and will have the option of accepting or withdrawing your enrollment.\nWhen accepted, the token transaction is performed.', [{
     text: 'Got it!',
