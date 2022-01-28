@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
+import moment from 'moment';
 import Colors from '../constants/Colors';
 import TutoringSession from '../models/TutoringSession';
 import { RegularText, SemiBoldText } from './UI/StyledText';
@@ -43,6 +44,13 @@ export default function TutoringSessionItem({
         </View>
         <View style={[styles.line, styles.textAlone]}>
           <RegularText numberOfLines={1} style={styles.text}>
+            <SemiBoldText>Date: </SemiBoldText>
+            {moment(tutoringSession.date)
+              .format('lll')}
+          </RegularText>
+        </View>
+        <View style={[styles.line, styles.textAlone]}>
+          <RegularText numberOfLines={1} style={styles.text}>
             <SemiBoldText>Institution: </SemiBoldText>
             {tutoringSession.tutorInstitution}
           </RegularText>
@@ -56,7 +64,7 @@ export default function TutoringSessionItem({
           </View>
           <View style={styles.textBetweenIcons}>
             <RegularText numberOfLines={1} style={styles.text}>
-              <SemiBoldText>Author: </SemiBoldText>
+              <SemiBoldText>Tutor: </SemiBoldText>
               {tutoringSession.tutor}
             </RegularText>
           </View>
