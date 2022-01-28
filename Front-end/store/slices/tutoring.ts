@@ -82,7 +82,7 @@ ScheduleTutoringSessionPayload, ThunkApiConfig>(
     };
     const response = await axios.post<TutoringSessionPOSTResponse>(`${SERVER_BASE_URL}/tutoring`, params);
     if (response.status !== 200) throw new Error('Status code not okay!');
-    alert('Tutoring Session Schedule', `The tutoring session '${p.name}' has been scheduled.`);
+    alert('Tutoring Session Schedule', 'The tutoring session has been scheduled.');
     dispatch(fetchTutoringSessions());
   },
 );

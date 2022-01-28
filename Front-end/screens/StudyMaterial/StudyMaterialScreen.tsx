@@ -153,12 +153,12 @@ export default function StudyMaterialScreen({
               row
             >
               <FontAwesome5
-                name="link"
+                name="file-download"
                 size={24}
                 color={Colors.white}
                 style={styles.iconL}
               />
-              <SemiBoldText style={styles.actionText}>Get Link</SemiBoldText>
+              <SemiBoldText style={styles.actionText}>Get File</SemiBoldText>
             </CustomButton>
           </View>
         ) : (

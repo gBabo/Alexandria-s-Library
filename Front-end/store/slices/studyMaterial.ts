@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { EncodingType, readAsStringAsync } from 'expo-file-system';
+import {
+  documentDirectory, EncodingType, downloadAsync, getContentUriAsync, readAsStringAsync,
+} from 'expo-file-system';
+import { startActivityAsync } from 'expo-intent-launcher';
 import { setString } from 'expo-clipboard';
 import axios from 'axios';
 
@@ -158,10 +161,23 @@ FetchStudyMaterialLinkPayload, ThunkApiConfig>(
       idToken: getState().authentication.idToken!,
       ...p,
     };
+    const { studyMaterials } = getState().studyMaterial;
     const response = await axios.get<StudyMaterialLinkGETResponse>(`${SERVER_BASE_URL}/study-material/get-link`, { params });
     if (response.status !== 200) throw new Error('Status code not okay!');
     setString(response.data.link);
     alert('Obtaining Study Material', 'Link copied to clipboard.');
+
+    const fileUri = `${documentDirectory}${studyMaterials[p.studyMaterialId].name
+      .replace(/\s/g, '_')}_${Math.random()
+      .toString(36)
+      .slice(2)}.pdf`;
+    downloadAsync(response.data.link, fileUri)
+      .then(({ uri }) => getContentUriAsync(uri)
+        .then((contentUri) => startActivityAsync('android.intent.action.VIEW', {
+          type: 'application/pdf',
+          data: contentUri,
+          flags: 1,
+        })));
     return {};
   },
 );
@@ -234,7 +250,7 @@ PublishStudyMaterialPayload, ThunkApiConfig>(
     };
     const response = await axios.post<StudyMaterialPOSTResponse>(`${SERVER_BASE_URL}/study-material`, params);
     if (response.status !== 200) throw new Error('Status code not okay!');
-    alert('Upload Study Material', `The study material '${p.name}' has been published.`);
+    alert('Upload Study Material', 'The study material has been published.');
     dispatch(fetchStudyMaterials());
   },
 );
