@@ -24,3 +24,4 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
 });
+export const cardStyle = styles.container;

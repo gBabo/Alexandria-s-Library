@@ -32,6 +32,7 @@ import {
 import ProfileScreen from '../screens/User/ProfileScreen';
 import LogoutScreen from '../screens/User/LogoutScreen';
 import LoginNavigator from './LoginNavigator';
+import { cardStyle } from '../components/UI/Card';
 
 const expandables = {
   SM: {
@@ -56,70 +57,70 @@ const screens = {
     iconName: 'user-alt',
     component: ProfileScreen,
     exposure: ScreenExposure.RequiresAuthentication,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   SM_Store: {
     drawerLabel: 'Store',
     iconName: 'store',
     component: SMStoreNavigator,
     exposure: ScreenExposure.Always,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   SM_Exchanges: {
-    drawerLabel: 'Exchanges',
+    drawerLabel: 'Exchange Proposals',
     iconName: 'exchange-alt',
     component: SMExchangesNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   SM_Acquired: {
     drawerLabel: 'Acquired',
     iconName: 'bookmark',
     component: SMAcquiredNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   SM_Uploaded: {
     drawerLabel: 'Uploaded',
     iconName: 'file-upload',
     component: SMUploadedNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   T_Store: {
     drawerLabel: 'Store',
     iconName: 'store',
     component: TStoreNavigator,
     exposure: ScreenExposure.Always,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   T_Enrolled: {
     drawerLabel: 'Enrolled',
     iconName: 'handshake',
     component: TEnrolledNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   T_Scheduled: {
-    drawerLabel: 'Scheduled',
+    drawerLabel: 'Your Sessions',
     iconName: 'calendar-alt',
     component: TScheduledNavigator,
     exposure: ScreenExposure.RequiresAuthentication,
-    inactiveBackgroundColor: Colors.secondary,
+    inactiveBackgroundColor: Colors.primary,
   },
   A_Login: {
     drawerLabel: 'Login',
     iconName: 'sign-in-alt',
     component: LoginNavigator,
     exposure: ScreenExposure.RequiresGuest,
-    inactiveBackgroundColor: Colors.info,
+    inactiveBackgroundColor: Colors.blue,
   },
   A_Logout: {
     drawerLabel: 'Logout',
     iconName: 'sign-out-alt',
     component: LogoutScreen,
     exposure: ScreenExposure.RequiresAuthentication,
-    inactiveBackgroundColor: Colors.error,
+    inactiveBackgroundColor: Colors.blue,
   },
 };
 
@@ -210,7 +211,11 @@ function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
           navigation={navigation}
         />
         <HorizontalDivider />
-        <CustomExpandableDrawerItem name="SM" isExpandedState={isExpandedState.SM} />
+        <CustomExpandableDrawerItem
+          name="SM"
+          isExpandedState={isExpandedState.SM}
+          focusedLabelState={focusedLabelState}
+        />
         {isExpandedState.SM[0] && Object.keys(screens)
           .filter((name) => name.startsWith('SM_'))
           .map((name) => (
@@ -222,7 +227,11 @@ function CustomDrawerContent({ navigation }: DrawerContentComponentProps) {
             />
           ))}
         <HorizontalDivider />
-        <CustomExpandableDrawerItem name="T" isExpandedState={isExpandedState.T} />
+        <CustomExpandableDrawerItem
+          name="T"
+          isExpandedState={isExpandedState.T}
+          focusedLabelState={focusedLabelState}
+        />
         {isExpandedState.T[0] && Object.keys(screens)
           .filter((name) => name.startsWith('T_'))
           .map((name) => (
@@ -281,6 +290,10 @@ function CustomDrawerItem({
       inactiveBackgroundColor={screens[name].inactiveBackgroundColor}
       inactiveTintColor={Colors.background}
       labelStyle={{ fontFamily: 'OpenSans-SemiBold' }}
+      style={[cardStyle, {
+        borderColor: Colors.indigo,
+        borderWidth: 0.5,
+      }]}
       focused={name === focusedLabel}
     />
   );
@@ -295,22 +308,33 @@ const drawerIcon = (name: ComponentProps<typeof FontAwesome5>['name']) => (
 function CustomExpandableDrawerItem({
   name,
   isExpandedState,
+  focusedLabelState,
 }: {
   name: 'SM' | 'T',
   isExpandedState: [boolean, Dispatch<SetStateAction<boolean>>]
+  focusedLabelState: [string, Dispatch<SetStateAction<string>>]
 }) {
   const [isExpanded, setIsExpanded] = isExpandedState;
+  const [focusedLabel] = focusedLabelState;
+
+  const inactiveBackgroundColor = focusedLabel.startsWith(`${name}_`)
+    ? Colors.accent
+    : Colors.primary;
 
   return (
     <DrawerItem
       label={expandableLabel(expandables[name].drawerLabel, isExpanded)}
       icon={drawerIcon(expandables[name].iconName)}
       onPress={() => setIsExpanded((v) => !v)}
-      activeBackgroundColor={Colors.info}
+      activeBackgroundColor={Colors.indigo}
       activeTintColor={Colors.background}
-      inactiveBackgroundColor={Colors.secondary}
+      inactiveBackgroundColor={inactiveBackgroundColor}
       inactiveTintColor={Colors.background}
       labelStyle={{ fontFamily: 'OpenSans-SemiBold' }}
+      style={[cardStyle, {
+        borderColor: Colors.indigo,
+        borderWidth: 0.5,
+      }]}
       focused={isExpanded}
     />
   );

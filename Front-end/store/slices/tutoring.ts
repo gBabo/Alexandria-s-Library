@@ -102,7 +102,7 @@ EnrollTutoringSessionPayload, ThunkApiConfig>(
     try {
       response = await axios.post<TutoringSessionEnrollmentPOSTResponse>(`${SERVER_BASE_URL}/tutoring/enroll`, params);
     } catch (err) {
-      if (err.response.status === 402) throw new Error('You are out of credits!');
+      if (err.response.status === 402 || err.response.status === 500) throw new Error('You are out of credits!');
       throw err;
     }
     if (response.status !== 200) throw new Error('Status code not okay!');

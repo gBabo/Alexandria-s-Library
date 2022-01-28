@@ -1,12 +1,11 @@
-import React, { useCallback } from 'react';
-import {
-  StyleSheet, FlatList, Alert, ListRenderItem,
-} from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, FlatList, ListRenderItem } from 'react-native';
 
 import { Entypo } from '@expo/vector-icons';
 import { View } from './UI/Themed';
 import { RegularText, SemiBoldText } from './UI/StyledText';
 import CustomButton from './UI/CustomButton';
+import ConfirmationAlert, { ConfirmationAlertValues } from './UI/ConfirmationAlert';
 import Colors from '../constants/Colors';
 import { UserEnroll } from '../models/TutoringSession';
 
@@ -25,38 +24,13 @@ export default function EnrollsList({
   onSettleEnrollmentStatus,
   onSettleAllEnrollmentStatus,
 }: EnrollsListProps) {
-  const confirmEnrollment = useCallback(
-    (enroll: UserEnroll, accept: boolean) => Alert.alert('Enrollment Acceptance', accept ? `
-    Are you sure you want to accept ${enroll.name.split(' ')[0]}'s enrollment?
-    ` : `
-    Are you sure you want to reject ${enroll.name.split(' ')[0]}'s enrollment?
-    `, [{
-      text: 'Yes',
-      style: 'default',
-      onPress: () => onSettleEnrollmentStatus && onSettleEnrollmentStatus(enroll.id, accept),
-    }, {
-      text: 'Cancel',
-      style: 'cancel',
-    }], {
-      cancelable: true,
-    }), [onSettleEnrollmentStatus],
-  );
-  const confirmAllEnrollment = useCallback(
-    (accept: boolean) => Alert.alert('All Enrollments Acceptance', accept ? `
-    Are you sure you want to accept all enrollments?
-    ` : `
-    Are you sure you want to reject all enrollments?
-    `, [{
-      text: 'Yes',
-      style: 'default',
-      onPress: () => onSettleAllEnrollmentStatus && onSettleAllEnrollmentStatus(accept),
-    }, {
-      text: 'Cancel',
-      style: 'cancel',
-    }], {
-      cancelable: true,
-    }), [onSettleAllEnrollmentStatus],
-  );
+  const [confirmationModalValues, setConfirmationModalValues] = useState<ConfirmationAlertValues>();
+  const confirmationModalVisibilityState = useState(false);
+
+  const onOpenConfirmationModal = (values: ConfirmationAlertValues) => {
+    setConfirmationModalValues(values);
+    confirmationModalVisibilityState[1](true);
+  };
 
   const ListHeaderComponent = (
     <View style={styles.enrollHeader}>
@@ -67,7 +41,15 @@ export default function EnrollsList({
   const ListFooterComponent = (
     <View style={styles.enrollContainer}>
       <CustomButton
-        onPress={() => confirmAllEnrollment(true)}
+        onPress={() => {
+          onOpenConfirmationModal({
+            title: 'All Enrollments Acceptance',
+            message: 'Are you sure you want to accept all enrollments?',
+            onConfirm: () => {
+              if (onSettleAllEnrollmentStatus) onSettleAllEnrollmentStatus(true);
+            },
+          });
+        }}
         style={styles.acceptButton}
         row
       >
@@ -79,7 +61,15 @@ export default function EnrollsList({
         <SemiBoldText style={styles.actionText}>Accept all</SemiBoldText>
       </CustomButton>
       <CustomButton
-        onPress={() => confirmAllEnrollment(false)}
+        onPress={() => {
+          onOpenConfirmationModal({
+            title: 'All Enrollments Rejection',
+            message: 'Are you sure you want to reject all enrollments?',
+            onConfirm: () => {
+              if (onSettleAllEnrollmentStatus) onSettleAllEnrollmentStatus(false);
+            },
+          });
+        }}
         style={styles.rejectButton}
         row
       >
@@ -101,7 +91,15 @@ export default function EnrollsList({
       {pending && (
         <View style={styles.buttonContainer}>
           <CustomButton
-            onPress={() => confirmEnrollment(item, true)}
+            onPress={() => {
+              onOpenConfirmationModal({
+                title: 'Enrollment Acceptance',
+                message: `Are you sure you want to accept ${item.name.split(' ')[0]}'s enrollment?`,
+                onConfirm: () => {
+                  if (onSettleEnrollmentStatus) onSettleEnrollmentStatus(item.id, true);
+                },
+              });
+            }}
             style={styles.acceptButton}
             small
           >
@@ -112,7 +110,15 @@ export default function EnrollsList({
             />
           </CustomButton>
           <CustomButton
-            onPress={() => confirmEnrollment(item, false)}
+            onPress={() => {
+              onOpenConfirmationModal({
+                title: 'Enrollment Rejection',
+                message: `Are you sure you want to reject ${item.name.split(' ')[0]}'s enrollment?`,
+                onConfirm: () => {
+                  if (onSettleEnrollmentStatus) onSettleEnrollmentStatus(item.id, false);
+                },
+              });
+            }}
             style={styles.rejectButton}
             small
           >
@@ -128,17 +134,28 @@ export default function EnrollsList({
   );
 
   return (
-    <FlatList
-      data={enrolls}
-      keyExtractor={(_, index) => index.toString()}
-      ListHeaderComponent={ListHeaderComponent}
-      ListFooterComponent={pending ? ListFooterComponent : undefined}
-      renderItem={renderItem}
-    />
+    <View style={styles.container}>
+      <FlatList
+        data={enrolls}
+        keyExtractor={(_, index) => index.toString()}
+        ListHeaderComponent={ListHeaderComponent}
+        ListFooterComponent={pending ? ListFooterComponent : undefined}
+        renderItem={renderItem}
+      />
+      {confirmationModalValues && (
+        <ConfirmationAlert
+          values={confirmationModalValues}
+          visibilityState={confirmationModalVisibilityState}
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   enrollHeader: {
     flex: 1,
     flexDirection: 'row',

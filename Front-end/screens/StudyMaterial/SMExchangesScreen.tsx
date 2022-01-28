@@ -28,7 +28,7 @@ export default function SMExchangesScreen({ navigation }: SMExchangesStackScreen
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
     if (isFocused) {
-      navigation.getParent()!.setOptions({ headerTitle: 'Study Materials Exchanges' });
+      navigation.getParent()!.setOptions({ headerTitle: 'Exchange Proposals' });
       dispatch(fetchStudyMaterials());
     }
   }, [navigation, isFocused]);

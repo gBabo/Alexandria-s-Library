@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useCallback, useLayoutEffect, useRef } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useIsFocused } from '@react-navigation/core';
@@ -9,11 +9,11 @@ import {
 
 import { SMStoreStackScreenProps } from '../../navigation/types';
 import Colors from '../../constants/Colors';
-import StudyMaterial from '../../models/StudyMaterial';
 import { RegularText, SemiBoldText } from '../../components/UI/StyledText';
 import { View } from '../../components/UI/Themed';
 import Loading from '../../components/UI/Loading';
 import CustomButton from '../../components/UI/CustomButton';
+import ConfirmationAlert, { ConfirmationAlertValues } from '../../components/UI/ConfirmationAlert';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
 import {
@@ -44,42 +44,13 @@ export default function StudyMaterialScreen({
     if (isFocused) navigation.getParent()!.setOptions({ headerTitle: studyMaterial.name });
   }, [navigation, isFocused]);
 
-  const confirmStudyMaterialPurchase = useCallback(
-    () => Alert.alert('Study Material Purchase', `
-    Are you sure you want to purchase the study material '${studyMaterial.name}'?
-    `, [{
-      text: 'Yes',
-      style: 'default',
-      onPress: () => {
-        dispatch(purchaseStudyMaterial({ studyMaterialId: studyMaterial.id }));
-      },
-    }, {
-      text: 'Cancel',
-      style: 'cancel',
-    }], {
-      cancelable: true,
-    }), [navigation, dispatch, proposeExchange, studyMaterial],
-  );
+  const [confirmationModalValues, setConfirmationModalValues] = useState<ConfirmationAlertValues>();
+  const confirmationModalVisibilityState = useState(false);
 
-  const confirmStudyMaterialExchange = useCallback(
-    (requesterStudyMaterial: StudyMaterial) => Alert.alert('Study Material Exchange', `
-    Are you sure you want to exchange the study material '${requesterStudyMaterial.name}' for '${studyMaterial.name}'?
-    `, [{
-      text: 'Yes',
-      style: 'default',
-      onPress: () => {
-        dispatch(proposeExchange({
-          requesterStudyMaterialId: requesterStudyMaterial.id,
-          requesteeStudyMaterialId: studyMaterial.id,
-        }));
-      },
-    }, {
-      text: 'Cancel',
-      style: 'cancel',
-    }], {
-      cancelable: true,
-    }), [pickerRef, navigation, dispatch, proposeExchange, studyMaterial],
-  );
+  const onOpenConfirmationModal = (values: ConfirmationAlertValues) => {
+    setConfirmationModalValues(values);
+    confirmationModalVisibilityState[1](true);
+  };
 
   return isLoading ? (
     <Loading />
@@ -154,7 +125,7 @@ export default function StudyMaterialScreen({
                 navigation.navigate('A_Login');
               }
             }}
-            style={styles.action}
+            style={[styles.action, { backgroundColor: Colors.cyan }]}
           >
             <View style={styles.actionSeparation}>
               <FontAwesome
@@ -165,11 +136,7 @@ export default function StudyMaterialScreen({
               />
               <SemiBoldText style={styles.actionText}>Discussion</SemiBoldText>
             </View>
-            <View style={{
-              flexDirection: 'row-reverse',
-              backgroundColor: Colors.transparent,
-            }}
-            >
+            <View style={{ backgroundColor: Colors.transparent }}>
               <RegularText style={styles.actionSubtext}>
                 {`${studyMaterial.reviews.length} Reviews`}
               </RegularText>
@@ -199,12 +166,18 @@ export default function StudyMaterialScreen({
             <CustomButton
               onPress={() => {
                 if (localId) {
-                  confirmStudyMaterialPurchase();
+                  onOpenConfirmationModal({
+                    title: 'Study Material Purchase',
+                    message: `Are you sure you want to purchase the study material '${studyMaterial.name}'?`,
+                    onConfirm: () => {
+                      dispatch(purchaseStudyMaterial({ studyMaterialId: studyMaterial.id }));
+                    },
+                  });
                 } else {
                   navigation.navigate('A_Login');
                 }
               }}
-              style={styles.action}
+              style={[styles.action, { backgroundColor: Colors.blue }]}
             >
               <View style={styles.actionSeparation}>
                 <FontAwesome5
@@ -230,12 +203,21 @@ export default function StudyMaterialScreen({
             <CustomButton
               onPress={() => {
                 if (localId) {
-                  (pickerRef.current as any)?.focus();
+                  if (myStudyMaterials.length > 0) {
+                    (pickerRef.current as any)?.focus();
+                  } else {
+                    Alert.alert('Exchange', 'You have not yet purchased or uploaded study materials.\nYou must first have study materials to propose exchanges.', [{
+                      text: 'Got it!',
+                      style: 'default',
+                    }], {
+                      cancelable: true,
+                    });
+                  }
                 } else {
                   navigation.navigate('A_Login');
                 }
               }}
-              style={styles.action}
+              style={[styles.action, { backgroundColor: Colors.accent }]}
               row
             >
               <FontAwesome
@@ -251,7 +233,16 @@ export default function StudyMaterialScreen({
               selectedValue="Unselected"
               onValueChange={(itemValue) => {
                 (pickerRef.current as any)?.blur();
-                confirmStudyMaterialExchange(studyMaterials[itemValue]);
+                onOpenConfirmationModal({
+                  title: 'Study Material Exchange',
+                  message: `Are you sure you want to exchange the study material '${studyMaterials[itemValue].name}' for '${studyMaterial.name}'?`,
+                  onConfirm: () => {
+                    dispatch(proposeExchange({
+                      requesterStudyMaterialId: itemValue,
+                      requesteeStudyMaterialId: studyMaterial.id,
+                    }));
+                  },
+                });
               }}
               mode="dialog"
               dropdownIconColor={Colors.primary}
@@ -274,6 +265,12 @@ export default function StudyMaterialScreen({
                 />
               ))}
             </Picker>
+            {confirmationModalValues && (
+            <ConfirmationAlert
+              values={confirmationModalValues}
+              visibilityState={confirmationModalVisibilityState}
+            />
+            )}
           </View>
         )}
       </View>

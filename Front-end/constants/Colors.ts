@@ -14,6 +14,8 @@ export default {
   black: '#000000',
   white: '#ffffff',
   purple: '#3949AB',
+  indigo: '#1A237E',
+  cyan: '#00A2B4',
   blue: '#1E88E5',
   yellow: '#FBC02D',
   transparent: '#00000000',

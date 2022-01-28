@@ -33,6 +33,7 @@ module.exports = {
     'react/jsx-props-no-spreading': 'off',
     'react/no-unescaped-entities': 'off',
     'react/require-default-props': 'off',
+    'react/prop-types': 'off',
     'react-native/no-inline-styles': 'off',
     'react-native/no-color-literals': 'off',
     'react-native/no-unused-styles': 'error',

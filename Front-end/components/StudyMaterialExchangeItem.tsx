@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useState } from 'react';
 import {
-  Alert,
   GestureResponderEvent, StyleSheet, View, ViewProps,
 } from 'react-native';
 import {
@@ -11,6 +10,7 @@ import Colors from '../constants/Colors';
 import { StudyMaterialExchange } from '../models/StudyMaterial';
 import { RegularText, SemiBoldText } from './UI/StyledText';
 import CustomButton from './UI/CustomButton';
+import ConfirmationAlert, { ConfirmationAlertValues } from './UI/ConfirmationAlert';
 
 export type StudyMaterialExchangeExtended = StudyMaterialExchange & {
   requesterSMName: string
@@ -34,22 +34,13 @@ export default function StudyMaterialExchangeItem({
   containerStyle,
   style,
 }: StudyMaterialExchangeItemProps) {
-  const confirmExchange = useCallback(
-    (accept: boolean) => Alert.alert('Study Materials Exchange', accept ? `
-    Are you sure you want to exchange the study material '${studyMaterialExchange.requesteeSMName}' for '${studyMaterialExchange.requesterSMName}'?
-    ` : `
-    Are you sure you want to reject the proposal to exchange the study material '${studyMaterialExchange.requesteeSMName}' for '${studyMaterialExchange.requesterSMName}'? 
-    `, [{
-      text: 'Yes',
-      style: 'default',
-      onPress: () => onSettleExchange(accept),
-    }, {
-      text: 'Cancel',
-      style: 'cancel',
-    }], {
-      cancelable: true,
-    }), [studyMaterialExchange, onSettleExchange],
-  );
+  const [confirmationModalValues, setConfirmationModalValues] = useState<ConfirmationAlertValues>();
+  const confirmationModalVisibilityState = useState(false);
+
+  const onOpenConfirmationModal = (values: ConfirmationAlertValues) => {
+    setConfirmationModalValues(values);
+    confirmationModalVisibilityState[1](true);
+  };
 
   return (
     <View style={containerStyle}>
@@ -115,14 +106,26 @@ export default function StudyMaterialExchangeItem({
         </View>
         <View style={[styles.line, styles.buttonsAlone]}>
           <CustomButton
-            onPress={() => confirmExchange(true)}
+            onPress={() => {
+              onOpenConfirmationModal({
+                title: 'Study Materials Exchange',
+                message: `Are you sure you want to exchange the study material '${studyMaterialExchange.requesteeSMName}' for '${studyMaterialExchange.requesterSMName}'?`,
+                onConfirm: () => onSettleExchange(true),
+              });
+            }}
             style={styles.acceptButton}
             small
           >
             <Entypo name="check" size={30} color={Colors.white} />
           </CustomButton>
           <CustomButton
-            onPress={() => confirmExchange(false)}
+            onPress={() => {
+              onOpenConfirmationModal({
+                title: 'Study Materials Exchange',
+                message: `Are you sure you want to reject the proposal to exchange the study material '${studyMaterialExchange.requesteeSMName}' for '${studyMaterialExchange.requesterSMName}'?`,
+                onConfirm: () => onSettleExchange(false),
+              });
+            }}
             style={styles.rejectButton}
             small
           >
@@ -130,6 +133,12 @@ export default function StudyMaterialExchangeItem({
           </CustomButton>
         </View>
       </CustomButton>
+      {confirmationModalValues && (
+        <ConfirmationAlert
+          values={confirmationModalValues}
+          visibilityState={confirmationModalVisibilityState}
+        />
+      )}
     </View>
   );
 }

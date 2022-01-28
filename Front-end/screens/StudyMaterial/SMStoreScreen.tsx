@@ -27,17 +27,12 @@ export default function SMStoreScreen({ navigation }: SMStoreStackScreenProps<'S
     .filter(([, v]) => v.some((id) => !myStudyMaterialIds.includes(id)))
     .map(([k]) => k);
 
-  const onPressHelp = useCallback(() => Alert.alert(
-    'Help', `
-    Here you can search, purchase and exchange study materials.
-    It is possible to acquire materials using tokens or by trading materials already owned.
-    `, [{
-      text: 'Got it!',
-      style: 'default',
-    }], {
-      cancelable: true,
-    },
-  ), []);
+  const onPressHelp = useCallback(() => Alert.alert('Help', 'Here you can search, purchase and exchange study materials.\nIt is possible to acquire materials using tokens or by trading materials already owned.', [{
+    text: 'Got it!',
+    style: 'default',
+  }], {
+    cancelable: true,
+  }), []);
 
   const isFocused = useIsFocused();
   useLayoutEffect(() => {

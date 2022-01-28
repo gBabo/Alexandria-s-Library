@@ -78,7 +78,7 @@ export default function SMUploadedScreen({ navigation }: SMUploadedStackScreenPr
         style={styles.plusButton}
         small
       >
-        <Ionicons name="add" size={40} color={Colors.white} />
+        <Ionicons name="add" size={60} color={Colors.white} />
       </CustomButton>
     </View>
   );

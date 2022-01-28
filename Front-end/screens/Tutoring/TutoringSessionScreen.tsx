@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useCallback, useLayoutEffect } from 'react';
-import { Alert, ScrollView, StyleSheet } from 'react-native';
+import { useLayoutEffect, useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
 import { useIsFocused } from '@react-navigation/core';
 import { AntDesign, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import moment from 'moment';
@@ -11,6 +11,7 @@ import { RegularText, SemiBoldText } from '../../components/UI/StyledText';
 import { View } from '../../components/UI/Themed';
 import Loading from '../../components/UI/Loading';
 import CustomButton from '../../components/UI/CustomButton';
+import ConfirmationAlert, { ConfirmationAlertValues } from '../../components/UI/ConfirmationAlert';
 import useAppDispatch from '../../hooks/useAppDispatch';
 import useAppSelector from '../../hooks/useAppSelector';
 import {
@@ -36,22 +37,13 @@ export default function TutoringSessionScreen({
     if (isFocused) navigation.getParent()!.setOptions({ headerTitle: tutoringSession.name });
   }, [navigation, isFocused]);
 
-  const confirmTutoringSessionEnroll = useCallback(
-    () => Alert.alert('Tutoring Session Enroll', `
-    Are you sure you want to sign up for tutoring session '${tutoringSession.name}'?
-    `, [{
-      text: 'Yes',
-      style: 'default',
-      onPress: () => {
-        dispatch(enrollTutoringSession({ tutoringSessionId: tutoringSession.id }));
-      },
-    }, {
-      text: 'Cancel',
-      style: 'cancel',
-    }], {
-      cancelable: true,
-    }), [navigation, dispatch, enrollTutoringSession, tutoringSession],
-  );
+  const [confirmationModalValues, setConfirmationModalValues] = useState<ConfirmationAlertValues>();
+  const confirmationModalVisibilityState = useState(false);
+
+  const onOpenConfirmationModal = (values: ConfirmationAlertValues) => {
+    setConfirmationModalValues(values);
+    confirmationModalVisibilityState[1](true);
+  };
 
   const isEnrolled = [
     ...tutoringSession.pendingEnrolls,
@@ -161,7 +153,13 @@ export default function TutoringSessionScreen({
             <CustomButton
               onPress={() => {
                 if (localId) {
-                  confirmTutoringSessionEnroll();
+                  onOpenConfirmationModal({
+                    title: 'Tutoring Session Enroll',
+                    message: `Are you sure you want to sign up for tutoring session '${tutoringSession.name}'?`,
+                    onConfirm: () => {
+                      dispatch(enrollTutoringSession({ tutoringSessionId: tutoringSession.id }));
+                    },
+                  });
                 } else {
                   navigation.navigate('A_Login');
                 }
@@ -192,6 +190,12 @@ export default function TutoringSessionScreen({
                 />
               </View>
             </CustomButton>
+            {confirmationModalValues && (
+            <ConfirmationAlert
+              values={confirmationModalValues}
+              visibilityState={confirmationModalVisibilityState}
+            />
+            )}
           </View>
         )}
       </View>

@@ -27,7 +27,7 @@ export default function TScheduledScreen({ navigation }: TScheduledStackScreenPr
   const isFocused = useIsFocused();
   useLayoutEffect(() => {
     if (isFocused) {
-      navigation.getParent()!.setOptions({ headerTitle: 'Scheduled Sessions' });
+      navigation.getParent()!.setOptions({ headerTitle: 'Your Sessions' });
       dispatch(fetchTutoringSessions());
     }
   }, [navigation, isFocused]);
