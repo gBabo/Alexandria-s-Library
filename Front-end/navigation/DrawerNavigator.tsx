@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-  ComponentProps, Dispatch, SetStateAction, useEffect, useState,
+  ComponentProps, Dispatch, SetStateAction, useEffect, useRef, useState,
 } from 'react';
 import { View } from 'react-native';
-import { NavigationState } from '@react-navigation/core';
+import { NavigationProp, NavigationState, useNavigation } from '@react-navigation/core';
 import {
   DrawerContentComponentProps,
   createDrawerNavigator,
@@ -12,6 +12,11 @@ import {
 } from '@react-navigation/drawer';
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/src/types';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { Subscription } from 'expo-clipboard';
+import {
+  addNotificationResponseReceivedListener,
+  removeNotificationSubscription,
+} from 'expo-notifications';
 
 import { DrawerParamList } from './types';
 import Colors from '../constants/Colors';
@@ -128,6 +133,34 @@ const Drawer = createDrawerNavigator<DrawerParamList>();
 
 export default function DrawerNavigator() {
   const localId = useAppSelector((s) => s.authentication.localId);
+
+  const drawerNavigation = useNavigation<NavigationProp<DrawerParamList>>();
+  const responseListener = useRef<Subscription>();
+
+  useEffect(() => {
+    responseListener.current = addNotificationResponseReceivedListener((response) => {
+      const { code } = response.notification.request.content.data;
+      switch (code) {
+        case 'EXCHANGE':
+          drawerNavigation.navigate('SM_Exchanges');
+          break;
+        case 'SETTLE_EXCHANGE':
+          drawerNavigation.navigate('SM_Acquired');
+          break;
+        case 'ENROLL':
+          drawerNavigation.navigate('T_Scheduled');
+          break;
+        case 'SETTLE_ENROLL':
+          drawerNavigation.navigate('T_Enrolled');
+          break;
+        default:
+          break;
+      }
+    });
+    return () => {
+      if (responseListener.current) removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
 
   return (
     <Drawer.Navigator

@@ -3,7 +3,7 @@
  * https://reactnavigation.org/docs/typescript/
  */
 
-import { CompositeScreenProps, NavigatorScreenParams } from '@react-navigation/native';
+import { CompositeScreenProps } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 
@@ -21,13 +21,13 @@ export type RootStackParamList = {
 
 export type DrawerParamList = {
   Profile: undefined;
-  SM_Store: NavigatorScreenParams<SMStoreStackParamList>;
-  SM_Exchanges: NavigatorScreenParams<SMExchangesStackParamList>;
-  SM_Acquired: NavigatorScreenParams<SMAcquiredStackParamList>;
-  SM_Uploaded: NavigatorScreenParams<SMUploadedStackParamList>;
-  T_Store: NavigatorScreenParams<TStoreStackParamList>;
-  T_Enrolled: NavigatorScreenParams<TEnrolledStackParamList>;
-  T_Scheduled: NavigatorScreenParams<TScheduledStackParamList>;
+  SM_Store: undefined;
+  SM_Exchanges: undefined;
+  SM_Acquired: undefined;
+  SM_Uploaded: undefined;
+  T_Store: undefined;
+  T_Enrolled: undefined;
+  T_Scheduled: undefined;
   A_Login: undefined;
   A_Logout: undefined;
 };

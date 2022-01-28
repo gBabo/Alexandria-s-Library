@@ -45,6 +45,7 @@ export default <Omit<ExpoConfig, 'extra'> & { extra: Extra }>{
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
     },
+    googleServicesFile: './google-services.json',
   },
   web: {
     favicon: './assets/images/favicon.png',

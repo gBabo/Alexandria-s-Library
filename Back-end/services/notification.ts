@@ -1,6 +1,9 @@
 import axios from 'axios';
+import { Expo } from 'expo-server-sdk';
 import * as studyMaterialDB from '../db/manager/studyMaterial';
 import * as userDB from '../db/manager/user';
+
+const expo = new Expo();
 
 export async function newStudyMaterialExchange(
   requestee: string,
@@ -8,7 +11,7 @@ export async function newStudyMaterialExchange(
   studyMIdTee: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(requestee);
-  if (registrationToken == null) {
+  if (!Expo.isExpoPushToken(registrationToken)) {
     console.error(`No Registration Token for user: ${requestee}`);
     return;
   }
@@ -16,12 +19,14 @@ export async function newStudyMaterialExchange(
   const studyMTee = await studyMaterialDB.getStudyMaterialName(studyMIdTee);
 
   try {
-    await sendPushNotification({
+    const chunk = (expo.chunkPushNotifications([{
       to: registrationToken,
-      title: 'Alexandria\'s Library',
+      sound: 'default',
       body: `New Study Material Exchange Request: ${studyMTer} For ${studyMTee}`,
       data: { code: 'EXCHANGE' },
-    });
+    }]))[0];
+    const ticket = (await expo.sendPushNotificationsAsync(chunk))[0];
+    if (ticket.status !== 'ok') console.error(ticket.message);
   } catch (error) {
     console.log('Error sending Notification of Study Material Exchange:', error);
   }
@@ -34,7 +39,7 @@ export async function settleStudyMaterialExchange(
   status: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(requester);
-  if (registrationToken == null) {
+  if (!Expo.isExpoPushToken(registrationToken)) {
     console.error(`No Registration Token for user: ${requester}`);
     return;
   }
@@ -42,14 +47,16 @@ export async function settleStudyMaterialExchange(
   const studyMTee = await studyMaterialDB.getStudyMaterialName(studyMIdTee);
 
   try {
-    await sendPushNotification({
+    const chunk = (expo.chunkPushNotifications([{
       to: registrationToken,
-      title: 'Alexandria\'s Library',
+      sound: 'default',
       body: `${status} Study Material Exchange Request: ${studyMTer} For ${studyMTee}`,
       data: { code: 'SETTLE_EXCHANGE' },
-    });
+    }]))[0];
+    const ticket = (await expo.sendPushNotificationsAsync(chunk))[0];
+    if (ticket.status !== 'ok') console.error(ticket.message);
   } catch (error) {
-    console.log('Error sending Notification of Settlement of Study Material Exchange:', error);
+    console.error('Error sending Notification of Settlement of Study Material Exchange:', error);
   }
 }
 
@@ -58,20 +65,22 @@ export async function newEnrollment(
   sessionName: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(tutor);
-  if (registrationToken == null) {
+  if (!Expo.isExpoPushToken(registrationToken)) {
     console.error(`No Registration Token for user: ${tutor}`);
     return;
   }
 
   try {
-    await sendPushNotification({
+    const chunk = (expo.chunkPushNotifications([{
       to: registrationToken,
-      title: 'Alexandria\'s Library',
+      sound: 'default',
       body: `New Enrollment on Tutoring Session: ${sessionName}`,
       data: { code: 'ENROLL' },
-    });
+    }]))[0];
+    const ticket = (await expo.sendPushNotificationsAsync(chunk))[0];
+    if (ticket.status !== 'ok') console.error(ticket.message);
   } catch (error) {
-    console.log('Error sending Notification of enrollment:', error);
+    console.error('Error sending Notification of enrollment:', error);
   }
 }
 
@@ -81,32 +90,21 @@ export async function settleEnrollment(
   status: string,
 ) {
   const registrationToken = await userDB.getPushNotificationToken(requester);
-  if (registrationToken == null) {
+  if (!Expo.isExpoPushToken(registrationToken)) {
     console.error(`No Registration Token for user: ${requester}`);
     return;
   }
 
   try {
-    await sendPushNotification({
+    const chunk = (expo.chunkPushNotifications([{
       to: registrationToken,
-      title: 'Alexandria\'s Library',
+      sound: 'default',
       body: `${status} Enrollment on Tutoring Session: ${sessionName}`,
       data: { code: 'SETTLE_ENROLL' },
-    });
+    }]))[0];
+    const ticket = (await expo.sendPushNotificationsAsync(chunk))[0];
+    if (ticket.status !== 'ok') console.error(ticket.message);
   } catch (error) {
-    console.log('Error sending Notification for a settlement of enrollment:', error);
+    console.error('Error sending Notification for a settlement of enrollment:', error);
   }
 }
-
-const sendPushNotification = (data: {
-    to: string
-    title: string
-    body: string
-    data: { code: string }
-}) => axios.post('https://exp.host/--/api/v2/push/send', data, {
-  headers: {
-    Accept: 'application/json',
-    'Accept-encoding': 'gzip, deflate',
-    'Content-Type': 'application/json',
-  },
-});
