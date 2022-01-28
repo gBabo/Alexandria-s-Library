@@ -294,18 +294,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textContainer: {
-    width: '75%',
+    maxWidth: '75%',
     flexDirection: 'row',
     marginLeft: 15,
   },
   text: {
     fontSize: 20,
+    textAlign: 'center',
   },
   subtext: {
     fontSize: 18,
+    textAlign: 'center',
   },
   iconLContainer: {
-    width: '15%',
+    minWidth: '15%',
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 5,
