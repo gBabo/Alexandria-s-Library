@@ -23,7 +23,7 @@ export async function createStudyMaterial(
     const values = [name, description, author, type, price, date];
     const studyMaterialId = (await con.query(insert.insertStudyM, values)).rows.pop().study_id;
 
-    const path = `${name}_${Math.random().toString(36).slice(2)}.pdf`;
+    const path = `${name.replace(/\s/g, '_')}_${Math.random().toString(36).slice(2)}.pdf`;
     await con.query(insert.insertPathToStudyM, [path, studyMaterialId]);
 
     const promiseCatg = [];
