@@ -21,6 +21,7 @@ export default function TEnrolledScreen({ navigation }: TEnrolledStackScreenProp
       ...enrollment,
       tutoringSessionName: tutoringSessions[enrollment.tutoringSessionId].name,
       tutoringSessionLocation: tutoringSessions[enrollment.tutoringSessionId].location,
+      tutor: tutoringSessions[enrollment.tutoringSessionId].tutor,
     }));
 
   const isFocused = useIsFocused();

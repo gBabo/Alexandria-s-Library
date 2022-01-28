@@ -11,6 +11,7 @@ import CustomButton from './UI/CustomButton';
 export type EnrollmentExtended = Enrollment & {
   tutoringSessionName: string
   tutoringSessionLocation: string
+  tutor: string
 };
 
 interface EnrollmentItemProps {
@@ -48,7 +49,7 @@ export default function EnrollmentItem({
         <View style={styles.line}>
           <RegularText numberOfLines={1} style={styles.text}>
             <SemiBoldText>Tutor: </SemiBoldText>
-            {enrollment.requester}
+            {enrollment.tutor}
           </RegularText>
         </View>
         <View style={styles.line}>
